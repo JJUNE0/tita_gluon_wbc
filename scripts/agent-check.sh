@@ -75,6 +75,27 @@ if [[ -d "docs/exp" ]]; then
     fi
 fi
 
+echo
+echo "=================================================="
+echo "Experiment Log Existence Check"
+echo "=================================================="
+# Check if code files were modified
+code_changed=$(git diff HEAD --name-only 2>/dev/null | grep -E "^(lab/|sim2sim/|sdk/|tita_gluon_ws/)" || true)
+exp_logged=$(git diff HEAD --name-only 2>/dev/null | grep -E "^docs/exp/.*\.md$" || true)
+untracked_exp=$(git status --porcelain 2>/dev/null | grep -E "^\?\? docs/exp/.*\.md$" || true)
+
+if [[ -n "$code_changed" ]]; then
+    if [[ -z "$exp_logged" && -z "$untracked_exp" ]]; then
+        echo "NOTICE: Code changes detected in task, but no new experiment log found in docs/exp/YYYY-MM-DD/*.md."
+        echo " -> Reminder: If this change includes an experiment or test run, please create a report using docs/exp/template.md."
+    else
+        echo "PASS: Code changes accompanied by experiment log entry in docs/exp/."
+    fi
+else
+    echo "PASS: No core code changes, experiment log check bypassed."
+fi
+
+
 
 echo
 echo "=================================================="
