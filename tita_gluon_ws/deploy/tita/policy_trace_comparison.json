@@ -1,0 +1,105 @@
+{
+  "isaac_trace": "/home/cocel/Desktop/Research/DDT_Lab/deploy/tita/isaac_policy_trace_initial.npz",
+  "mujoco_trace": "/home/cocel/Desktop/Research/DDT_Lab/deploy/tita/mujoco_policy_trace_initial.npz",
+  "policy": "/home/cocel/Desktop/Research/DDT_Lab/deploy/tita/policy.onnx",
+  "rows": [
+    {
+      "name": "obs_current",
+      "isaac_shape": "(33,)",
+      "mujoco_shape": "(33,)",
+      "max_abs_diff": 0.9678282737731934
+    },
+    {
+      "name": "obs_history",
+      "isaac_shape": "(10, 33)",
+      "mujoco_shape": "(10, 33)",
+      "max_abs_diff": 0.9678282737731934
+    },
+    {
+      "name": "policy_action_raw",
+      "isaac_shape": "(8,)",
+      "mujoco_shape": "(8,)",
+      "max_abs_diff": 3.5747205018997192
+    },
+    {
+      "name": "base_ang_vel",
+      "isaac_shape": "(3,)",
+      "mujoco_shape": "(3,)",
+      "max_abs_diff": 0.11356468498706818
+    },
+    {
+      "name": "projected_gravity",
+      "isaac_shape": "(3,)",
+      "mujoco_shape": "(3,)",
+      "max_abs_diff": 1.0233876679421883e-07
+    },
+    {
+      "name": "command",
+      "isaac_shape": "(3,)",
+      "mujoco_shape": "(3,)",
+      "max_abs_diff": 0.9678282737731934
+    },
+    {
+      "name": "joint_pos_error",
+      "isaac_shape": "(8,)",
+      "mujoco_shape": "(8,)",
+      "max_abs_diff": 0.706794023513794
+    },
+    {
+      "name": "joint_vel",
+      "isaac_shape": "(8,)",
+      "mujoco_shape": "(8,)",
+      "max_abs_diff": 0.0
+    },
+    {
+      "name": "last_action",
+      "isaac_shape": "(8,)",
+      "mujoco_shape": "(8,)",
+      "max_abs_diff": 0.0
+    },
+    {
+      "name": "history_first_row",
+      "isaac_shape": "(33,)",
+      "mujoco_shape": "(33,)",
+      "max_abs_diff": 0.9678282737731934
+    },
+    {
+      "name": "history_last_row",
+      "isaac_shape": "(33,)",
+      "mujoco_shape": "(33,)",
+      "max_abs_diff": 0.9678282737731934
+    },
+    {
+      "name": "ONNX(isaac_input)_vs_ONNX(mujoco_input)",
+      "isaac_shape": "(8,)",
+      "mujoco_shape": "(8,)",
+      "max_abs_diff": 3.5747214555740356
+    }
+  ],
+  "history_note": "normal=0.967828, mujoco_time_reversed=0.967828, mujoco_history_rows_are_identical",
+  "onnx": {
+    "onnx_isaac_input": [
+      -1.1591787338256836,
+      -2.458360433578491,
+      1.4585044384002686,
+      -3.154866933822632,
+      0.2610401511192322,
+      -1.8427656888961792,
+      -0.30815088748931885,
+      -0.29941967129707336
+    ],
+    "onnx_mujoco_input": [
+      -1.0296725034713745,
+      -0.17814207077026367,
+      0.1337137520313263,
+      0.4198545217514038,
+      0.21155309677124023,
+      -0.07268521189689636,
+      -0.5111542344093323,
+      0.2101786881685257
+    ],
+    "onnx_input_action_diff": 3.5747214555740356,
+    "onnx_vs_isaac_recorded": 9.5367431640625e-07,
+    "onnx_vs_mujoco_recorded": 0.0
+  }
+}

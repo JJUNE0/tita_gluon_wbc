@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="gluon_2L6_4L3_sim">
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-7.07923322916521E-05 -3.15078560279351E-07 0.00211490550882476" rpy="0 0 0" />
+      <mass value="0.947876033180305" />
+      <inertia ixx="0.0017318413107461" ixy="3.14952850900379E-10" ixz="2.06131736991631E-06" iyy="0.00151929091543902" iyz="-2.03157503363577E-07" izz="0.00288656909579778" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="1.570796 0 1.570796" />
+      <geometry>
+        <mesh filename="../meshes/base_link.STL" />
+      </geometry>
+      <material name="base_link_material_0">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -3.82214784622e-06 0.0417468776895" rpy="0 0 0" />
+      <geometry>
+        <box size="0.119999997318 0.120006024837 0.0835108447882" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="link1">
+    <inertial>
+      <origin xyz="0.00601948373922 3.11497189211e-07 -0.00394142488735" rpy="0 0 0" />
+      <mass value="0.96778777529" />
+      <inertia ixx="0.000779426454708" ixy="1.17036166626e-08" ixz="-2.06784758981e-05" iyy="0.000844854827818" iyz="8.6684920065e-09" izz="0.000875044652849" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../meshes/gluon_link_1.STL" />
+      </geometry>
+      <material name="link1_material_0">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0182500258088 2.82563269138e-06 -0.00448676198721" rpy="0 0 0" />
+      <geometry>
+        <box size="0.122499972582 0.0860064961016 0.0950280725956" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="axis_joint_1" type="revolute">
+    <origin xyz="0.1205 -1.7907E-05 0" rpy="1.570796 1.570796 1.570796" />
+    <parent link="base_link" />
+    <child link="link1" />
+    <axis xyz="0 0 1" />
+    <limit lower="-3.0" upper="3.0" effort="150.0" velocity="3.0" />
+  </joint>
+  <link name="link2">
+    <inertial>
+      <origin xyz="0.0132063596679 2.05271813095e-07 -0.00465815671007" rpy="0 0 0" />
+      <mass value="1.01412222791" />
+      <inertia ixx="0.000805315385032" ixy="3.49858738378e-09" ixz="3.45359279918e-05" iyy="0.00102184808274" iyz="-1.38777375382e-08" izz="0.00105077171378" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../meshes/gluon_link_2.STL" />
+      </geometry>
+      <material name="link2_material_0">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0946251787245 0 -0.0044863615185" rpy="0 0 0" />
+      <geometry>
+        <box size="0.275250278413 0.0859999656677 0.0950272716582" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="axis_joint_2" type="revolute">
+    <origin xyz="0.1165 0 0" rpy="3.14159265359 -1.57079632679 0" />
+    <parent link="link1" />
+    <child link="link2" />
+    <axis xyz="0 0 -1" />
+    <limit lower="-1.67079632679" upper="1.42920367321" effort="150.0" velocity="3.0" />
+  </joint>
+  <link name="link3">
+    <inertial>
+      <origin xyz="0.0209495347639 3.91209511461e-06 -0.0332839613237" rpy="0 0 0" />
+      <mass value="0.395735858556" />
+      <inertia ixx="0.000915456079127" ixy="-6.00954400813e-08" ixz="0.000448338339684" iyy="0.00120808467647" iyz="7.74488834511e-08" izz="0.000446548359419" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../meshes/gluon_link_3.STL" />
+      </geometry>
+      <material name="link3_material_0">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0865091886371 9.0803951025e-07 -0.0751256577205" rpy="0 0 0" />
+      <geometry>
+        <box size="0.230432946235 0.0613243635744 0.156265898142" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="axis_joint_3" type="revolute">
+    <origin xyz="0.20352 2.2698E-05 0.03825" rpy="-0.00039303 0 0" />
+    <parent link="link2" />
+    <child link="link3" />
+    <axis xyz="0 0 1" />
+    <limit lower="-3.0" upper="3.0" effort="150.0" velocity="3.0" />
+  </joint>
+  <link name="link4">
+    <inertial>
+      <origin xyz="0.000829004722495 -6.58870731219e-06 -0.0172072336413" rpy="0 0 0" />
+      <mass value="0.331824016925" />
+      <inertia ixx="0.00045221360406" ixy="-2.62991903648e-09" ixz="1.99390689473e-05" iyy="0.000454739230777" iyz="-1.10019974888e-07" izz="0.00012598481021" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../meshes/gluon_link_4.STL" />
+      </geometry>
+      <material name="link4_material_0">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="7.12834298611e-05 0 -0.0715999929234" rpy="0 0 0" />
+      <geometry>
+        <box size="0.0718087852001 0.0613211132586 0.14919998683" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="axis_joint_4" type="revolute">
+    <origin xyz="0.173 1.58E-05 -0.1557" rpy="-3.1412 0 0" />
+    <parent link="link3" />
+    <child link="link4" />
+    <axis xyz="0 0 1" />
+    <limit lower="-3.0" upper="3.0" effort="150.0" velocity="3.0" />
+  </joint>
+  <link name="link5">
+    <inertial>
+      <origin xyz="0.000783744246946 6.53563453567e-06 -0.00706352906943" rpy="0 0 0" />
+      <mass value="0.331121956513" />
+      <inertia ixx="0.00022165760529" ixy="-1.25202341439e-08" ixz="1.16127307876e-05" iyy="0.000223774139355" iyz="4.72231844646e-08" izz="0.000125408527513" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../meshes/gluon_link_5.STL" />
+      </geometry>
+      <material name="link5_material_0">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.00212998129427 -1.86264514923e-09 -0.0333256628364" rpy="0 0 0" />
+      <geometry>
+        <box size="0.0673086158931 0.0613211132586 0.149199981242" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="axis_joint_5" type="revolute">
+    <origin xyz="0 0 -0.11743" rpy="3.1416 1.5708 0" />
+    <parent link="link4" />
+    <child link="link5" />
+    <axis xyz="0 0 1" />
+    <limit lower="-3.0" upper="3.0" effort="150.0" velocity="3.0" />
+  </joint>
+  <link name="link6">
+    <inertial>
+      <origin xyz="2.97302335458e-06 2.20818414454e-06 0.00359315675129" rpy="0 0 0" />
+      <mass value="0.279143512223" />
+      <inertia ixx="0.000173602411677" ixy="-7.65698806322e-09" ixz="-2.46489118208e-08" iyy="0.000174128037886" iyz="-9.5258445746e-09" izz="9.95542495303e-05" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../meshes/gluon_link_6.STL" />
+      </geometry>
+      <material name="link6_material_0">
+        <color rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-9.31322574615e-10 -9.0803951025e-07 0.0283736602869" rpy="0 0 0" />
+      <geometry>
+        <box size="0.0519999992102 0.0613243635744 0.0647672680207" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="axis_joint_6" type="revolute">
+    <origin xyz="0.019524 2.2696E-05 -0.079176" rpy="3.1412 1.5708 0" />
+    <parent link="link5" />
+    <child link="link6" />
+    <axis xyz="0 0 -1" />
+    <limit lower="-3.0" upper="3.0" effort="150.0" velocity="3.0" />
+  </joint>
+</robot>

@@ -1,0 +1,13 @@
+name,isaac_shape,mujoco_shape,max_abs_diff
+obs_current,"(33,)","(33,)",0.0
+obs_history,"(10, 33)","(10, 33)",0.0
+policy_action_raw,"(8,)","(8,)",0.0
+base_ang_vel,"(3,)","(3,)",0.0
+projected_gravity,"(3,)","(3,)",0.0
+command,"(3,)","(3,)",0.0
+joint_pos_error,"(8,)","(8,)",0.0
+joint_vel,"(8,)","(8,)",0.0
+last_action,"(8,)","(8,)",0.0
+history_first_row,"(33,)","(33,)",0.0
+history_last_row,"(33,)","(33,)",0.0
+ONNX(isaac_input)_vs_ONNX(mujoco_input),"(8,)","(8,)",0.0

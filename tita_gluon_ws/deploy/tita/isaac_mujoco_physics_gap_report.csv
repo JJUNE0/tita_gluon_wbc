@@ -1,0 +1,32 @@
+parameter,isaac_nominal,isaac_dr_range,mujoco_value,inside_dr_range,severity,note
+robot_material.static_friction,1.0,"[0.2, 1.6]",0.4,True,LOW,MuJoCo wheel sliding friction compared against Isaac robot body material randomization.
+robot_material.dynamic_friction,1.0,"[0.2, 1.6]",0.4,True,MEDIUM,MuJoCo uses a single sliding friction value per geom; Isaac randomizes static/dynamic separately.
+robot_material.restitution,0.0,"[0.0, 1.0]",1.0,True,MEDIUM,Not directly comparable here; MuJoCo dump did not expose restitution on geoms.
+ground.static_friction,1.0,,1.0,,MEDIUM,Ground is fixed in Isaac flat task. MuJoCo floor sliding friction should be compared directly.
+ground.rolling_friction,0.0,,0.0001,,MEDIUM,Isaac flat terrain config does not expose MuJoCo-style rolling friction. Contact semantics differ.
+base_link.mass,11.36326789855957,"(10.86326789855957, 13.36326789855957)",13.2,True,LOW,Isaac randomizes base mass additively on base_link only.
+base_link.inertia_xx,0.10787048190832138,"(0.09708343371748925, 0.11865753009915353)",0.061855,False,HIGH,Isaac randomizes only diagonal inertia by scaling.
+base_link.inertia_yy,0.2583353817462921,"(0.2325018435716629, 0.28416891992092136)",0.036934,False,HIGH,Isaac randomizes only diagonal inertia by scaling.
+base_link.inertia_zz,0.3123105764389038,"(0.2810795187950134, 0.3435416340827942)",0.071232,False,HIGH,Isaac randomizes only diagonal inertia by scaling.
+base_link.com_x,0.0,"[-0.05, 0.05]",0.020452,True,LOW,Isaac randomizes COM offset; MuJoCo body inertial frame offset compared directly.
+base_link.com_y,0.0,"[-0.05, 0.05]",3.5457e-06,True,LOW,Isaac randomizes COM offset; MuJoCo body inertial frame offset compared directly.
+base_link.com_z,0.0,"[-0.05, 0.05]",0.01871,True,LOW,Isaac randomizes COM offset; MuJoCo body inertial frame offset compared directly.
+joint_left_leg_1.stiffness,60.0,"(48.0, 72.0)",,,MEDIUM,MuJoCo XML motor actuator has no built-in stiffness; controller semantics must supply it.
+joint_left_leg_1.damping,1.5,"(1.2000000000000002, 1.7999999999999998)",0.1,False,HIGH,"Joint damping compares XML/runtime damping only, not controller damping."
+joint_right_leg_1.stiffness,60.0,"(48.0, 72.0)",,,MEDIUM,MuJoCo XML motor actuator has no built-in stiffness; controller semantics must supply it.
+joint_right_leg_1.damping,1.5,"(1.2000000000000002, 1.7999999999999998)",0.1,False,HIGH,"Joint damping compares XML/runtime damping only, not controller damping."
+joint_left_leg_2.stiffness,60.0,"(48.0, 72.0)",,,MEDIUM,MuJoCo XML motor actuator has no built-in stiffness; controller semantics must supply it.
+joint_left_leg_2.damping,1.5,"(1.2000000000000002, 1.7999999999999998)",0.1,False,HIGH,"Joint damping compares XML/runtime damping only, not controller damping."
+joint_right_leg_2.stiffness,60.0,"(48.0, 72.0)",,,MEDIUM,MuJoCo XML motor actuator has no built-in stiffness; controller semantics must supply it.
+joint_right_leg_2.damping,1.5,"(1.2000000000000002, 1.7999999999999998)",0.1,False,HIGH,"Joint damping compares XML/runtime damping only, not controller damping."
+joint_left_leg_3.stiffness,60.0,"(48.0, 72.0)",,,MEDIUM,MuJoCo XML motor actuator has no built-in stiffness; controller semantics must supply it.
+joint_left_leg_3.damping,1.5,"(1.2000000000000002, 1.7999999999999998)",0.1,False,HIGH,"Joint damping compares XML/runtime damping only, not controller damping."
+joint_right_leg_3.stiffness,60.0,"(48.0, 72.0)",,,MEDIUM,MuJoCo XML motor actuator has no built-in stiffness; controller semantics must supply it.
+joint_right_leg_3.damping,1.5,"(1.2000000000000002, 1.7999999999999998)",0.1,False,HIGH,"Joint damping compares XML/runtime damping only, not controller damping."
+joint_left_leg_4.stiffness,0.0,"(0.0, 0.0)",,,MEDIUM,MuJoCo XML motor actuator has no built-in stiffness; controller semantics must supply it.
+joint_left_leg_4.damping,0.5,"(0.4, 0.6)",0.1,False,HIGH,"Joint damping compares XML/runtime damping only, not controller damping."
+joint_right_leg_4.stiffness,0.0,"(0.0, 0.0)",,,MEDIUM,MuJoCo XML motor actuator has no built-in stiffness; controller semantics must supply it.
+joint_right_leg_4.damping,0.5,"(0.4, 0.6)",0.1,False,HIGH,"Joint damping compares XML/runtime damping only, not controller damping."
+physics_dt,0.005,,0.005,,LOW,Direct timing comparison. This may intentionally differ when using ddt_reference_500hz mode.
+policy_dt,0.02,,,,MEDIUM,"Compare with active MuJoCo timing config, not raw XML dump."
+solver_position_iterations,4,,100,,MEDIUM,PhysX articulation iterations vs MuJoCo solver iterations are not directly equivalent.

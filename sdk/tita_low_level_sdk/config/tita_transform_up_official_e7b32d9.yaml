@@ -1,0 +1,13 @@
+# Verbatim values from DDTRobot/ddt_ros2_control
+# commit e7b32d9746df900680641ff2845ffb0b5ffe99ed
+# controller/rl_controller/config/tita/controllers.yaml: transform_up
+source_repository: "https://github.com/DDTRobot/ddt_ros2_control.git"
+source_commit: "e7b32d9746df900680641ff2845ffb0b5ffe99ed"
+source_config_sha256: "9298b8d030b22b405490c1e14bb9b78ae0151366ffb46d1ddc3463c514644d91"
+fold_jpos: [0.75, 1.20, -2.7, 0.0, -0.75, 1.2, -2.7, 0.0]
+stand_jpos: [-0.05, 0.9, -2.6, 0.0, 0.05, 0.90, -2.6, 0.0]
+fold_timer: 4.0
+stand_timer: 2.0
+ff_torque: [-20.0, 0.0, -25.0, 0.0, 20.0, 0.0, -25.0, 0.0]
+joint_kp: [600.0, 80.0, 80.0, 5.0, 600.0, 80.0, 80.0, 5.0]
+joint_kd: [8.0, 8.0, 8.0, 0.5, 8.0, 8.0, 8.0, 0.5]

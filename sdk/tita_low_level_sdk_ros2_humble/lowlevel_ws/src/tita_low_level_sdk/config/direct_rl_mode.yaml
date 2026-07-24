@@ -1,0 +1,69 @@
+/**:
+  ros__parameters:
+    tita_ns: "tita4252763"
+    policy_path: "/home/robot/tita_policy/policy.onnx"
+    policy_rate_hz: 50.0
+
+    # A launch argument is only intent. The READY-state operator_arm service is a
+    # separate gate, and production remains blocked without official mode/recovery evidence.
+    execute_vendor_stop: false
+    execute_start_bash: false
+    enable_hardware_output: false
+    operator_arm: false
+    auto_enter_rl: false
+    direct_soak_only: false
+    respawn: false
+    requested_stage: 1
+
+    vendor_service: "tita-bringup.service"
+    official_start_bash_path: "/home/robot/direct_ws/src/ddt_ros2_control/start.bash"
+    official_start_bash_sha256: "0a2bca4a146f9127ad558b50ca745826cc93ee920f3bb9538521555ea94f97b3"
+    official_hardware_launch_path: "/home/robot/direct_ws/install/tita_stage1_controller/share/tita_stage1_controller/launch/stage1_hardware.launch.py"
+    official_soak_launch_path: "/home/robot/direct_ws/install/tita_stage1_controller/share/tita_stage1_controller/launch/direct_readonly_soak.launch.py"
+    upstream_commit: "e7b32d9746df900680641ff2845ffb0b5ffe99ed"
+    production_preflight_report_path: "/home/robot/direct_ws/stage1_preflight.json"
+    # Must be replaced with an operator-confirmed identifier for each full-power session.
+    power_session_id: ""
+    direct_session_ledger_path: "/home/robot/direct_ws/runtime/direct_session.json"
+    takeover_token_file: "/home/robot/direct_ws/runtime/stage1_takeover.token"
+    stand_profile_path: ""
+    stand_profile_sha256: "b4e7c17112dddf4beb485d398a4bdb6e77e623e590e0ccfe6c6ac1d6deae5920"
+
+    # The operator accepted Stage 1 composite confirmation: official script success followed by
+    # bridge activation, eight-joint state, interface claim, TransformUp and sustained feedback.
+    direct_ack_available: true
+    recovery_confirmed: true
+    emergency_procedure_confirmed: false
+    vendor_stop_timeout_sec: 10.0
+    start_bash_timeout_sec: 3.0
+    hardware_confirmation_timeout_sec: 10.0
+
+    preflight_duration_sec: 5.0
+    message_timeout_sec: 0.5
+    command_timeout_sec: 0.25
+    command_zero_tolerance: 0.05
+    direct_ack_timeout_sec: 2.0
+    standing_completion_sec: 0.25
+    standing_settle_sec: 5.0
+    rl_prepare_sec: 1.0
+    rl_blend_sec: 1.0
+    max_leg_target_delta_rad: 0.25
+    max_leg_target_slew_rad_s: 0.5
+    max_wheel_velocity_rad_s: 5.0
+    max_wheel_accel_rad_s: 5.0
+    max_effort: 60.0
+    max_repeated_clipping: 5
+
+    # Official FSMState_TransformUp data, mirrored in the hashed profile file.
+    stand_fold_position: [0.75, 1.20, -2.7, 0.0, -0.75, 1.2, -2.7, 0.0]
+    stand_position: [-0.05, 0.9, -2.6, 0.0, 0.05, 0.90, -2.6, 0.0]
+    stand_fold_duration_sec: 4.0
+    stand_duration_sec: 2.0
+    stand_kp: [600.0, 80.0, 80.0, 5.0, 600.0, 80.0, 80.0, 5.0]
+    stand_kd: [8.0, 8.0, 8.0, 0.5, 8.0, 8.0, 8.0, 0.5]
+    stand_feedforward_effort: [-20.0, 0.0, -25.0, 0.0, 20.0, 0.0, -25.0, 0.0]
+
+    logger_enabled: true
+    logger_output_root: "/home/robot/lowlevel_ws/runs"
+    logger_queue_size: 1024
+    logger_test_label: "direct_rl_preflight"

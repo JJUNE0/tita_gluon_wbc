@@ -1,0 +1,6 @@
+repositories:
+  ddt_ros2_control:
+    type: git
+    url: https://github.com/DDTRobot/ddt_ros2_control.git
+    version: e7b32d9746df900680641ff2845ffb0b5ffe99ed
+

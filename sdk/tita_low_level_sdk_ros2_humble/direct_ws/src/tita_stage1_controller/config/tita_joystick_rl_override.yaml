@@ -1,0 +1,8 @@
+/**:
+  tita_stage1_controller:
+    ros__parameters:
+      stage2:
+        require_zero_joystick: false
+        # Zero means no automatic RL_RUNNING timeout. Operator stop uses the
+        # controller-owned ~/request_safe_hold service; watchdogs remain active.
+        rl_running_seconds: 0.0

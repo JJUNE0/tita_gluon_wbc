@@ -1,0 +1,1454 @@
+{
+  "model_path": "/home/cocel/Desktop/Research/DDT_Lab/ddt_ros2_control/urdfs/tita_description/mujoco/scene.xml",
+  "config_path": "/home/cocel/Desktop/Research/DDT_Lab/cosim_ros2_jazzy/config/tita.yaml",
+  "sim": {
+    "xml_default_timestep": 0.002,
+    "active_timestep": 0.005,
+    "integrator": 0,
+    "cone": 1,
+    "solver": 2,
+    "iterations": 100,
+    "ls_iterations": 50,
+    "noslip_iterations": 0,
+    "gravity": [
+      0.0,
+      0.0,
+      -9.81
+    ],
+    "wind": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "counts": {
+    "nq": 15,
+    "nv": 14,
+    "nu": 8,
+    "nbody": 10,
+    "njnt": 9,
+    "ngeom": 23,
+    "nsensor": 29
+  },
+  "joint_rows": [
+    {
+      "joint_index": 0,
+      "joint_name": "<joint:0>",
+      "qpos_adr": 0,
+      "qvel_adr": 0,
+      "type": 0,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        0.0,
+        0.0
+      ],
+      "damping": 0.0,
+      "armature": 0.0,
+      "frictionloss": 0.0
+    },
+    {
+      "joint_index": 1,
+      "joint_name": "joint_left_leg_1",
+      "qpos_adr": 7,
+      "qvel_adr": 6,
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -0.785398,
+        0.785398
+      ],
+      "damping": 0.1,
+      "armature": 0.01,
+      "frictionloss": 0.2
+    },
+    {
+      "joint_index": 2,
+      "joint_name": "joint_left_leg_2",
+      "qpos_adr": 8,
+      "qvel_adr": 7,
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -1.91986,
+        3.49066
+      ],
+      "damping": 0.1,
+      "armature": 0.01,
+      "frictionloss": 0.2
+    },
+    {
+      "joint_index": 3,
+      "joint_name": "joint_left_leg_3",
+      "qpos_adr": 9,
+      "qvel_adr": 8,
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -2.67035,
+        -0.698132
+      ],
+      "damping": 0.1,
+      "armature": 0.01,
+      "frictionloss": 0.2
+    },
+    {
+      "joint_index": 4,
+      "joint_name": "joint_left_leg_4",
+      "qpos_adr": 10,
+      "qvel_adr": 9,
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -62831.8,
+        62831.8
+      ],
+      "damping": 0.1,
+      "armature": 0.01,
+      "frictionloss": 0.2
+    },
+    {
+      "joint_index": 5,
+      "joint_name": "joint_right_leg_1",
+      "qpos_adr": 11,
+      "qvel_adr": 10,
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -0.785398,
+        0.785398
+      ],
+      "damping": 0.1,
+      "armature": 0.01,
+      "frictionloss": 0.2
+    },
+    {
+      "joint_index": 6,
+      "joint_name": "joint_right_leg_2",
+      "qpos_adr": 12,
+      "qvel_adr": 11,
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -1.91986,
+        3.49066
+      ],
+      "damping": 0.1,
+      "armature": 0.01,
+      "frictionloss": 0.2
+    },
+    {
+      "joint_index": 7,
+      "joint_name": "joint_right_leg_3",
+      "qpos_adr": 13,
+      "qvel_adr": 12,
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -2.67035,
+        -0.698132
+      ],
+      "damping": 0.1,
+      "armature": 0.01,
+      "frictionloss": 0.2
+    },
+    {
+      "joint_index": 8,
+      "joint_name": "joint_right_leg_4",
+      "qpos_adr": 14,
+      "qvel_adr": 13,
+      "type": 3,
+      "axis": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "range": [
+        -62831.8,
+        62831.8
+      ],
+      "damping": 0.1,
+      "armature": 0.01,
+      "frictionloss": 0.2
+    }
+  ],
+  "actuator_rows": [
+    {
+      "actuator_index": 0,
+      "actuator_name": "left_leg_1",
+      "joint_name": "joint_left_leg_1",
+      "trntype": 0,
+      "dyntype": 0,
+      "gaintype": 0,
+      "biastype": 0,
+      "ctrllimited": false,
+      "ctrlrange": [
+        0.0,
+        0.0
+      ],
+      "forcelimited": false,
+      "forcerange": [
+        0.0,
+        0.0
+      ],
+      "gear": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "actuator_index": 1,
+      "actuator_name": "left_leg_2",
+      "joint_name": "joint_left_leg_2",
+      "trntype": 0,
+      "dyntype": 0,
+      "gaintype": 0,
+      "biastype": 0,
+      "ctrllimited": false,
+      "ctrlrange": [
+        0.0,
+        0.0
+      ],
+      "forcelimited": false,
+      "forcerange": [
+        0.0,
+        0.0
+      ],
+      "gear": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "actuator_index": 2,
+      "actuator_name": "left_leg_3",
+      "joint_name": "joint_left_leg_3",
+      "trntype": 0,
+      "dyntype": 0,
+      "gaintype": 0,
+      "biastype": 0,
+      "ctrllimited": false,
+      "ctrlrange": [
+        0.0,
+        0.0
+      ],
+      "forcelimited": false,
+      "forcerange": [
+        0.0,
+        0.0
+      ],
+      "gear": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "actuator_index": 3,
+      "actuator_name": "left_leg_4",
+      "joint_name": "joint_left_leg_4",
+      "trntype": 0,
+      "dyntype": 0,
+      "gaintype": 0,
+      "biastype": 0,
+      "ctrllimited": false,
+      "ctrlrange": [
+        0.0,
+        0.0
+      ],
+      "forcelimited": false,
+      "forcerange": [
+        0.0,
+        0.0
+      ],
+      "gear": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "actuator_index": 4,
+      "actuator_name": "right_leg_1",
+      "joint_name": "joint_right_leg_1",
+      "trntype": 0,
+      "dyntype": 0,
+      "gaintype": 0,
+      "biastype": 0,
+      "ctrllimited": false,
+      "ctrlrange": [
+        0.0,
+        0.0
+      ],
+      "forcelimited": false,
+      "forcerange": [
+        0.0,
+        0.0
+      ],
+      "gear": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "actuator_index": 5,
+      "actuator_name": "right_leg_2",
+      "joint_name": "joint_right_leg_2",
+      "trntype": 0,
+      "dyntype": 0,
+      "gaintype": 0,
+      "biastype": 0,
+      "ctrllimited": false,
+      "ctrlrange": [
+        0.0,
+        0.0
+      ],
+      "forcelimited": false,
+      "forcerange": [
+        0.0,
+        0.0
+      ],
+      "gear": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "actuator_index": 6,
+      "actuator_name": "right_leg_3",
+      "joint_name": "joint_right_leg_3",
+      "trntype": 0,
+      "dyntype": 0,
+      "gaintype": 0,
+      "biastype": 0,
+      "ctrllimited": false,
+      "ctrlrange": [
+        0.0,
+        0.0
+      ],
+      "forcelimited": false,
+      "forcerange": [
+        0.0,
+        0.0
+      ],
+      "gear": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "actuator_index": 7,
+      "actuator_name": "right_leg_4",
+      "joint_name": "joint_right_leg_4",
+      "trntype": 0,
+      "dyntype": 0,
+      "gaintype": 0,
+      "biastype": 0,
+      "ctrllimited": false,
+      "ctrlrange": [
+        0.0,
+        0.0
+      ],
+      "forcelimited": false,
+      "forcerange": [
+        0.0,
+        0.0
+      ],
+      "gear": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "body_rows": [
+    {
+      "body_index": 0,
+      "body_name": "world",
+      "mass": 0.0,
+      "inertia": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ipos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "iquat": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "body_index": 1,
+      "body_name": "base_link",
+      "mass": 13.2,
+      "inertia": [
+        0.061855,
+        0.036934,
+        0.071232
+      ],
+      "ipos": [
+        0.020452,
+        3.5457e-06,
+        0.01871
+      ],
+      "iquat": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "body_index": 2,
+      "body_name": "left_leg_1",
+      "mass": 2.064,
+      "inertia": [
+        0.00430758,
+        0.0029982,
+        0.00226711
+      ],
+      "ipos": [
+        0.0016025,
+        5.0253e-05,
+        0.000638
+      ],
+      "iquat": [
+        0.9998042946806632,
+        -0.0010502003095343012,
+        -0.019755005822557726,
+        -9.572022821242166e-05
+      ]
+    },
+    {
+      "body_index": 3,
+      "body_name": "left_leg_2",
+      "mass": 3.0984,
+      "inertia": [
+        0.00883636,
+        0.00648624,
+        0.00297469
+      ],
+      "ipos": [
+        0.021763,
+        0.0019069,
+        -0.027868
+      ],
+      "iquat": [
+        -0.009314580017133534,
+        0.7117770013092652,
+        0.010108400018593713,
+        0.7022710012917797
+      ]
+    },
+    {
+      "body_index": 4,
+      "body_name": "left_leg_3",
+      "mass": 0.57244,
+      "inertia": [
+        0.00342536,
+        0.00324384,
+        0.000258551
+      ],
+      "ipos": [
+        0.095348,
+        0.011698,
+        0.001838
+      ],
+      "iquat": [
+        0.037529988229265225,
+        0.6921687829113319,
+        -0.0472809851710069,
+        0.7192067744312591
+      ]
+    },
+    {
+      "body_index": 5,
+      "body_name": "left_leg_4",
+      "mass": 1.5094,
+      "inertia": [
+        0.0069049,
+        0.00354775,
+        0.00350415
+      ],
+      "ipos": [
+        -2.267e-06,
+        -1.6471e-06,
+        -0.00095616
+      ],
+      "iquat": [
+        0.4576148474442773,
+        0.5390308203025169,
+        -0.45764884743294265,
+        0.5390658202908489
+      ]
+    },
+    {
+      "body_index": 6,
+      "body_name": "right_leg_1",
+      "mass": 2.064,
+      "inertia": [
+        0.00430758,
+        0.0029982,
+        0.00226711
+      ],
+      "ipos": [
+        -0.0016025,
+        5.0253e-05,
+        0.00063801
+      ],
+      "iquat": [
+        0.9998043009237658,
+        -0.0010442603143042553,
+        0.019755005945914395,
+        9.547152873527542e-05
+      ]
+    },
+    {
+      "body_index": 7,
+      "body_name": "right_leg_2",
+      "mass": 3.0987,
+      "inertia": [
+        0.00883636,
+        0.00648624,
+        0.00297469
+      ],
+      "ipos": [
+        0.021763,
+        0.0019065,
+        0.027873
+      ],
+      "iquat": [
+        -0.010110199814882261,
+        0.7022719871414014,
+        0.009315809829427542,
+        0.7117759869673831
+      ]
+    },
+    {
+      "body_index": 8,
+      "body_name": "right_leg_3",
+      "mass": 0.57244,
+      "inertia": [
+        0.00342536,
+        0.00324384,
+        0.000258551
+      ],
+      "ipos": [
+        0.095348,
+        0.011698,
+        -0.001838
+      ],
+      "iquat": [
+        0.0472809851710069,
+        0.7192067744312591,
+        -0.037529988229265225,
+        0.6921687829113319
+      ]
+    },
+    {
+      "body_index": 9,
+      "body_name": "right_leg_4",
+      "mass": 1.5094,
+      "inertia": [
+        0.0069047,
+        0.00354767,
+        0.00350403
+      ],
+      "ipos": [
+        -2.3798e-06,
+        -1.5854e-06,
+        0.00095595
+      ],
+      "iquat": [
+        0.45722084145801484,
+        0.5394288129522824,
+        -0.4571858414701511,
+        0.5393948129640719
+      ]
+    }
+  ],
+  "geom_rows": [
+    {
+      "geom_index": 0,
+      "geom_name": "floor",
+      "body_name": "world",
+      "type": 0,
+      "size": [
+        0.0,
+        0.0,
+        0.05
+      ],
+      "friction": [
+        1.0,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 3,
+      "margin": 0.0
+    },
+    {
+      "geom_index": 1,
+      "geom_name": "<unnamed:1>",
+      "body_name": "world",
+      "type": 6,
+      "size": [
+        0.1,
+        2.0,
+        0.04
+      ],
+      "friction": [
+        1.0,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 3,
+      "margin": 0.0
+    },
+    {
+      "geom_index": 2,
+      "geom_name": "<unnamed:2>",
+      "body_name": "world",
+      "type": 6,
+      "size": [
+        0.1,
+        2.0,
+        0.04
+      ],
+      "friction": [
+        1.0,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 3,
+      "margin": 0.0
+    },
+    {
+      "geom_index": 3,
+      "geom_name": "<unnamed:3>",
+      "body_name": "world",
+      "type": 6,
+      "size": [
+        0.2,
+        2.0,
+        0.15
+      ],
+      "friction": [
+        1.0,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 3,
+      "margin": 0.0
+    },
+    {
+      "geom_index": 4,
+      "geom_name": "<unnamed:4>",
+      "body_name": "world",
+      "type": 6,
+      "size": [
+        0.22,
+        2.0,
+        0.3
+      ],
+      "friction": [
+        1.0,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 3,
+      "margin": 0.0
+    },
+    {
+      "geom_index": 5,
+      "geom_name": "<unnamed:5>",
+      "body_name": "world",
+      "type": 6,
+      "size": [
+        0.23,
+        2.0,
+        0.45
+      ],
+      "friction": [
+        1.0,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 3,
+      "margin": 0.0
+    },
+    {
+      "geom_index": 6,
+      "geom_name": "<unnamed:6>",
+      "body_name": "world",
+      "type": 6,
+      "size": [
+        0.24,
+        2.0,
+        0.6
+      ],
+      "friction": [
+        1.0,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 3,
+      "margin": 0.0
+    },
+    {
+      "geom_index": 7,
+      "geom_name": "<unnamed:7>",
+      "body_name": "world",
+      "type": 6,
+      "size": [
+        0.25,
+        2.0,
+        0.75
+      ],
+      "friction": [
+        1.0,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 3,
+      "margin": 0.0
+    },
+    {
+      "geom_index": 8,
+      "geom_name": "<unnamed:8>",
+      "body_name": "world",
+      "type": 6,
+      "size": [
+        0.26,
+        2.0,
+        0.9
+      ],
+      "friction": [
+        1.0,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 3,
+      "margin": 0.0
+    },
+    {
+      "geom_index": 9,
+      "geom_name": "<unnamed:9>",
+      "body_name": "base_link",
+      "type": 7,
+      "size": [
+        0.11492169428343224,
+        0.1562165984966215,
+        0.27749477908598535
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 10,
+      "geom_name": "<unnamed:10>",
+      "body_name": "base_link",
+      "type": 6,
+      "size": [
+        0.235,
+        0.15,
+        0.095
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 11,
+      "geom_name": "<unnamed:11>",
+      "body_name": "left_leg_1",
+      "type": 7,
+      "size": [
+        0.05772524824509284,
+        0.06327623968874223,
+        0.08630014741425852
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 12,
+      "geom_name": "<unnamed:12>",
+      "body_name": "left_leg_2",
+      "type": 7,
+      "size": [
+        0.07649581453103672,
+        0.07541570005488688,
+        0.19497621287452518
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 13,
+      "geom_name": "<unnamed:13>",
+      "body_name": "left_leg_3",
+      "type": 7,
+      "size": [
+        0.03192408266519909,
+        0.05442126628594618,
+        0.14185394848412367
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 14,
+      "geom_name": "<unnamed:14>",
+      "body_name": "left_leg_3",
+      "type": 6,
+      "size": [
+        0.1,
+        0.035,
+        0.025
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 15,
+      "geom_name": "<unnamed:15>",
+      "body_name": "left_leg_4",
+      "type": 7,
+      "size": [
+        0.021617927242865848,
+        0.09292939726200897,
+        0.09298750496436504
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 16,
+      "geom_name": "<unnamed:16>",
+      "body_name": "left_leg_4",
+      "type": 5,
+      "size": [
+        0.0925,
+        0.017,
+        0.0
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 17,
+      "geom_name": "<unnamed:17>",
+      "body_name": "right_leg_1",
+      "type": 7,
+      "size": [
+        0.05769218855312211,
+        0.06327718740052389,
+        0.0863138205391248
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 18,
+      "geom_name": "<unnamed:18>",
+      "body_name": "right_leg_2",
+      "type": 7,
+      "size": [
+        0.07798599502767127,
+        0.07903798912017354,
+        0.1946747341995555
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 19,
+      "geom_name": "<unnamed:19>",
+      "body_name": "right_leg_3",
+      "type": 7,
+      "size": [
+        0.031924037640538895,
+        0.05442129808919657,
+        0.1418536858097083
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 20,
+      "geom_name": "<unnamed:20>",
+      "body_name": "right_leg_3",
+      "type": 6,
+      "size": [
+        0.1,
+        0.035,
+        0.025
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 21,
+      "geom_name": "<unnamed:21>",
+      "body_name": "right_leg_4",
+      "type": 7,
+      "size": [
+        0.021617939832989527,
+        0.09292925355788899,
+        0.09298757387874214
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 22,
+      "geom_name": "<unnamed:22>",
+      "body_name": "right_leg_4",
+      "type": 5,
+      "size": [
+        0.0925,
+        0.017,
+        0.0
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    }
+  ],
+  "wheel_geom_summary": [
+    {
+      "geom_index": 15,
+      "geom_name": "<unnamed:15>",
+      "body_name": "left_leg_4",
+      "type": 7,
+      "size": [
+        0.021617927242865848,
+        0.09292939726200897,
+        0.09298750496436504
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 16,
+      "geom_name": "<unnamed:16>",
+      "body_name": "left_leg_4",
+      "type": 5,
+      "size": [
+        0.0925,
+        0.017,
+        0.0
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 21,
+      "geom_name": "<unnamed:21>",
+      "body_name": "right_leg_4",
+      "type": 7,
+      "size": [
+        0.021617939832989527,
+        0.09292925355788899,
+        0.09298757387874214
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    },
+    {
+      "geom_index": 22,
+      "geom_name": "<unnamed:22>",
+      "body_name": "right_leg_4",
+      "type": 5,
+      "size": [
+        0.0925,
+        0.017,
+        0.0
+      ],
+      "friction": [
+        0.4,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 1,
+      "margin": 0.001
+    }
+  ],
+  "floor_geom_summary": [
+    {
+      "geom_index": 0,
+      "geom_name": "floor",
+      "body_name": "world",
+      "type": 0,
+      "size": [
+        0.0,
+        0.0,
+        0.05
+      ],
+      "friction": [
+        1.0,
+        0.005,
+        0.0001
+      ],
+      "solref": [
+        0.02,
+        1.0
+      ],
+      "solimp": [
+        0.9,
+        0.95,
+        0.001,
+        0.5,
+        2.0
+      ],
+      "condim": 3,
+      "margin": 0.0
+    }
+  ]
+}

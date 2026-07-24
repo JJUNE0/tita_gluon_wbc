@@ -1,0 +1,32 @@
+# Build and Install directories
+build/
+install/
+log/
+logs/
+*.log
+
+# Python & PyTorch Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+*.so
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.tmp
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Temporary / Backup
+*.bak
+*.orig
+usd_retry*/

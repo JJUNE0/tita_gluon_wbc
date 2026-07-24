@@ -1,0 +1,135 @@
+{
+  "startup_mode": "reference",
+  "target_state": "rl_0",
+  "transform_duration": 15.0,
+  "bridge_duration": 3.0,
+  "rl_duration": 1.0,
+  "idle_wait": 3.0,
+  "sample_counts": {
+    "state": 551,
+    "base_rpy": 551,
+    "base_ang_vel": 551,
+    "action_raw": 551,
+    "action_scaled": 551,
+    "target_wheel_vel": 551,
+    "wheel_joint_vel": 551,
+    "wheel_torque": 551,
+    "torque": 551,
+    "torque_clip": 551,
+    "joint_pos_error": 551,
+    "transform_progress": 551,
+    "reference_transform_progress": 551,
+    "bridge_progress": 551
+  },
+  "first_state": "idle",
+  "last_state": "reference_transform_up",
+  "state_sequence": [
+    "idle",
+    "reference_transform_up",
+    "reference_stand_hold"
+  ],
+  "final_base_rpy": [
+    0.08168025314807892,
+    0.09726187586784363,
+    -2.4403457641601562
+  ],
+  "final_pitch": 0.09726187586784363,
+  "max_abs_pitch": 0.6493058204650879,
+  "max_abs_roll": 3.1415927410125732,
+  "final_base_ang_vel": [
+    -0.000630637863650918,
+    -0.0007762875757180154,
+    7.521203224314377e-05
+  ],
+  "max_abs_base_ang_vel": 2.5852818489074707,
+  "final_transform_up_progress": 0.0,
+  "final_reference_transform_up_progress": 1.792724651750177e-05,
+  "final_handoff_bridge_progress": 0.0,
+  "final_action_raw_by_joint": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "max_abs_action_raw": 0.0,
+  "max_abs_action_wheels": 0.0,
+  "final_action_scaled_by_joint": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "max_abs_action_scaled": 0.0,
+  "final_target_wheel_vel_by_joint": [
+    NaN,
+    NaN,
+    NaN,
+    0.0,
+    NaN,
+    NaN,
+    NaN,
+    0.0
+  ],
+  "max_abs_target_wheel_vel": 0.0,
+  "final_wheel_joint_vel": [
+    0.00022367275960277766,
+    -0.0002515678061172366
+  ],
+  "max_abs_wheel_joint_vel": 3.006333827972412,
+  "final_wheel_torque_cmd": [
+    -0.0001455825549783185,
+    0.00012157817400293425
+  ],
+  "max_abs_wheel_torque_cmd": 1.4887828826904297,
+  "final_torque_cmd_by_joint": [
+    -16.80598258972168,
+    0.15536172688007355,
+    -24.17580795288086,
+    4.715385875897482e-05,
+    16.087779998779297,
+    0.8527730703353882,
+    -24.1246337890625,
+    -0.00033616903237998486
+  ],
+  "max_abs_torque_cmd": 25.78584861755371,
+  "final_torque_clip_by_joint": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "max_abs_torque_clip": 0.0,
+  "initial_joint_pos_error": [
+    -0.009267322719097137,
+    0.007962286472320557,
+    -0.34838831424713135,
+    1.265608549118042,
+    0.00648035854101181,
+    -0.004124164581298828,
+    -0.3511545658111572,
+    1.2378363609313965
+  ],
+  "final_joint_pos_error": [
+    0.256976455450058,
+    0.33878618478775024,
+    -1.1967430114746094,
+    12829.0859375,
+    -0.3570731580257416,
+    0.5740898251533508,
+    -1.1965091228485107,
+    11025.162109375
+  ],
+  "max_abs_joint_pos_error": 59757.55859375
+}

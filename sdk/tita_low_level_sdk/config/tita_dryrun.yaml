@@ -1,0 +1,34 @@
+/**:
+  ros__parameters:
+    tita_ns: "tita4252763"
+    policy_path: "/home/robot/tita_policy/policy.onnx"
+    policy_enabled: true
+    policy_required: false
+    rate_hz: 50.0
+    history_len: 0
+    obs_dim: 33
+    publish_debug: true
+    command_enabled: false
+    allow_command_output: false
+    require_motors_status: true
+    require_fsm_mode: true
+    policy_fsm_gate_enabled: true
+    allowed_policy_fsm_modes: []
+    fsm_timeout_sec: 0.5
+    require_fsm_freshness: true
+    fsm_settle_time_sec: 2.0
+    require_pose_gate: true
+    require_motion_gate: true
+    max_leg_position_error_rad: 0.35
+    max_base_angular_velocity_rad_s: 0.5
+    max_projected_gravity_norm_error: 0.15
+    message_timeout_sec: 0.5
+    max_abs_leg_delta_rad: 0.25
+    max_abs_wheel_vel_rad_s: 5.0
+    step_logger_enabled: true
+    step_logger_output_root: "/home/robot/lowlevel_ws/runs"
+    step_logger_queue_size: 1024
+    step_logger_event_queue_size: 256
+    step_logger_history_sec: 5.0
+    step_logger_post_fault_sec: 1.0
+    step_logger_test_label: "command_free_dryrun"
