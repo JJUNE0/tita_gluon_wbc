@@ -22,10 +22,12 @@ lab/
 
 ## ⚙️ Environment Setup & Package Registration
 
+For complete Isaac Lab environment setup, please refer to the official [Isaac Lab Pip Installation Guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/isaaclab_pip_installation.html).
+
 Activate the Isaac Lab Python virtual environment and register the `ddt_lab` package in editable mode (`pip install -e .`):
 
 ```bash
-# 1. Activate Isaac Lab virtual environment
+# 1. Activate Isaac Lab virtual environment (e.g. env_isaaclab)
 source ~/isaac/env_isaaclab/bin/activate
 
 # 2. Register new ddt_lab package location
@@ -35,6 +37,7 @@ pip install -e .
 # 3. Verify editable location points to tita_gluon_wbc
 pip show ddt_lab
 ```
+
 
 
 ---

@@ -48,12 +48,16 @@ source install/setup.bash
 ```
 
 ### RL Environment Setup (`lab`)
+
+For complete Isaac Lab installation instructions, please refer to the [Isaac Lab Pip Installation Guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/isaaclab_pip_installation.html).
+
 ```bash
-# Activate Isaac Lab virtual environment
+# Activate Isaac Lab virtual environment (e.g. env_isaaclab)
 source ~/isaac/env_isaaclab/bin/activate
 
 # Register new ddt_lab package location
 cd lab/ddt_lab
 pip install -e .
 ```
+
 
