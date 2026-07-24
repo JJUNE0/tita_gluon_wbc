@@ -501,7 +501,7 @@ class RewardsCfg:
         params={
             # "asset_cfg": SceneEntityCfg("robot", body_names="base_link"),
             # "sensor_cfg": SceneEntityCfg("height_scanner_base"),
-            "target_height": 0.3,
+            "target_height": 0.335,
         },
     )
 

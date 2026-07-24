@@ -206,11 +206,11 @@ class MyTitaFlatEnvCfg(TitaFlatEnvCfg):
         self.observations.estimator_target = EstimatorTargetCfg()
 
         # ---- reward tuning (see class docstring for the settled rationale) ----
-        self.rewards.ang_vel_xy_l2.weight = -0.1
-        self.rewards.action_rate_l2.weight = -0.02
-        self.rewards.dof_acc_l2.weight = -2.5e-6
+        self.rewards.ang_vel_xy_l2.weight = -0.05
+        self.rewards.action_rate_l2.weight = -0.01
+
         self.rewards.track_lin_vel_xy_exp.weight = 2.0
-        self.rewards.track_ang_vel_z_exp.weight = 2.0
+        self.rewards.track_ang_vel_z_exp.weight = 1.0
         self.rewards.joint_deviation_hip = RewTerm(
             func=mdp.joint_deviation_l1,
             weight=-1.0,
@@ -226,7 +226,7 @@ class MyTitaFlatEnvCfg(TitaFlatEnvCfg):
             weight=1.0,
             params={
                 "command_name": "base_velocity",
-                "sharpness": 16.0,
+                "sharpness": 8.0,
                 "command_threshold": 0.0,
                 "warmup_s": 0.0,
                 "use_z": False,

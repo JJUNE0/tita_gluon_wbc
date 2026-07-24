@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ROS 2 / colcon outputs when this package is used as a standalone workspace
+build/
+install/
+log/
+
+# Generated or local-only model/policy assets
+models/generated/
+*.onnx
+
+# ROS bag recordings and runtime captures
+*.db3
+*.mcap
+rosbag2_*/
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store

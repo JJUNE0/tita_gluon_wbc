@@ -102,6 +102,14 @@ def main():
     env_cfg.log_dir = log_dir
     print(f'[INFO] Logging experiment in directory: {log_dir}')
 
+    if agent_cfg.logger == 'wandb':
+        # Back up the ddt_lab source tree (*.py) as a W&B code artifact, on top
+        # of rsl_rl's own git-diff-patch upload (add_git_repo_to_log below).
+        os.environ.setdefault('WANDB_SAVE_CODE', 'true')
+        os.environ.setdefault(
+            'WANDB_CODE_DIR', os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        )
+
     env = gym.make(args_cli.task, cfg=env_cfg, render_mode=None)
     env = RslRlVecEnvWrapper(env, clip_actions=agent_cfg.clip_actions)
 

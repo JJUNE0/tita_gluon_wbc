@@ -1,0 +1,3 @@
+<mujoco model="ddt_tita_scene_wrapper">
+  <include file="/home/cocel/Desktop/Research/DDT_Lab/ddt_ros2_control/urdfs/tita_description/mujoco/scene.xml"/>
+</mujoco>

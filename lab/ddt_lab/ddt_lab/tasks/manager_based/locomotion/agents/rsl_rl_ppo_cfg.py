@@ -31,10 +31,13 @@ class BaseRslRlPpoRunnerCfg(RslRlOnPolicyRunnerCfg):
     """RSL-RL PPO runner cfg mirroring NP3O's current hyperparameters."""
 
     num_steps_per_env = 24
-    max_iterations = 5000
+    max_iterations = 2000
     save_interval = 100
     experiment_name = "locomotion_rslrl"
     obs_groups = {"policy": ["policy"], "critic": ["critic"]}
+
+    logger = "wandb"
+    wandb_project = "tita_gluon_wbc"
 
     policy = RslRlPpoActorCriticCfg(
         init_noise_std=1.0,

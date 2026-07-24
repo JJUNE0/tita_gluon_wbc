@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"ls /home/cocel/Desktop/Research/tita_gluon_wbc/tita_gluon_ws/deploy/tita/ 2>/dev/null | head -10\\necho \\\"---count---\\\"\\nls /home/cocel/Desktop/Research/tita_gluon_wbc/tita_gluon_ws/deploy/...",
+  "error": "Exit code 2\nactuator_response_comparison.csv\nactuator_response_comparison.json\ncorrected_kp60_10s_20260708_213816.json\ncorrected_kp60_10s_20260708_213816.npz\ncorrected_kp60_3s_20260708_213150.json\ncorrected_kp60_3s_20260708_213150.npz\ncorrected_mjcf_isaac_gains_3s_20260708_212544.json\ncorrected_mjcf_isaac_gains_3s_20260708_212544.npz\ncorrected_mjcf_mujoco_isaac_handoff_compare.csv\ncorrected_mjcf_mujoco_isaac_handoff_compare.json\n---count---\n32\n---mujoco_corrected scene check---",
+  "timestamp": "2026-07-24T09:38:29.998Z",
+  "retry_count": 1
+}
