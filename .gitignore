@@ -1,4 +1,4 @@
-# Build and Install directories
+# Build, Install & Log directories
 build/
 install/
 log/
@@ -14,14 +14,14 @@ __pycache__/
 dist/
 *.so
 
-# IDE & OS
+# IDE & OS Temporary Files
 .vscode/
 .idea/
 .DS_Store
 *.swp
 *.tmp
 
-# Virtual Environment
+# Virtual Environments
 .venv/
 venv/
 env/
@@ -30,3 +30,9 @@ env/
 *.bak
 *.orig
 usd_retry*/
+
+# Explicitly ensure markdown docs and config files are tracked
+!AGENTS.md
+!CLAUDE.md
+!README.md
+!docs/exp/**/*.md
