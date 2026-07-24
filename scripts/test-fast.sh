@@ -13,7 +13,7 @@ echo "[TEST-FAST] Checking Python Syntax across lab and sim2sim..."
 python3 -c "
 import py_compile, glob
 
-files = glob.glob('lab/**/*.py', recursive=True) + glob.glob('sim2sim/**/*.py', recursive=True)
+files = glob.glob('lab/**/*.py', recursive=True) + glob.glob('sim2sim/**/*.py', recursive=True) + glob.glob('test/**/*.py', recursive=True)
 passed = 0
 failed = 0
 for f in files:

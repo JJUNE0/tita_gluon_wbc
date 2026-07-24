@@ -31,8 +31,11 @@ env/
 *.orig
 usd_retry*/
 
-# Explicitly ensure markdown docs and config files are tracked
+# Explicitly ensure markdown docs, config files, and test directory are tracked
 !AGENTS.md
 !CLAUDE.md
 !README.md
 !docs/exp/**/*.md
+!test/
+!test/**
+

@@ -97,3 +97,13 @@ All experiment logs, evaluation reports, sim-to-sim verification results, and si
   3. Evidence Status (`PASS`, `SUSPICIOUS`, `FAIL`, etc.)
   4. Observed Metrics / Behavior / Log Summary
 
+---
+
+## 5. Debugging and test code policy
+
+When agents perform debugging, write temporary test scripts, unit tests, or trial code:
+- **Location**: ALL test-related scripts, temporary debug files, and custom test units MUST be created inside the `/test/` directory.
+- **Forbidden Locations**: Do NOT create ad-hoc scratch scripts or test files in the root directory or inside main package directories (`lab/`, `sim2sim/`, `tita_gluon_ws/`, `sdk/`).
+- **Naming**: Ensure test scripts in `/test/` follow clear, descriptive names (e.g. `test/test_onnx_runner.py`, `test/debug_joint_mapping.py`).
+
+
