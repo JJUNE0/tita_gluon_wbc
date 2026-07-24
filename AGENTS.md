@@ -81,3 +81,19 @@ For robot hardware, shutdown, watchdog, direct control, networking, Sim2Real, an
 - Never deploy to hardware automatically.
 - Never run physical robot commands automatically.
 - Merging and deployment require separate operator approval.
+
+---
+
+## 4. Experiment logging policy
+
+All experiment logs, evaluation reports, sim-to-sim verification results, and sim-to-real run summaries MUST be recorded inside the `/docs/exp/` directory.
+
+- **Directory Naming**: `/docs/exp/YYYY-MM-DD/` (Date only, e.g. `docs/exp/2026-07-24/`)
+  - Do NOT include hours/minutes in the directory name.
+- **File Naming**: `<task_or_exp_name>.md` or `<run_id>_summary.md`
+- **Required Metadata**: Every experiment entry must include:
+  1. Execution Domain (`TRAINING_SIM`, `VALIDATION_SIM`, `ROBOT_READ_ONLY`, etc.)
+  2. Policy Checkpoint SHA256 or ONNX Hash
+  3. Evidence Status (`PASS`, `SUSPICIOUS`, `FAIL`, etc.)
+  4. Observed Metrics / Behavior / Log Summary
+
