@@ -26,17 +26,23 @@
 
 ## 1. RL 학습 (`TRAINING_SIM`)
 
-Isaac Lab 환경에서 TITA + GLUON 정책을 학습합니다.
+Isaac Lab 가상환경을 활성화하고 `ddt_lab` 패키지를 등록한 후 TITA + GLUON 정책을 학습합니다.
 
 ```bash
-cd lab/ddt_lab
+# 1. Isaac Lab 가상환경 활성화
+source ~/isaac/env_isaaclab/bin/activate
 
-# Isaac Lab Python 실행 또는 conda activate env_isaaclab
+# 2. ddt_lab 패키지 설치/등록
+cd lab/ddt_lab
+pip install -e .
+
+# 3. RL 학습 실행 (NP3O 알고리즘)
 python scripts/np3o/train.py \
   --task=DDT-Velocity-Flat-Tita-My-v0 \
   --num_envs 4096 \
   --headless
 ```
+
 
 - **체크포인트 위치**: `lab/ddt_lab/logs/np3o/tita_flat/<run_id>/model_<iter>.pt`
 - **관측/행동 설계**: Actuator delay + IMU/encoder bias 반영 모듈 적용.

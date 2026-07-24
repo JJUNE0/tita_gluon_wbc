@@ -49,6 +49,11 @@ source install/setup.bash
 
 ### RL Environment Setup (`lab`)
 ```bash
+# Activate Isaac Lab virtual environment
+source ~/isaac/env_isaaclab/bin/activate
+
+# Register new ddt_lab package location
 cd lab/ddt_lab
 pip install -e .
 ```
+

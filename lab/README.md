@@ -20,19 +20,22 @@ lab/
 
 ---
 
-## ⚙️ Environment Setup
+## ⚙️ Environment Setup & Package Registration
 
-Ensure you have Isaac Sim & Isaac Lab installed, or activate your Isaac Lab Conda/Python environment:
+Activate the Isaac Lab Python virtual environment and register the `ddt_lab` package in editable mode (`pip install -e .`):
 
 ```bash
-# Example: Activate Isaac Lab Python environment
+# 1. Activate Isaac Lab virtual environment
 source ~/isaac/env_isaaclab/bin/activate
-# Or use: conda activate env_isaaclab
 
-# Install ddt_lab package in editable mode
+# 2. Register new ddt_lab package location
 cd lab/ddt_lab
 pip install -e .
+
+# 3. Verify editable location points to tita_gluon_wbc
+pip show ddt_lab
 ```
+
 
 ---
 
