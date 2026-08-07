@@ -6,5 +6,14 @@
 """ddt_lab manager-style classes (parallel to ``isaaclab.managers``)."""
 
 from .cost_manager import CostManager, CostTermCfg
+from .domain_managers import DomainManager, DomainManagerTermCfg
+from .moo_managers import MOORewardManager, MOORewardTermCfg
 
-__all__ = ["CostManager", "CostTermCfg"]
+__all__ = [
+    "CostManager",
+    "CostTermCfg",
+    "DomainManager",
+    "DomainManagerTermCfg",
+    "MOORewardManager",
+    "MOORewardTermCfg",
+]
