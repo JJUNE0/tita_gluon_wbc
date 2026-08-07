@@ -12,8 +12,9 @@ from isaaclab.assets.articulation import ArticulationCfg
 
 
 DDT_LAB_ROOT = Path(__file__).resolve().parents[4]
-GLUON_DESCRIPTION_DIR = DDT_LAB_ROOT / "gluon" / "gluon_2L6_4L3_urdf"
+GLUON_DESCRIPTION_DIR = DDT_LAB_ROOT / "sim2sim" / "gluon_2L6_4L3_urdf"
 GLUON_2L6_4L3_URDF_PATH = GLUON_DESCRIPTION_DIR / "urdf" / "gluon_2L6_4L3_sim.urdf"
+GLUON_2L6_4L3_USD_PATH = GLUON_DESCRIPTION_DIR / "usd" / "gluon_2L6_4L3.usd"
 
 GLUON_JOINT_NAMES = tuple(f"axis_joint_{index}" for index in range(1, 7))
 GLUON_BODY_NAMES = ("base_link",) + tuple(f"link{index}" for index in range(1, 7))
@@ -43,13 +44,8 @@ GLUON_SIM_NOMINAL_DAMPING = {
 
 
 GLUON_2L6_4L3_CFG = ArticulationCfg(
-    spawn=sim_utils.UrdfFileCfg(
-        asset_path=str(GLUON_2L6_4L3_URDF_PATH),
-        fix_base=True,
-        merge_fixed_joints=True,
-        replace_cylinders_with_capsules=False,
-        collider_type="convex_hull",
-        self_collision=False,
+    spawn=sim_utils.UsdFileCfg(
+        usd_path=str(GLUON_2L6_4L3_USD_PATH),
         activate_contact_sensors=False,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
@@ -61,15 +57,6 @@ GLUON_2L6_4L3_CFG = ArticulationCfg(
             enabled_self_collisions=False,
             solver_position_iteration_count=8,
             solver_velocity_iteration_count=1,
-        ),
-        # Avoid inheriting an accidental importer drive.  The actuator block
-        # below is the single source of the SIM_NOMINAL joint-drive settings.
-        joint_drive=sim_utils.UrdfConverterCfg.JointDriveCfg(
-            target_type="none",
-            gains=sim_utils.UrdfConverterCfg.JointDriveCfg.PDGainsCfg(
-                stiffness=0.0,
-                damping=0.0,
-            ),
         ),
     ),
     init_state=ArticulationCfg.InitialStateCfg(

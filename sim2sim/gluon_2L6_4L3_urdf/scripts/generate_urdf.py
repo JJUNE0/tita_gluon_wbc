@@ -14,6 +14,20 @@ SOURCE_URDF = PACKAGE_DIR / "urdf" / "left_gravity_source.urdf"
 OUTPUT_URDF = PACKAGE_DIR / "urdf" / "gluon_2L6_4L3.urdf"
 SIM_OUTPUT_URDF = PACKAGE_DIR / "urdf" / "gluon_2L6_4L3_sim.urdf"
 
+# Motor-side hard stops mapped into URDF coordinates. These control limits stay
+# seven joint degrees inside the measured mechanical stops.
+JOINT_SOFT_LIMITS_RAD = {
+    "axis_joint_1": (-2.584484342, 2.584484342),
+    "axis_joint_2": (-1.623319218, 1.651337338),
+    "axis_joint_3": (-2.443782617, 2.395065067),
+    "axis_joint_4": (-2.419633194, 2.396012955),
+    "axis_joint_5": (-2.421678546, 2.407829882),
+    # ID6 has no measured mechanical-stop sweep yet.  The calibration layer
+    # maps motor turns 0 to q6=0; the URDF enforces the operator-selected
+    # cable-safe software range around that model zero.
+    "axis_joint_6": (-2.617993878, 2.617993878),
+}
+
 # Measured masses take precedence over published nominal masses.
 MOTORS = {
     "link1": {"mass": 0.540, "diameter": 0.080, "length": 0.0693},
@@ -148,14 +162,16 @@ def main() -> None:
     world_joint = root.find("joint[@name='world_joint']")
     world_joint.find("origin").set("rpy", "0 -1.57079632679 0")
 
+    for joint_name, (lower, upper) in JOINT_SOFT_LIMITS_RAD.items():
+        limit = root.find(f"joint[@name='{joint_name}']/limit")
+        limit.set("lower", f"{lower:.9f}")
+        limit.set("upper", f"{upper:.9f}")
+
     # Re-zero joint 2: q_new = 0 represents q_source = +pi/2.  Since the
     # source axis is (0, 0, -1), post-compose the source joint origin with
-    # that +pi/2 axis rotation and shift the limits by -pi/2.
+    # that +pi/2 axis rotation. Measured limits are applied above.
     joint_2 = root.find("joint[@name='axis_joint_2']")
     joint_2.find("origin").set("rpy", "3.14159265359 -1.57079632679 0")
-    joint_2_limit = joint_2.find("limit")
-    joint_2_limit.set("lower", "-1.67079632679")
-    joint_2_limit.set("upper", "1.42920367321")
 
     for link in root.findall("link"):
         name = link.get("name")

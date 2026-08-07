@@ -3,14 +3,14 @@
   "model_id": "gluon_2L6_4L3_phase_a",
   "urdf": {
     "relative_path": "urdf/gluon_2L6_4L3.urdf",
-    "sha256": "61328068c28cbf75715dc8f13e8d921f04080419f5bfa698f51a9567dcd65a1a",
+    "sha256": "eb6bbc1f2305fac3da832a911f00efbc82b5c7af57d905b3008bc5531707089e",
     "expected_total_mass_kg": 4.267611380601286,
     "fixed_base": true,
     "joint_2_zero_note": "q2=0 in this model corresponds to q2=pi/2 in the source left_gravity model"
   },
   "sim_urdf": {
     "relative_path": "urdf/gluon_2L6_4L3_sim.urdf",
-    "sha256": "5c63fb88602f23978885ca6f99f0ca85019f1fe12e34b638e18b2399ff8da7da",
+    "sha256": "b9b25074b7a417a9e499f14fee852699ac6f8a00ab4b137f90ec843eccc8ede4",
     "derivation": "generated from the canonical URDF; removes the empty world link and replaces high-resolution collision meshes with per-link AABB boxes",
     "root_rotation_wxyz": [0.7071067811865476, 0.0, -0.7071067811865475, 0.0],
     "collision_status": "conservative Phase-A approximation; refine before obstacle or self-collision training"
@@ -26,6 +26,17 @@
     ],
     "joint_units": "rad",
     "home_joint_position": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "home_joint_position_note": "model-zero pose; joints 1-5 hardware HOMING uses the negative mechanical-limit reference, while joint 6 uses motor turns 0 as q6=0",
+    "fixed_joints": [],
+    "calibration_relative_path": "../../../tita_gluon_ws/src/gluon/config/gluon_calibration.yaml",
+    "joint_soft_limits_rad": {
+      "axis_joint_1": [-2.584484342, 2.584484342],
+      "axis_joint_2": [-1.623319218, 1.651337338],
+      "axis_joint_3": [-2.443782617, 2.395065067],
+      "axis_joint_4": [-2.419633194, 2.396012955],
+      "axis_joint_5": [-2.421678546, 2.407829882],
+      "axis_joint_6": [-2.617993878, 2.617993878]
+    },
     "end_effector_body": "link6",
     "end_effector_offset_xyz_m": [0.0, 0.0, 0.0],
     "home_end_effector_position_base_m": [0.5761957168579102, -0.000018152204575017095, -0.13600391149520874],
@@ -54,7 +65,7 @@
     "policy_rate_hz": 50,
     "action_dim": 6,
     "observation_dim": 25,
-    "status": "P0 data-path smoke only; replace with the planned explicit 27D deployment contract before training"
+    "status": "P0 data-path smoke only; define and validate the explicit 6-DOF deployment contract before training"
   },
   "deferred_v2_change": "Adding a gripper changes the end-effector frame, mass properties, observation/action contract, and requires a new model/interface version."
 }
