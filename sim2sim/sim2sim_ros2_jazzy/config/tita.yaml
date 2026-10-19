@@ -1,0 +1,13 @@
+# Shared MuJoCo model and read-only mirror pose. Policy/PD settings come from the checkpoint.
+model:
+  scene_xml: tita_gluon_ws/src/ddt_ros2_control/urdfs/tita_description/mujoco_corrected/scene.xml
+control:
+  sim_timestep: 0.005
+  decimation: 4
+command:
+  max_lin_x: 0.2
+  max_ang_z: 0.3
+robot:
+  default_joint_angles: [0.1, 0.8, -1.5, 0.0, 0.1, 0.8, -1.5, 0.0]
+  reset_base_pos: [0.0, 0.0, 0.4]
+  reset_base_quat: [1.0, 0.0, 0.0, 0.0]

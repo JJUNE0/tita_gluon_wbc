@@ -3,6 +3,7 @@ build/
 install/
 log/
 logs/
+lab/ddt_lab/logs/*
 *.log
 
 # Python & PyTorch Artifacts
@@ -39,3 +40,46 @@ usd_retry*/
 !test/
 !test/**
 
+
+# --- Local-only raw data and generated artifacts (2026-10-19) ---
+# After the re-includes above so these also apply inside test/ and docs/exp/.
+# Build trees, caches, compiled objects, logs
+**/build/
+**/install/
+**/log/
+**/__pycache__/
+*.py[cod]
+*.o
+*.log
+# Agent tool state
+**/.omc/
+# Run outputs
+lab/outputs/
+# Papers (local reference only)
+docs/paper/
+
+# docs/exp: keep reports and figures only (md, png, svg, csv, dot)
+docs/exp/**
+!docs/exp/**/
+!docs/exp/**/*.md
+!docs/exp/**/*.png
+!docs/exp/**/*.svg
+!docs/exp/**/*.csv
+!docs/exp/**/*.dot
+
+# Raw data anywhere (also inside docs/exp re-includes): ROS bags, W&B, arrays, checkpoints, videos, archives
+*_bag/
+*.db3
+*.mcap
+**/wandb/
+*.wandb
+*.npz
+*.npy
+*.pt
+*.pth
+*.mp4
+*.gz
+*.tar
+*.ply
+# Embedded third-party tool repository (separate git repo)
+test/Minta-Actuator-Studio-linux/

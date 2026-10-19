@@ -1,0 +1,71 @@
+# tita_flash_sac_193248_068255_model_75000_com_minus5mm_baseline_s921
+
+Execution Domain: VALIDATION_SIM
+
+Policy Checkpoint SHA256: 3f7331c3912ccec2acc34ba899d124f69c63f6969c89cf609ed1c0b8f22fcd9a
+
+Evidence Status: PASS
+
+Observed metrics / behavior / log summary:
+
+```json
+{
+  "execution_domain": "VALIDATION_SIM",
+  "evidence_status": "PASS",
+  "job": {
+    "id": "tita_flash_sac_193248_068255_model_75000_com_minus5mm_baseline_s921",
+    "checkpoint_id": "tita_flash_sac_193248_068255_model_75000",
+    "duration": 60.0,
+    "warmup": 1.2,
+    "seed": 921,
+    "estimator": "fk",
+    "guarded": false,
+    "physics": {
+      "com": -0.005
+    },
+    "law": {
+      "mode": "constant",
+      "bias": 0.0
+    },
+    "harness_source_sha256": "44732edc64c4d464d1589b9c6f1750ea05fedf9b89dd940c8c05058777d5240f"
+  },
+  "checkpoint_sha256": "3f7331c3912ccec2acc34ba899d124f69c63f6969c89cf609ed1c0b8f22fcd9a",
+  "onnx_sha256": "ba89df992b5d2cb9fbeaff0a274ee0d50d022a90cd2982cdd88750a3adf35d15",
+  "input_columns": [
+    "velocity_bias_m_s",
+    "filtered_velocity_m_s",
+    "integral_m_s"
+  ],
+  "state_columns": [
+    "base_x",
+    "base_y",
+    "base_z",
+    "base_forward_speed",
+    "roll",
+    "pitch",
+    "yaw",
+    "raw_position",
+    "raw_speed",
+    "fk_position",
+    "fk_speed"
+  ],
+  "initial_physics_sha256": "43c12c6c18dad17414411897690f6f386a5d8893dc7d908f863b09c3cd3afa9c",
+  "complete": true,
+  "failure": [],
+  "duration_s": 60.0,
+  "final_drift_m": 14.720485685622386,
+  "max_drift_m": 14.720485685622386,
+  "radial_IAE_m_s": 441.76096238292536,
+  "signed_longitudinal_delta_m": -12.041603402425105,
+  "tail_speed_mean_m_s": -0.2957520860282521,
+  "tail_speed_rms_m_s": 0.29582885402128933,
+  "tail_sensor_speed_mean_m_s": -0.29540137491419843,
+  "tail_fk_speed_mean_m_s": -0.2954342788497399,
+  "peak_tilt_rad": 0.041600611150684585,
+  "peak_wheel_torque_nm": 0.25579988956451416,
+  "saturation_fraction": 0.0,
+  "final_velocity_bias_m_s": 0.0,
+  "final_integral_m_s": 0.0,
+  "elapsed_wall_s": 6.903439691988751
+}
+```

@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_URDF = (
     REPO_ROOT
     / "sim2sim"
-    / "gluon_2L6_4L3_urdf"
+    / "robot" / "gluon"
     / "urdf"
     / "gluon_2L6_4L3_sim.urdf"
 )

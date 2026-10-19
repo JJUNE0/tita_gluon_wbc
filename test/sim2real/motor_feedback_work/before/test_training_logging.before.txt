@@ -1,0 +1,85 @@
+"""DESKTOP_DRY_RUN: teacher reconstruction and generated-message SQLite round trip.
+
+Source ROS and an overlay containing the new TrainingSample before running.
+No controller, hardware API or CAN socket is instantiated.
+"""
+from pathlib import Path
+import subprocess
+import tempfile
+import unittest
+
+from rclpy.serialization import deserialize_message, serialize_message
+import rosbag2_py
+from tita_controller.msg import TrainingSample
+
+REPO = Path(__file__).resolve().parents[2]
+
+
+class TrainingLoggingTest(unittest.TestCase):
+    def test_teacher_matches_corrected_pd_targets(self):
+        with tempfile.TemporaryDirectory(dir=REPO / 'test/sim2real', prefix='teacher_action_') as tmp:
+            binary = Path(tmp) / 'runtime'
+            subprocess.run([
+                'g++', '-std=c++17', '-O2', '-Wall', '-Wextra', '-Werror', '-pedantic',
+                '-I', str(REPO / 'sim2real/tita_ws/src/tita_controller/include'),
+                str(REPO / 'test/sim2real/training_action_runtime.cpp'), '-o', str(binary),
+            ], check=True)
+            subprocess.run([str(binary)], check=True)
+
+    def test_sqlite_round_trip_preserves_atomic_frames_and_integer_times(self):
+        with tempfile.TemporaryDirectory(dir=REPO / 'test/sim2real', prefix='training_bag_') as tmp:
+            storage = rosbag2_py.StorageOptions(uri=str(Path(tmp) / 'bag'), storage_id='sqlite3')
+            converter = rosbag2_py.ConverterOptions('', '')
+            writer = rosbag2_py.SequentialWriter()
+            writer.open(storage, converter)
+            topic_fields = dict(name='/sim2real/training_sample',
+                                type='tita_controller/msg/TrainingSample', serialization_format='cdr')
+            try:
+                metadata = rosbag2_py.TopicMetadata(id=0, **topic_fields)  # Jazzy
+            except TypeError:
+                metadata = rosbag2_py.TopicMetadata(**topic_fields)  # Humble
+            writer.create_topic(metadata)
+            samples = []
+            for i in range(150):
+                sample = TrainingSample()
+                sample.header.stamp.sec = 1792200000 + i // 50
+                sample.header.stamp.nanosec = (i % 50) * 20_000_000
+                sample.sequence_id = 2**53 + i
+                sample.control_tick = i * 10
+                sample.monotonic_ns = 2**63 + i * 20_000_000
+                sample.state = 'rl' if i != 75 else 'damp'
+                sample.sensors_valid = i != 75
+                sample.policy_valid = i != 75
+                sample.output_enabled = i < 100
+                sample.torque_sent = sample.output_enabled and sample.policy_valid
+                sample.teacher_action_valid = sample.policy_valid
+                sample.observation = [float(i)] * 33 if sample.sensors_valid else []
+                sample.action_raw = [float(i)] * 8
+                sample.teacher_action = [float(i) + .125] * 8
+                sample.wheel_velocity_bias = [.25, -.5]
+                sample.computed_torque = [1., 2., 3., 4., 5., 6., 7., 8.]
+                samples.append(sample)
+                stamp = sample.header.stamp.sec * 10**9 + sample.header.stamp.nanosec
+                writer.write('/sim2real/training_sample', serialize_message(sample), stamp)
+            del writer  # Flush/finalize actual SQLite storage before reading it.
+            reader = rosbag2_py.SequentialReader()
+            reader.open(storage, converter)
+            actual = []
+            while reader.has_next():
+                topic, data, stamp = reader.read_next()
+                self.assertEqual(topic, '/sim2real/training_sample')
+                sample = deserialize_message(data, TrainingSample)
+                self.assertEqual(stamp, sample.header.stamp.sec * 10**9 + sample.header.stamp.nanosec)
+                actual.append(sample)
+            self.assertEqual(actual, samples)
+            self.assertEqual(len(actual), 150)
+            self.assertEqual(actual[1].monotonic_ns - actual[0].monotonic_ns, 20_000_000)
+            self.assertFalse(actual[75].sensors_valid)
+            self.assertEqual(list(actual[75].observation), [])
+            self.assertFalse(actual[100].torque_sent)
+            print('PASS: 150 atomic SQLite/CDR frames; >2^53 sequence/time precision; '
+                  '20 ms intervals, empty/fault frames and output-off flags preserved')
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)

@@ -1,0 +1,112 @@
+{
+  "candidate_count_after_spatial_thinning": 2466,
+  "candidate_voxel_size_m": 0.04,
+  "collision_clearance_m": 0.01,
+  "collision_pair_count": 51,
+  "combined_urdf": "/home/cocel/Desktop/Research/tita_gluon_wbc/sim2sim/robot/tita_gluon/urdf/tita_gluon_2L6_4L3.urdf",
+  "combined_urdf_sha256": "c1dbe9fadabecd48b10df1c80d11b036b5da04bc3bb63c32bacb4331e32bbe30",
+  "edge_count": 256,
+  "elapsed_s": 7.586460937047377,
+  "evidence_status": "SUSPICIOUS",
+  "execution_domain": "VALIDATION_SIM",
+  "gluon_urdf": "/home/cocel/Desktop/Research/tita_gluon_wbc/sim2sim/robot/gluon/urdf/gluon_2L6_4L3_sim.urdf",
+  "gluon_urdf_sha256": "b9b25074b7a417a9e499f14fee852699ac6f8a00ab4b137f90ec843eccc8ede4",
+  "joint_limit_margin_deg": 10.0,
+  "limitations": [
+    "Isaac/PhysX self collision remains disabled; safety comes from offline admission only.",
+    "The combined URDF has simplified or absent TITA collision geometry.",
+    "The mount-jig geometry and transform remain provisional until measured.",
+    "The graph is checked against reset-envelope TITA poses, not every dynamic locomotion posture.",
+    "Ground-plane clearance is not yet included in the offline hpp-fcl pair set.",
+    "The graph controls the link6 origin with q6 fixed at zero; no gripper/tool geometry is included.",
+    "Every stored edge is WORK-to-target; arbitrary target-to-target motion is not admitted."
+  ],
+  "max_path_joint_step_deg": 2.0,
+  "node_count": 257,
+  "path_joint_margin_deg": {
+    "min": 10.111897064376464,
+    "p50": 42.83868705676917
+  },
+  "path_sample_count": {
+    "max": 111,
+    "min": 33
+  },
+  "path_sigma_min": {
+    "min": 0.015223886693851822,
+    "p50": 0.020601225851682916
+  },
+  "q6_rad": 0.0,
+  "rejection_counts": {
+    "joint_margin": 32,
+    "sigma_min": 269
+  },
+  "schema_version": 1,
+  "seed": 20260810,
+  "semantics": "collision_checked_work_hub_cartesian_targets",
+  "sigma_min_threshold": 0.015,
+  "source_reachability_evidence_status": "SUSPICIOUS",
+  "source_reachability_map": "/home/cocel/Desktop/Research/tita_gluon_wbc/test/eval_logs/tita_gluon_reachability_q6_zero.npz",
+  "source_reachability_map_sha256": "d08ea2ca5b1d66e34a15e7298d750db8174f002aab599a783ed0a6e5ed003a0a",
+  "target_count": 256,
+  "target_distance_m": {
+    "max": 0.4215111880157126,
+    "min": 0.051242245329348415,
+    "p50": 0.25169697277398984,
+    "p95": 0.4032170807239591
+  },
+  "target_xyz_max_tita_base_m": [
+    0.44081929326057434,
+    0.4019603729248047,
+    0.7019231915473938
+  ],
+  "target_xyz_min_tita_base_m": [
+    -0.22757354378700256,
+    -0.32294362783432007,
+    0.30188360810279846
+  ],
+  "tita_collision_check_poses_rad": [
+    [
+      0.0,
+      0.8,
+      -1.5,
+      0.0,
+      0.0,
+      0.8,
+      -1.5,
+      0.0
+    ],
+    [
+      -0.06,
+      0.74,
+      -1.44,
+      -0.06,
+      0.06,
+      0.74,
+      -1.44,
+      -0.06
+    ],
+    [
+      0.135,
+      0.9,
+      -1.68,
+      0.06,
+      -0.135,
+      0.9,
+      -1.68,
+      0.06
+    ]
+  ],
+  "work_ee_tita_base_m": [
+    0.1358916842031654,
+    0.021868360140147897,
+    0.6184381555194916
+  ],
+  "work_q_rad": [
+    0.0,
+    0.8,
+    1.6,
+    0.8,
+    0.0,
+    0.0
+  ]
+}

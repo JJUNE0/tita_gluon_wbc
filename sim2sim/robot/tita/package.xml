@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>tita_urdf</name>
+  <version>0.1.0</version>
+  <description>TITA URDF and shared mesh assets</description>
+  <maintainer email="maintainer@example.com">TITA Maintainer</maintainer>
+  <license>BSD-3-Clause</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <export><build_type>ament_cmake</build_type><architecture_independent/></export>
+</package>

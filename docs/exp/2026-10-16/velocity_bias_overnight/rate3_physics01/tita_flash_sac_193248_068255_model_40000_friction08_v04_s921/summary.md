@@ -1,0 +1,77 @@
+# tita_flash_sac_193248_068255_model_40000_friction08_v04_s921
+
+Execution Domain: VALIDATION_SIM
+
+Policy Checkpoint SHA256: 391b8791d73b9fecdb5fae3be4e3efe31b71440d770ca559d9a5a526ad37efb4
+
+Evidence Status: PASS
+
+Observed metrics / behavior / log summary:
+
+```json
+{
+  "execution_domain": "VALIDATION_SIM",
+  "evidence_status": "PASS",
+  "job": {
+    "id": "tita_flash_sac_193248_068255_model_40000_friction08_v04_s921",
+    "checkpoint_id": "tita_flash_sac_193248_068255_model_40000",
+    "duration": 60.0,
+    "warmup": 1.2,
+    "seed": 921,
+    "estimator": "fk",
+    "guarded": true,
+    "physics": {
+      "friction": 0.8
+    },
+    "law": {
+      "kp": 0.0,
+      "ki": 4.0,
+      "tau": 0.1,
+      "ramp": 0.25,
+      "sign": 1.0,
+      "limit": 2.0,
+      "slew": 3.0,
+      "seed_gain": 3.0
+    },
+    "harness_source_sha256": "44732edc64c4d464d1589b9c6f1750ea05fedf9b89dd940c8c05058777d5240f"
+  },
+  "checkpoint_sha256": "391b8791d73b9fecdb5fae3be4e3efe31b71440d770ca559d9a5a526ad37efb4",
+  "onnx_sha256": "fb82f05252341f0576dd6277b7c6e5d77e7daea4d9d3f180fe72795b3f56c966",
+  "input_columns": [
+    "velocity_bias_m_s",
+    "filtered_velocity_m_s",
+    "integral_m_s"
+  ],
+  "state_columns": [
+    "base_x",
+    "base_y",
+    "base_z",
+    "base_forward_speed",
+    "roll",
+    "pitch",
+    "yaw",
+    "raw_position",
+    "raw_speed",
+    "fk_position",
+    "fk_speed"
+  ],
+  "initial_physics_sha256": "60b57b1687a0d9a8b7c52002ca2da56fc760d113b686b7152c5089c97625ef37",
+  "complete": true,
+  "failure": [],
+  "duration_s": 60.0,
+  "final_drift_m": 0.010807607020371205,
+  "max_drift_m": 0.040127171864611955,
+  "radial_IAE_m_s": 0.8436363087667684,
+  "signed_longitudinal_delta_m": -0.010807207820529624,
+  "tail_speed_mean_m_s": 8.938720130702417e-05,
+  "tail_speed_rms_m_s": 8.955354219895843e-05,
+  "tail_sensor_speed_mean_m_s": 8.959209738633048e-05,
+  "tail_fk_speed_mean_m_s": 8.894275316030594e-05,
+  "peak_tilt_rad": 0.10688399212619126,
+  "peak_wheel_torque_nm": 0.8672805428504944,
+  "saturation_fraction": 0.0,
+  "final_velocity_bias_m_s": 0.25125356330420817,
+  "final_integral_m_s": 0.25125356330420817,
+  "elapsed_wall_s": 9.85472441004822
+}
+```

@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"sleep 4\\ntail -15 /tmp/gluon_sim2sim_check.log\\necho \\\"---stopping check node---\\\"\\npkill -f \\\"mujoco_policy_node\\\" 2>/dev/null; sleep 2; pgrep -fal \\\"mujoco_policy_node\\\" | grep -v pgrep ...",
-  "error": "Exit code 144\n[python3-1] [INFO] [1784886072.990647949] [cosim_ros2_jazzy]: nq=15\n[python3-1] nv=14\n[python3-1] nu=8\n[python3-1] joints=['joint_left_leg_1', 'joint_left_leg_2', 'joint_left_leg_3', 'joint_left_leg_4', 'joint_right_leg_1', 'joint_right_leg_2', 'joint_right_leg_3', 'joint_right_leg_4']\n[python3-1] actuators=['left_leg_1', 'left_leg_2', 'left_leg_3', 'left_leg_4', 'right_leg_1', 'right_leg_2', 'right_leg_3', 'right_leg_4']\n[python3-1] qpos_addr=[7, 8, 9, 10, 11, 12, 13, 14]\n[python3...",
-  "timestamp": "2026-07-24T09:41:20.114Z",
-  "retry_count": 1
-}

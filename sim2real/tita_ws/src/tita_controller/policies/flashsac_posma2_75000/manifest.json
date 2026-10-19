@@ -1,0 +1,22 @@
+{
+  "execution_domain": "DESKTOP_DRY_RUN",
+  "evidence_status": "PASS",
+  "checkpoint_sha256": "9c22f34e0e3b9d7840f29250c214452bb84cadde6037d277d90df55221e84150",
+  "onnx_sha256": "128734f230868b947c9eac59ef647b8394043c6603781a335fd4e3b4700a2001",
+  "config_sha256": "45a2e773f5ccf43b770829184b22537a6de1ce8da092727264446ac32287c28a",
+  "fingerprint": "434e047e7ee729aea34b76ea2f6a9f28e48d89981922760d0259642154178130",
+  "parity": {
+    "samples": 256,
+    "max_abs_error": 3.4570693969726562e-06
+  },
+  "hardware_status": "NOT_TESTED",
+  "deployment_overrides": {
+    "command": {
+      "max_lin_x": 1.0,
+      "max_ang_z": 1.0
+    },
+    "source_config_sha256": "aadc132e296351fc77f3b2db00cf447a516d9861a2ab7bdb28099b48467501b8",
+    "source_run": "tita_flash_sac_180212_290240/model_75000",
+    "note": "Same interface and training gains as PosMA2 50k; existing real joystick caps 1/1."
+  }
+}

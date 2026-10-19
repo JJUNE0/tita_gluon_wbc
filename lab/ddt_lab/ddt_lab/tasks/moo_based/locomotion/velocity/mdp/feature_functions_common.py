@@ -129,15 +129,15 @@ def error_track_pos_integral(
 
 _NATURAL_STANDING_HEIGHT = 0.35
 
-# Affine map of the trained pos_z command range ([0.23, 0.42] m -- see
-# CommandsCfg.base_velocity.ranges.pos_z) onto [-1, 1]. Raw meter values are a very
-# low-magnitude signal (a 0.19m span) for both the policy's input and the height-tracking
+# Affine map of the final trained pos_z command range ([0.25, 0.45] m -- see
+# TitaFlatEnvCfg_GTBaseVel_TargetHeight) onto [-1, 1]. Raw meter values are a very
+# low-magnitude signal (a 0.20m span) for both the policy's input and the height-tracking
 # reward; this rescaling is applied only at the point of use (observation encoding, reward
 # error) -- the command's own internal representation (`vel_command_b`) stays in real
 # meters throughout, so FK fits, dead-reckoning integration, and the MuJoCo sim2sim bridge
 # are unaffected.
-_HEIGHT_NORM_CENTER = 0.325       # (0.23 + 0.42) / 2
-_HEIGHT_NORM_HALF_RANGE = 0.095   # (0.42 - 0.23) / 2
+_HEIGHT_NORM_CENTER = 0.35        # (0.25 + 0.45) / 2
+_HEIGHT_NORM_HALF_RANGE = 0.10    # (0.45 - 0.25) / 2
 
 
 def normalize_height(height_m: torch.Tensor) -> torch.Tensor:
@@ -146,13 +146,12 @@ def normalize_height(height_m: torch.Tensor) -> torch.Tensor:
 
 
 def _init_phase_safe_height(height_cmd: torch.Tensor, fallback: float = _NATURAL_STANDING_HEIGHT) -> torch.Tensor:
-    """UniformVelocityWithZCommand (mdp/commands/velocity_command.py) masks
-    ALL command channels -- including height -- to exactly 0.0 during its
-    initial_phase_time window after every reset (5s for TITA). 0.0 is not a
-    physically meaningful height target (never sampled otherwise -- the real
-    range is 0.25-0.45), so substitute the natural default standing height
-    during that window instead of feeding literal 0.0 into height-conditioned
-    reward targets (which would otherwise demand an extreme crouch)."""
+    """Guard legacy command configurations that may expose literal height zero.
+
+    Current target-height configurations return a valid sampled or explicitly
+    configured init-phase height. The fallback remains for older configurations
+    whose command contract used zero as an initial-phase sentinel.
+    """
     return torch.where(height_cmd.abs() < 1e-6, torch.full_like(height_cmd, fallback), height_cmd)
 
 

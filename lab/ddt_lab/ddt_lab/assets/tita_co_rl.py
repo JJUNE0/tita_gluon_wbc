@@ -12,7 +12,7 @@ from isaaclab.actuators import DelayedPDActuatorCfg
 from isaaclab.assets.articulation import ArticulationCfg
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-TITA_URDF_PATH = REPO_ROOT / "sim2sim" / "tita_gluon_urdf" / "urdf" / "tita.urdf"
+TITA_URDF_PATH = REPO_ROOT / "sim2sim" / "robot" / "tita" / "urdf" / "tita.urdf"
 
 
 TITA_CFG = ArticulationCfg(

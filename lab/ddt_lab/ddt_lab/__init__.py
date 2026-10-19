@@ -7,8 +7,14 @@
 Python module serving as a project/extension template.
 """
 
-# Register Gym environments.
-from .tasks import *
+# Register Gym environments if dependencies are available.
+try:
+    from .tasks import *
+except Exception:
+    pass
 
 # Register UI extensions.
-from .ui_extension_example import *
+try:
+    from .ui_extension_example import *
+except Exception:
+    pass

@@ -1,0 +1,39 @@
+digraph G {
+  rankdir=LR; nodesep=0.18; ranksep=0.5; splines=true; bgcolor="white";
+  node [fontname="Noto Sans CJK KR", fontsize=11, shape=plaintext];
+  edge [color="#888888", arrowsize=0.6];
+  label=<<b>TITA sim ↔ real 갭 지도 (2026-10-19 기준)</b><br/><font point-size="10">초록 = 해결/완화 · 노랑 = 진행 중 · 빨강 = 미확인 · 회색 = 측정 한계</font>>;
+  labelloc=t; fontname="Noto Sans CJK KR"; fontsize=15;
+
+  SIM [label=<<table border="1" cellborder="0" cellpadding="6" bgcolor="#e8f0fe" color="#3b6fd8">
+    <tr><td><b>SIM</b></td></tr>
+    <tr><td align="left">Isaac (학습) / MuJoCo (sim2sim)</td></tr>
+    <tr><td align="left">URDF 질량·CoM, 이상적 모터</td></tr>
+    <tr><td align="left">관절 마찰 0, 지연 0–20 ms DR</td></tr>
+    <tr><td align="left">자세 = ground truth (+노이즈)</td></tr>
+    <tr><td align="left">휠: 원통 → 구 (2026-10-18~)</td></tr></table>>];
+
+  REAL [label=<<table border="1" cellborder="0" cellpadding="6" bgcolor="#fdecea" color="#c0392b">
+    <tr><td><b>REAL TITA</b></td></tr>
+    <tr><td align="left">50 Hz 정책 / 500 Hz PD (C++)</td></tr>
+    <tr><td align="left">SDK 토크 = 명령값 (외부 보정 없음)</td></tr>
+    <tr><td align="left">IMU 내부 필터 자세</td></tr>
+    <tr><td align="left">타이어·기어·백래시·마찰</td></tr>
+    <tr><td align="left">좌우 비대칭 (왼쪽 무릎)</td></tr></table>>];
+
+  node [shape=plaintext];
+  g1 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#d5f5e3" color="#1e8449"><tr><td align="left"><b>G1 무릎 출력 부족</b> · 실기 ≈ sim의 0.6–0.75배 (L 0.60 / R 0.75 등가)</td></tr><tr><td align="left"><font point-size="9">대응: 무릎 PD 92/2.3 (=60/0.65) + 무릎 출력 DR 0.55–1.0 × jitter 0.8–1.2 · hip·shoulder는 nominal</font></td></tr></table>>];
+  g2 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#d5f5e3" color="#1e8449"><tr><td align="left"><b>G2 고주파 과반응 → 25 Hz 교번</b> · hip 4–40× sim</td></tr><tr><td align="left"><font point-size="9">대응: MA2 필터(학습+배포) · 다리 게인 60 유지 · 25 Hz 대리 g 스크린</font></td></tr></table>>];
+  g3 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#d5f5e3" color="#1e8449"><tr><td align="left"><b>G3 선속도 관측 없음 → 정지 drift</b></td></tr><tr><td align="left"><font point-size="9">대응: 휠 오도메트리 x_err 관측 (C++ parity 1e-8 m) · 실기 효과 확인</font></td></tr></table>>];
+  g4 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#d5f5e3" color="#1e8449"><tr><td align="left"><b>G4 휠-바닥 yaw 비틀림 저항 (sim 과대)</b> · 0.3 Nm 차동: sim 0.17 °/s, 실기 3.8 °/s</td></tr><tr><td align="left"><font point-size="9">대응: 학습 휠 충돌체 원통 → 구 · 실기 정지 yaw 2.5–4.6 → ≤1.4 °/s</font></td></tr></table>>];
+  g5 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#fef9e7" color="#b7950b"><tr><td align="left"><b>G5 좌우 비대칭 + yaw 보상 둔감</b> · 1–2 °/s 회전이 거의 무벌점</td></tr><tr><td align="left"><font point-size="9">대응: 정지 heading drift 보상 + critic yaw_error (학습 예약)</font></td></tr></table>>];
+  g6 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#fef9e7" color="#b7950b"><tr><td align="left"><b>G6 CoM 1–2.5 cm 또는 IMU/관절 오프셋 1–2°</b> (정적 데이터로 분리 불가)</td></tr><tr><td align="left"><font point-size="9">대응: base CoM DR ±1.5 cm</font></td></tr></table>>];
+  g7 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#fadbd8" color="#c0392b"><tr><td align="left"><b>G7 1.2 Hz 앞뒤 흔들림</b> (실기 전용, sim pitch std 0.02°)</td></tr><tr><td align="left"><font point-size="9">후보: IMU 자세 추정 지연 · 통신 지연 · 휠 마찰(stick-slip 징후는 없음)</font></td></tr></table>>];
+  g8 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#fadbd8" color="#c0392b"><tr><td align="left"><b>G8 8–10 Hz pitch·허벅지 진동</b> (MA2 정책)</td></tr><tr><td align="left"><font point-size="9">후보: MA2 위상 지연 · 다리 기구 공진 · 체크포인트 이득 / 시험 후보: hip·shoulder 48</font></td></tr></table>>];
+  g9 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#fadbd8" color="#c0392b"><tr><td align="left"><b>G9 휠 관절 마찰 크기</b> · 피팅 0.3 Nm는 sim 정지 불가로 불일치</td></tr><tr><td align="left"><font point-size="9">필요: 들어올린 휠 감속/브레이크어웨이 측정</font></td></tr></table>>];
+  m1 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#eaeded" color="#7f8c8d"><tr><td align="left"><b>M1 heading 측정</b> · IMU quat vs gyro 적분 0.3–0.5 °/s 불일치</td></tr><tr><td align="left"><font point-size="9">필요: 바닥 기준선/카메라 (60 s 정지)</font></td></tr></table>>];
+  m2 [label=<<table border="1" cellborder="0" cellpadding="4" bgcolor="#eaeded" color="#7f8c8d"><tr><td align="left"><b>M2 토크 측정</b> · SDK 보고 토크 = 명령 토크, 외부 Nm 보정 없음</td></tr><tr><td align="left"><font point-size="9">→ "모터 게인" vs "기어 손실" vs "부하 모델" 분리 불가</font></td></tr></table>>];
+
+  SIM -> {g1 g2 g3 g4 g5 g6 g7 g8 g9 m1 m2} [dir=both];
+  {g1 g2 g3 g4 g5 g6 g7 g8 g9 m1 m2} -> REAL [dir=both];
+}

@@ -76,7 +76,7 @@ def normalize_converter_config(config_path: Path) -> None:
 
 def main() -> None:
     repo_root = Path(__file__).resolve().parents[4]
-    model_root = repo_root / "sim2sim" / "gluon_2L6_4L3_urdf"
+    model_root = repo_root / "sim2sim" / "robot" / "gluon"
     contract_path = model_root / "config" / "model_contract.json"
     contract = json.loads(contract_path.read_text(encoding="utf-8"))
 

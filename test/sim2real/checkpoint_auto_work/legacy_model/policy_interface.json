@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "articulation_joint_names": [
+    "joint_left_leg_1",
+    "joint_right_leg_1",
+    "joint_left_leg_2",
+    "joint_right_leg_2",
+    "joint_left_leg_3",
+    "joint_right_leg_3",
+    "joint_left_leg_4",
+    "joint_right_leg_4"
+  ],
+  "observations": [
+    {
+      "name": "base_ang_vel",
+      "scale": 0.25,
+      "clip": [
+        -100.0,
+        100.0
+      ]
+    },
+    {
+      "name": "projected_gravity",
+      "scale": 1.0,
+      "clip": [
+        -100.0,
+        100.0
+      ]
+    },
+    {
+      "name": "velocity_commands",
+      "scale": [
+        2.0,
+        2.0,
+        0.25
+      ],
+      "clip": [
+        -100.0,
+        100.0
+      ]
+    },
+    {
+      "name": "joint_pos",
+      "scale": 1.0,
+      "clip": [
+        -100.0,
+        100.0
+      ],
+      "joints": [
+        "joint_left_leg_1",
+        "joint_right_leg_1",
+        "joint_left_leg_2",
+        "joint_right_leg_2",
+        "joint_left_leg_3",
+        "joint_right_leg_3",
+        "joint_left_leg_4",
+        "joint_right_leg_4"
+      ]
+    },
+    {
+      "name": "joint_vel",
+      "scale": 0.05000000074505806,
+      "clip": [
+        -100.0,
+        100.0
+      ],
+      "joints": [
+        "joint_left_leg_1",
+        "joint_right_leg_1",
+        "joint_left_leg_2",
+        "joint_right_leg_2",
+        "joint_left_leg_3",
+        "joint_right_leg_3",
+        "joint_left_leg_4",
+        "joint_right_leg_4"
+      ]
+    },
+    {
+      "name": "actions",
+      "scale": 1.0,
+      "clip": [
+        -100.0,
+        100.0
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "name": "joint_pos_0",
+      "joints": [
+        "joint_left_leg_1"
+      ]
+    },
+    {
+      "name": "joint_pos_1",
+      "joints": [
+        "joint_left_leg_2"
+      ]
+    },
+    {
+      "name": "joint_pos_2",
+      "joints": [
+        "joint_left_leg_3"
+      ]
+    },
+    {
+      "name": "joint_vel_3",
+      "joints": [
+        "joint_left_leg_4"
+      ]
+    },
+    {
+      "name": "joint_pos_4",
+      "joints": [
+        "joint_right_leg_1"
+      ]
+    },
+    {
+      "name": "joint_pos_5",
+      "joints": [
+        "joint_right_leg_2"
+      ]
+    },
+    {
+      "name": "joint_pos_6",
+      "joints": [
+        "joint_right_leg_3"
+      ]
+    },
+    {
+      "name": "joint_vel_7",
+      "joints": [
+        "joint_right_leg_4"
+      ]
+    }
+  ]
+}

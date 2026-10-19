@@ -72,6 +72,42 @@ def modify_base_velocity_range(
                 setattr(command_term.cfg.ranges, key, target_range)
 
 
+def linearly_widen_command_range(
+    env: ManagerBasedRLEnv,
+    env_ids: Sequence[int],
+    term_name: str,
+    key: str,
+    start_range: tuple[float, float],
+    end_range: tuple[float, float],
+    start_step: int,
+    end_step: int,
+) -> torch.Tensor:
+    """Linearly widen one command range without a discontinuous distribution shift.
+
+    The range is held at ``start_range`` through ``start_step``, interpolated
+    until ``end_step``, and held at ``end_range`` afterwards.  The returned
+    scalar is the interpolation fraction logged by Isaac Lab's curriculum
+    manager.
+    """
+    if end_step <= start_step:
+        raise ValueError("end_step must be greater than start_step")
+    if len(start_range) != 2 or len(end_range) != 2:
+        raise ValueError("start_range and end_range must each contain two values")
+    if start_range[0] > start_range[1] or end_range[0] > end_range[1]:
+        raise ValueError("command ranges must be ordered (lower, upper)")
+
+    step = int(env.common_step_counter)
+    fraction = min(max((step - start_step) / (end_step - start_step), 0.0), 1.0)
+    lower = start_range[0] + (end_range[0] - start_range[0]) * fraction
+    upper = start_range[1] + (end_range[1] - start_range[1]) * fraction
+
+    command_term = env.command_manager.get_term(term_name)
+    if not hasattr(command_term.cfg.ranges, key):
+        raise AttributeError(f"command term {term_name!r} has no range named {key!r}")
+    setattr(command_term.cfg.ranges, key, (lower, upper))
+    return torch.tensor(fraction, dtype=torch.float32, device=env.device)
+
+
 
 
 def modify_terminataton_condition(

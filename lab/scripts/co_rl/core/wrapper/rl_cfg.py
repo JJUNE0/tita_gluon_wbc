@@ -46,6 +46,20 @@ class CoRlPpoActorCriticCfg:
     activation: str = MISSING
     """The activation function for the actor and critic networks."""
 
+
+@configclass
+class CoRlHybridPpoActorCriticCfg:
+    """Hybrid PPO policy for continuous base commands and one arm option."""
+
+    class_name: str = "HybridActorCritic"
+    init_noise_std: float = MISSING
+    actor_hidden_dims: list[int] = MISSING
+    critic_hidden_dims: list[int] = MISSING
+    activation: str = MISSING
+    continuous_action_dim: int = 2
+    discrete_action_dim: int = 2
+    action_mask_obs_start: int | None = None
+
 @configclass
 class CoRlEstimatorActorCriticCfg:
     """Configuration for the base-velocity-estimator actor-critic (ActorCriticWithEstimator).
@@ -78,6 +92,18 @@ class CoRlEstimatorActorCriticCfg:
 
     estimator_output_dim: int = MISSING
     """The dimension of the quantity the estimator predicts (e.g. 3 for base_lin_vel_x/y/z)."""
+
+
+@configclass
+class CoRlRMATeacherActorCriticCfg:
+    """Configuration for an RMA teacher using encoded privileged observations."""
+
+    class_name: str = "RMATeacher"
+    init_noise_std: float = MISSING
+    actor_hidden_dims: list[int] = MISSING
+    critic_hidden_dims: list[int] = MISSING
+    activation: str = MISSING
+    latent_dim: int = 16
 
 
 @configclass
@@ -722,6 +748,9 @@ class CoRlMOOPolicyRunnerCfg:
 
     wandb_project: str = "isaaclab"
     """The wandb project name. Default is "isaaclab"."""
+
+    enable_teacher_tsne: bool = False
+    """Whether to log the optional teacher-latent t-SNE diagnostic."""
 
     ##
     # Loading parameters

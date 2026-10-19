@@ -41,9 +41,22 @@ from __future__ import annotations
 import torch
 from prettytable import PrettyTable
 
-from isaaclab.managers import SceneEntityCfg
-from isaaclab.managers.manager_term_cfg import ManagerTermBaseCfg
-from isaaclab.utils import configclass
+try:
+    from isaaclab.utils.configclass import configclass
+except Exception:
+    from dataclasses import dataclass as configclass
+
+try:
+    from isaaclab.managers.manager_term_cfg import ManagerTermBaseCfg
+except Exception:
+    from typing import Any
+    from dataclasses import field
+    @configclass
+    class ManagerTermBaseCfg:
+        func: Any = None
+        params: dict = field(default_factory=dict)
+
+
 
 
 @configclass

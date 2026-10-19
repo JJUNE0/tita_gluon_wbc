@@ -1,0 +1,28 @@
+digraph L {
+  rankdir=TB; nodesep=0.35; ranksep=0.42; bgcolor="white";
+  node [fontname="Noto Sans CJK KR", fontsize=11, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#555555"];
+  edge [fontname="Noto Sans CJK KR", fontsize=9, color="#555555"];
+  label=<<b>closed-loop: RL 학습 → sim2sim → sim2real → real2sim → 갭 진단</b>>; labelloc=t; fontname="Noto Sans CJK KR"; fontsize=15;
+
+  train [label="① RL 학습 (Isaac, FlashSAC)\nDR: 무릎 출력·CoM·게인·마찰\n관측 34 (x_err 포함), 구 휠, MA2", fillcolor="#e8f0fe"];
+  export [label="② Export\nONNX ↔ Torch parity (≤4e-6)\nconfig SHA 고정", fillcolor="#e8f0fe"];
+  screen [label="③ sim2sim 스크린 (MuJoCo, production adapter)\n보정된 plant A: 구 휠 + 무릎 L0.60/R0.75\n+ plant B·강건성·25 Hz 대리 g", fillcolor="#e8f0fe"];
+  real [label="④ 실기 run (승인 후)\nTrainingSample · MotorFeedback · ActionFilterSample\njoint_states · IMU (rosbag)", fillcolor="#fdecea"];
+
+  subgraph cluster_r2s {
+    label=<<b>⑤ real2sim 분석 (DESKTOP_DRY_RUN)</b>>; fontname="Noto Sans CJK KR"; fontsize=12; style="rounded,filled"; fillcolor="#fef9e7"; color="#b7950b";
+    a1 [label="5a 무결성\n원격 SHA256 · ONNX 재생 오차\nPD 토크 재계산 · x_err C++ 재현"];
+    a2 [label="5b 신호 분석\n정지 구간 yaw(quat/gyro/엔코더)\nx 오도메트리 · 자세 · PSD 대역\n정책 tick 토크 단차 · 25 Hz 교번"];
+    a3 [label="5c 벤더 제어기 프로브\n벤더 LQR stand/push/높이 로그 →\n제어 법칙 식별 → MuJoCo 재현\n→ 무릎 0.65 · 휠 토크 1.0 · CoM"];
+    a4 [label="5d 정책 반사실 재생\n실기 관측을 ONNX에 재입력\n그룹별 좌우 대칭화 → 원인 입력\n(예: 무릎 비대칭 → 휠 차동)"];
+    a5 [label="5e plant 피팅\n후보 물리 변형 sweep\n(무릎 좌우, 엔코더 오프셋, 휠 형상,\n마찰, 지연, 고주파 g) → 실기와 맞는 plant"];
+    a1 -> a2 -> {a3 a4} -> a5;
+  }
+  diag [label="⑥ 갭 진단\n기준 정책(50k 나쁨 / 75k 좋음)으로\nplant 검증 후 원인 확정·후보 정리", fillcolor="#d5f5e3"];
+
+  train -> export -> screen -> real;
+  real -> a1;
+  a5 -> diag;
+  diag -> train [label="  DR 범위 · 물리 모델 · 보상 · 관측 변경\n  (무릎 92+DR, x_err, 구 휠, heading 보상)", color="#1e8449", fontcolor="#1e8449"];
+  diag -> screen [label=" 보정된 plant로 스크린 갱신", color="#3b6fd8", fontcolor="#3b6fd8", constraint=false];
+}

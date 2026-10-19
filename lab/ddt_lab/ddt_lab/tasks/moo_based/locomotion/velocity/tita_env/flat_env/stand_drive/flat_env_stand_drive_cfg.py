@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import math
+from isaaclab.managers import CurriculumTermCfg as CurrTerm
 from isaaclab.managers import ObservationTermCfg as ObsTerm
 from isaaclab.managers import SceneEntityCfg
 from isaaclab.utils import configclass
@@ -272,7 +273,22 @@ class TitaFlatEnvCfg_GTBaseVel_TargetHeight(TitaFlatEnvCfg_GTBaseVel):
 
     def __post_init__(self):
         super().__post_init__()
-        self.commands.base_velocity.ranges.pos_z = (0.23, 0.42)
+        # Reproduce the validated v4 command curriculum: first learn around
+        # the natural 0.35 m standing height, then widen to the complete range.
+        # With 24 rollout steps these boundaries correspond to iterations
+        # 1000 and 5000 respectively.
+        self.commands.base_velocity.ranges.pos_z = (0.32, 0.38)
+        self.curriculum.widen_height_range = CurrTerm(
+            func=mdp.linearly_widen_command_range,
+            params={
+                "term_name": "base_velocity",
+                "key": "pos_z",
+                "start_range": (0.32, 0.38),
+                "end_range": (0.25, 0.45),
+                "start_step": 24_000,
+                "end_step": 120_000,
+            },
+        )
         # scale dropped from 5.0: error_base_height now operates on height normalized to
         # roughly [-1, 1] (see feature_functions_common.normalize_height), which already
         # amplifies the raw ~0.1m-scale error by ~11x (1 / _HEIGHT_NORM_HALF_RANGE).

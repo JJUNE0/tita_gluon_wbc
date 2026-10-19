@@ -1,0 +1,26 @@
+# TITA policy_export
+
+Execution Domain: VALIDATION_SIM
+
+Evidence Status: PASS
+
+Policy Checkpoint SHA256: 79f9175bb8c3be0c5138866e30891b90cc1282b6c98023cdb76c2e33b229068c
+
+ONNX SHA256: 26f0d86b65a68475fb8a315fb31e829ae16eaa2cf16dabbbcf38e69f28c933e9
+
+Observed metrics / behavior / log summary:
+
+```json
+{
+  "execution_domain": "VALIDATION_SIM",
+  "evidence_status": "PASS",
+  "checkpoint_sha256": "79f9175bb8c3be0c5138866e30891b90cc1282b6c98023cdb76c2e33b229068c",
+  "onnx_sha256": "26f0d86b65a68475fb8a315fb31e829ae16eaa2cf16dabbbcf38e69f28c933e9",
+  "config_sha256": "501414873e10f72d5b3f7e7952af715311ea06a9cb1db89d5ce0161a7eaca658",
+  "fingerprint": "f274f23041134a8149dec11afe379058ed26fefd3b2105cbc038e929615f6c40",
+  "parity": {
+    "samples": 256,
+    "max_abs_error": 2.9802322387695312e-06
+  }
+}
+```

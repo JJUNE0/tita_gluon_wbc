@@ -1,0 +1,38 @@
+[
+  {
+    "bundle": "flashsac_sphere2_60000",
+    "label": "② 60k",
+    "run": "tita_flash_sac_220437_199621",
+    "step": 60000,
+    "checkpoint_sha256": "a4c2bfbf6a58240a6623ee8bb8d863774b9336f62df7de3d1993b76725334b2a",
+    "onnx_sha256": "b744091bb984f3540ec9517f4d3a8a70b5d76cf0f1c7a811d122baac15017040",
+    "leg_action_filter": "none"
+  },
+  {
+    "bundle": "flashsac_sphere1_70000",
+    "label": "① 70k",
+    "run": "tita_flash_sac_220437_190135",
+    "step": 70000,
+    "checkpoint_sha256": "8e23cf5d1844a6d825482939e5cfc455cd672dd566b2320570080ff606782c77",
+    "onnx_sha256": "df54bb61b09c681aad403b41ae52dc83807002f2832b8f969c2ba56a441297d7",
+    "leg_action_filter": "ma2_legs"
+  },
+  {
+    "bundle": "flashsac_sphere1_90000",
+    "label": "① 90k",
+    "run": "tita_flash_sac_220437_190135",
+    "step": 90000,
+    "checkpoint_sha256": "df2a03faeb6e054310c8cc0c2c11f811c1f6e845dd87a66c40ff3cd29dd8b311",
+    "onnx_sha256": "08d57aa5b0d63063ddcd1f64a08fc545f7ad2ab317aa1c1044cb80ea15a0710a",
+    "leg_action_filter": "ma2_legs"
+  },
+  {
+    "bundle": "flashsac_sphere3_70000",
+    "label": "③ 70k",
+    "run": "tita_flash_sac_034313_051978",
+    "step": 70000,
+    "checkpoint_sha256": "b9d411eaee09753d3bb6a00d12da8a3f18ce205b2c95faec954c91699e811263",
+    "onnx_sha256": "204693483d123b77d9ad1698819ee10179ba27b5881bc8a41c1e5fc138ee16ff",
+    "leg_action_filter": "ma2_legs"
+  }
+]

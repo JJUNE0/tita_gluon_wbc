@@ -4,6 +4,7 @@
 """Definitions for neural-network components for RL-agents."""
 
 from .actor_critic import ActorCritic
+from .hybrid_actor_critic import HybridActorCritic
 from .actor_critic_recurrent import ActorCriticRecurrent
 from .normalizer import EmpiricalNormalization
 from .discriminator import DiscriminatorMLP, DiscriminatorGRU
@@ -17,4 +18,10 @@ from .demo.student_teacher_recurrent import StudentTeacherRecurrent
 
 
 
-__all__ = ["ActorCritic", "ActorCriticRecurrent", "StudentTeacher", "StudentTeacherRecurrent"]
+__all__ = [
+    "ActorCritic",
+    "ActorCriticRecurrent",
+    "HybridActorCritic",
+    "StudentTeacher",
+    "StudentTeacherRecurrent",
+]

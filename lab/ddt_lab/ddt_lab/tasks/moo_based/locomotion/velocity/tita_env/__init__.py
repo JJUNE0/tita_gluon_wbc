@@ -52,6 +52,16 @@ gym.register(
 )
 
 gym.register(
+    id="Isaac-Velocity-Flat-Tita-RMATeacher-TargetHeight-v3-moo-ppo",
+    entry_point="ddt_lab.envs:ManagerBasedMOORLEnv",
+    disable_env_checker=True,
+    kwargs={
+        "env_cfg_entry_point": flat_env.stand_drive.flat_env_stand_drive_cfg.TitaFlatEnvCfg_GTBaseVel_TargetHeight,
+        "co_rl_cfg_entry_point": agents.co_rl_cfg.TitaMOOPPORunnerCfg_Flat_Stand_Drive_RMATeacher,
+    },
+)
+
+gym.register(
     id="Isaac-Velocity-Flat-Tita-Play-v3-moo-ppo",
     entry_point="ddt_lab.envs:ManagerBasedMOORLEnv",
     disable_env_checker=True,

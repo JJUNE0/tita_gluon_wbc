@@ -7,6 +7,8 @@ import gymnasium as gym
 
 from . import agents, flat_env_cfg, jump_env_cfg, my_flat_env_cfg, rough_env_cfg
 
+
+
 ##
 # Register Gym environments. All Tita tasks are wired to NP3O (BarlowTwins-PPO);
 # stock PPO is no longer supported because the policy obs is now 3D.
@@ -39,6 +41,7 @@ gym.register(
     kwargs={
         "env_cfg_entry_point": my_flat_env_cfg.MyTitaFlatEnvCfg,
         "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:TitaFlatEstimatorPPORunnerCfg",
+        "flash_sac_cfg_entry_point": f"{agents.__name__}.flash_sac_cfg:TitaFlatFlashSACRunnerCfg",
     },
 )
 
@@ -49,6 +52,7 @@ gym.register(
     kwargs={
         "env_cfg_entry_point": my_flat_env_cfg.MyTitaFlatEnvCfg_PLAY,
         "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:TitaFlatEstimatorPPORunnerCfg",
+        "flash_sac_cfg_entry_point": f"{agents.__name__}.flash_sac_cfg:TitaFlatFlashSACRunnerCfg",
     },
 )
 

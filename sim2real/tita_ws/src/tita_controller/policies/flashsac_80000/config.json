@@ -1,0 +1,279 @@
+{
+  "model": {
+    "scene_xml": "tita_gluon_ws/src/ddt_ros2_control/urdfs/tita_description/mujoco_corrected/scene.xml"
+  },
+  "control": {
+    "sim_timestep": 0.005,
+    "decimation": 4
+  },
+  "command": {
+    "max_lin_x": 1.0,
+    "max_ang_z": 1.0
+  },
+  "robot": {
+    "default_joint_angles": [
+      0.0,
+      0.8,
+      -1.5,
+      0.0,
+      0.0,
+      0.8,
+      -1.5,
+      0.0
+    ],
+    "reset_base_pos": [
+      0.0,
+      0.0,
+      0.4
+    ],
+    "reset_base_quat": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "default_joint_velocities": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "joint_kp": [
+      60.0,
+      60.0,
+      92.0,
+      0.0,
+      60.0,
+      60.0,
+      92.0,
+      0.0
+    ],
+    "joint_kd": [
+      1.5,
+      1.5,
+      2.3,
+      0.5,
+      1.5,
+      1.5,
+      2.3,
+      0.5
+    ],
+    "torque_limit": [
+      60.0,
+      60.0,
+      60.0,
+      12.0,
+      60.0,
+      60.0,
+      60.0,
+      12.0
+    ]
+  },
+  "policy": {
+    "obs_dim": 33,
+    "path": "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_201940_278440/model_80000/sim2sim/actor/policy.onnx"
+  },
+  "policy_interface": {
+    "schema_version": 1,
+    "observations": [
+      {
+        "name": "base_ang_vel",
+        "kind": "ang_vel",
+        "scale": 0.25,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "size": 3
+      },
+      {
+        "name": "projected_gravity",
+        "kind": "gravity",
+        "scale": 1.0,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "size": 3
+      },
+      {
+        "name": "velocity_commands",
+        "kind": "commands",
+        "scale": [
+          2.0,
+          2.0,
+          0.25
+        ],
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "size": 3
+      },
+      {
+        "name": "joint_pos",
+        "kind": "joint_pos",
+        "scale": 1.0,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "joints": [
+          "joint_left_leg_1",
+          "joint_right_leg_1",
+          "joint_left_leg_2",
+          "joint_right_leg_2",
+          "joint_left_leg_3",
+          "joint_right_leg_3",
+          "joint_left_leg_4",
+          "joint_right_leg_4"
+        ],
+        "zero_wheel_pos": true,
+        "size": 8
+      },
+      {
+        "name": "joint_vel",
+        "kind": "joint_vel",
+        "scale": 0.05000000074505806,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "joints": [
+          "joint_left_leg_1",
+          "joint_right_leg_1",
+          "joint_left_leg_2",
+          "joint_right_leg_2",
+          "joint_left_leg_3",
+          "joint_right_leg_3",
+          "joint_left_leg_4",
+          "joint_right_leg_4"
+        ],
+        "zero_wheel_pos": false,
+        "size": 8
+      },
+      {
+        "name": "actions",
+        "kind": "last_action",
+        "scale": 1.0,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "size": 8
+      }
+    ],
+    "actions": [
+      {
+        "joint": "joint_left_leg_1",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_left_leg_2",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.8,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_left_leg_3",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": -1.5,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_left_leg_4",
+        "kind": "velocity",
+        "scale": 20.0,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_1",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_2",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.8,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_3",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": -1.5,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_4",
+        "kind": "velocity",
+        "scale": 20.0,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      }
+    ],
+    "articulation_joint_names": [
+      "joint_left_leg_1",
+      "joint_right_leg_1",
+      "joint_left_leg_2",
+      "joint_right_leg_2",
+      "joint_left_leg_3",
+      "joint_right_leg_3",
+      "joint_left_leg_4",
+      "joint_right_leg_4"
+    ],
+    "joint_order_source": "resolved training interface",
+    "checkpoint": "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_201940_278440/model_80000/actor.pt",
+    "algorithm": "FlashSAC",
+    "checkpoint_sha256": "79f9175bb8c3be0c5138866e30891b90cc1282b6c98023cdb76c2e33b229068c",
+    "sources": {
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_201940_278440/env.yaml": "f12cf34d553e0dfaae17301c5cd7433d4febff628852392a1a3b8295eaf08c97",
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_201940_278440/agent.json": "c49e1024d3637b235b80bbf71ef8b4892c3cbd04a7eac566e759acec8c609c60",
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_201940_278440/policy_interface.json": "7704405eaf6e08954a1ee57190dd8089bb21b74b642aa2e2105e7ba609912b42",
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_201940_278440/model_80000/ddt.json": "6aaa4c3a14fce3627eb4305719bd4a34b72532b50bfcf08df36a3ac12b947a72"
+    },
+    "adapter_sources": {
+      "checkpoint.py": "6698efacef99a2fb1b1da66558d140d1d2e4e9ce9a0f6eac542fa0529be22f33",
+      "adapter.py": "a506aec59831676c935e9d1338fdebe8da0e05e89aa9a736d1988a3eafb9760c",
+      "export.py": "bb89af0a67868b512b19d2261ce14fda4409a4f5d918ecf7431de8c6c1d0878d"
+    },
+    "onnx_sha256": "26f0d86b65a68475fb8a315fb31e829ae16eaa2cf16dabbbcf38e69f28c933e9"
+  }
+}

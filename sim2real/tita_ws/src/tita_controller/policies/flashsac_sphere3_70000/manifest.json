@@ -1,0 +1,22 @@
+{
+  "execution_domain": "DESKTOP_DRY_RUN",
+  "evidence_status": "PASS",
+  "checkpoint_sha256": "b9d411eaee09753d3bb6a00d12da8a3f18ce205b2c95faec954c91699e811263",
+  "onnx_sha256": "204693483d123b77d9ad1698819ee10179ba27b5881bc8a41c1e5fc138ee16ff",
+  "config_sha256": "ba2a48b603524fcd5215e8cbf608efbd87895c0521f56ed46876b9ab26121c6c",
+  "fingerprint": "4b18bb761c4a9043fc1d71da0228ed41ca5772b1c175540f33149123cb463d97",
+  "parity": {
+    "samples": 256,
+    "max_abs_error": 2.9802322387695312e-06
+  },
+  "hardware_status": "NOT_TESTED",
+  "deployment_overrides": {
+    "command": {
+      "max_lin_x": 1.0,
+      "max_ang_z": 1.0
+    },
+    "source_config_sha256": "6527ed51e9c33e1dfc8b6162ac1b6e99f2efa21cafa7d425b5263d7dc44c5c5e",
+    "source_run": "tita_flash_sac_034313_051978/model_70000",
+    "note": "Training observations/actions/gains/filter retained; existing real joystick caps 1/1 and ramp retained."
+  }
+}

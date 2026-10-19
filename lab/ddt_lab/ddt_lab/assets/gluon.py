@@ -12,7 +12,7 @@ from isaaclab.assets.articulation import ArticulationCfg
 
 
 DDT_LAB_ROOT = Path(__file__).resolve().parents[4]
-GLUON_DESCRIPTION_DIR = DDT_LAB_ROOT / "sim2sim" / "gluon_2L6_4L3_urdf"
+GLUON_DESCRIPTION_DIR = DDT_LAB_ROOT / "sim2sim" / "robot" / "gluon"
 GLUON_2L6_4L3_URDF_PATH = GLUON_DESCRIPTION_DIR / "urdf" / "gluon_2L6_4L3_sim.urdf"
 GLUON_2L6_4L3_USD_PATH = GLUON_DESCRIPTION_DIR / "usd" / "gluon_2L6_4L3.usd"
 

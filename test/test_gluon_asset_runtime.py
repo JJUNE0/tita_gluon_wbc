@@ -41,7 +41,7 @@ from ddt_lab.assets.gluon import (  # noqa: E402
 )
 
 
-MODEL_ROOT = REPO_ROOT / "sim2sim" / "gluon_2L6_4L3_urdf"
+MODEL_ROOT = REPO_ROOT / "sim2sim" / "robot" / "gluon"
 MODEL_CONTRACT_PATH = MODEL_ROOT / "config" / "model_contract.json"
 POSITION_TOLERANCE_M = 1.0e-3
 MASS_TOLERANCE_KG = 1.0e-5

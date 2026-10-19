@@ -51,6 +51,12 @@ class UniformVelocityWithZCommand(UniformVelocityCommand):
         self.time_elapsed = torch.zeros(self.num_envs, device=self.device)  # Time tracker for each environment
         self.initial_choice = None
         self.track_z_flag = (cfg.ranges.pos_z[0] != 0.0 or cfg.ranges.pos_z[1] != 0.0)
+        if cfg.initial_phase_height is not None and not math.isfinite(cfg.initial_phase_height):
+            raise ValueError("initial_phase_height must be finite or None")
+        if not math.isfinite(cfg.initial_phase_height_transition_time):
+            raise ValueError("initial_phase_height_transition_time must be finite")
+        if cfg.initial_phase_height_transition_time < 0.0:
+            raise ValueError("initial_phase_height_transition_time must be non-negative")
 
     def __str__(self) -> str:
         """Return a string representation of the command generator with position z."""
@@ -61,19 +67,38 @@ class UniformVelocityWithZCommand(UniformVelocityCommand):
     @property
     def command(self) -> torch.Tensor:
         """The desired base velocity and position z command in the base frame. Shape is (num_envs, 4)."""
-        is_initial_phase = (self.time_elapsed <= self.cfg.initial_phase_time)
+        is_initial_phase = self.time_elapsed <= self.cfg.initial_phase_time
         mask = is_initial_phase.unsqueeze(-1)
         vel_command_b = torch.where(mask, self.zero_command_b, self.vel_command_b)
-        # Height (index 3) is exempt from the initial-phase mask: only the velocity channels
-        # (0:3) are zeroed during init-phase. Forcing height to literal 0.0 here left it out
-        # of sync with the reward's own init-phase fallback (feature_functions_common.
-        # _init_phase_safe_height, which substitutes a natural default instead of chasing
-        # height=0) -- and, now that the observation is height-normalized (roughly [-1,1]),
-        # a raw 0.0 maps to a wild outlier (~-4.3) far outside the trained range, which is
-        # worse than the original mismatch. Keep the actual per-env sampled height target
-        # visible throughout.
         vel_command_b = vel_command_b.clone()
-        vel_command_b[:, 3] = self.vel_command_b[:, 3]
+
+        # Only velocity channels are zeroed during the reset phase. Height either remains
+        # at the sampled value (legacy behavior), or follows a configured reset contract:
+        # hold a fixed height through initial_phase_time and then blend continuously to the
+        # sampled command. Since all observation and reward consumers call this property
+        # through CommandManager.get_command(), they receive exactly the same target.
+        sampled_height = self.vel_command_b[:, 3]
+        initial_height = self.cfg.initial_phase_height
+        if initial_height is None or not self.track_z_flag:
+            vel_command_b[:, 3] = sampled_height
+        else:
+            transition_time = self.cfg.initial_phase_height_transition_time
+            if transition_time > 0.0:
+                transition_alpha = torch.clamp(
+                    (self.time_elapsed - self.cfg.initial_phase_time) / transition_time,
+                    min=0.0,
+                    max=1.0,
+                )
+                height_command = float(initial_height) + transition_alpha * (
+                    sampled_height - float(initial_height)
+                )
+            else:
+                height_command = torch.where(
+                    is_initial_phase,
+                    torch.full_like(sampled_height, float(initial_height)),
+                    sampled_height,
+                )
+            vel_command_b[:, 3] = height_command
         return vel_command_b
 
     def _update_metrics(self):
@@ -227,6 +252,12 @@ class UniformVelocityWithZCommandCfg(UniformVelocityCommandCfg):
 
     initial_phase_time: float = 2.0
     """Time for which the initial phase lasts."""
+
+    initial_phase_height: float | None = None
+    """Fixed height command during the initial phase. ``None`` keeps the sampled height."""
+
+    initial_phase_height_transition_time: float = 0.0
+    """Time used to blend from ``initial_phase_height`` to the sampled height command."""
 
 
 

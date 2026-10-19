@@ -31,10 +31,7 @@ from scripts.co_rl.core.storage import SequenceDataStorage
 #
 
 import torch
-import numpy as np
-import matplotlib.pyplot as plt
 import wandb
-from sklearn.manifold import TSNE
 
 def log_teacher_z_tsne(extras: dict, step: int, num_samples: int = 1000):
     """
@@ -50,6 +47,14 @@ def log_teacher_z_tsne(extras: dict, step: int, num_samples: int = 1000):
     # 1. 키 존재 확인
     if "teacher_z" not in extras:
         return # z가 없으면 스킵
+
+    # Import plotting dependencies only when this optional diagnostic is enabled.
+    # Forcing a non-interactive backend prevents Tk cleanup from running on a
+    # training worker thread in headless jobs.
+    import matplotlib
+    matplotlib.use("Agg", force=True)
+    import matplotlib.pyplot as plt
+    from sklearn.manifold import TSNE
 
     # 2. 데이터 추출 및 Sampling (CPU 이동)
     # 전체 배치를 다 돌리면 t-SNE가 너무 느리므로 랜덤 샘플링
@@ -400,7 +405,14 @@ class MOO_OnPolicyRunner:
             if hasattr(self.env.unwrapped, "domain_manager") and self.env.unwrapped.domain_manager is not None:
                 self.env.unwrapped.domain_manager.update_curriculum(mean_potential)
 
-            if self.log_dir is not None and self.writer is not None and it % 100 == 0:
+            if (
+                self.log_dir is not None
+                and self.writer is not None
+                and self.logger_type == "wandb"
+                and wandb.run is not None
+                and self.cfg.get("enable_teacher_tsne", False)
+                and it % 100 == 0
+            ):
                 if "teacher_z" in extras and "privileged_info" in extras:
                     # t-SNE 유틸 함수 호출
                     log_teacher_z_tsne(extras, step=it)

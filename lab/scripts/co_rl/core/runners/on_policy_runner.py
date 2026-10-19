@@ -14,7 +14,12 @@ from scripts import co_rl
 from scripts.co_rl.core.utils import *
 from scripts.co_rl.core.algorithms import PPO
 from scripts.co_rl.core.env import VecEnv
-from scripts.co_rl.core.modules import ActorCritic, ActorCriticRecurrent, EmpiricalNormalization
+from scripts.co_rl.core.modules import (
+    ActorCritic,
+    ActorCriticRecurrent,
+    EmpiricalNormalization,
+    HybridActorCritic,
+)
 from scripts.co_rl.core.utils import store_code_state
 
 from dataclasses import is_dataclass, fields
@@ -56,6 +61,14 @@ class OnPolicyRunner:
         actor_critic: ActorCritic | ActorCriticRecurrent = actor_critic_class(
             num_obs, num_critic_obs, self.env.num_actions, **self.policy_cfg
         ).to(self.device)
+        if (
+            getattr(actor_critic, "requires_fixed_kl_schedule", False)
+            and self.alg_cfg.get("schedule") != "fixed"
+        ):
+            raise ValueError(
+                "HybridActorCritic requires PPO schedule='fixed'; the existing adaptive KL "
+                "calculation assumes an all-Gaussian action distribution"
+            )
         alg_class = eval(self.alg_cfg.pop("class_name"))  # PPO
         self.alg: PPO = alg_class(actor_critic, device=self.device, **self.alg_cfg)
         self.num_steps_per_env = self.cfg["num_steps_per_env"]
@@ -141,6 +154,14 @@ class OnPolicyRunner:
             with torch.inference_mode():
                 for i in range(self.num_steps_per_env):
                     actions = self.alg.act(obs, critic_obs)
+                    if hasattr(self.env, "record_policy_diagnostics"):
+                        option_distribution = getattr(
+                            self.alg.actor_critic, "option_distribution", None
+                        )
+                        if option_distribution is not None:
+                            self.env.record_policy_diagnostics(
+                                option_distribution.probs.detach(), actions.detach()
+                            )
                     obs, rewards, dones, infos = self.env.step(actions.to(self.env.device))
                     # move to the right device
 
@@ -192,6 +213,7 @@ class OnPolicyRunner:
                 self.alg.compute_returns(critic_obs)
 
             mean_value_loss, mean_surrogate_loss = self.alg.update()
+            mean_behavior_cloning_loss = self.alg.last_behavior_cloning_loss
             stop = time.time()
             learn_time = stop - start
             self.current_learning_iteration = it
@@ -241,8 +263,17 @@ class OnPolicyRunner:
 
         self.writer.add_scalar("Loss/value_function", locs["mean_value_loss"], locs["it"])
         self.writer.add_scalar("Loss/surrogate", locs["mean_surrogate_loss"], locs["it"])
+        if locs["mean_behavior_cloning_loss"] > 0.0:
+            self.writer.add_scalar(
+                "Loss/behavior_cloning_anchor",
+                locs["mean_behavior_cloning_loss"],
+                locs["it"],
+            )
         self.writer.add_scalar("Loss/learning_rate", self.alg.learning_rate, locs["it"])
         self.writer.add_scalar("Policy/mean_noise_std", mean_std.item(), locs["it"])
+        if hasattr(self.env, "consume_policy_diagnostics"):
+            for name, value in self.env.consume_policy_diagnostics().items():
+                self.writer.add_scalar(f"Policy/{name}", value, locs["it"])
         self.writer.add_scalar("Perf/total_fps", fps, locs["it"])
         self.writer.add_scalar("Perf/collection time", locs["collection_time"], locs["it"])
         self.writer.add_scalar("Perf/learning_time", locs["learn_time"], locs["it"])

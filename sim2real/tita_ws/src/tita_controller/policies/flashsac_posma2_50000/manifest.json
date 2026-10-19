@@ -1,0 +1,22 @@
+{
+  "execution_domain": "DESKTOP_DRY_RUN",
+  "evidence_status": "PASS",
+  "checkpoint_sha256": "baba6974b76d4e8a7b7107cdfab9d2b7bb73695df00419009279549ebd51f992",
+  "onnx_sha256": "4b922a52b4e371f4e1ed28d64a0a9d4211161ba24950a1d5a92d2ccf26918553",
+  "config_sha256": "2b11c12bf531b8fd92558d3b36e04f49aa91fcae7b97f187413b127780bb93be",
+  "fingerprint": "952ea27bf113e3c3b967e5bcb4fe8fa3e430953d306aaaaf8f7c89a75e96928a",
+  "parity": {
+    "samples": 256,
+    "max_abs_error": 3.993511199951172e-06
+  },
+  "hardware_status": "NOT_TESTED",
+  "deployment_overrides": {
+    "command": {
+      "max_lin_x": 1.0,
+      "max_ang_z": 1.0
+    },
+    "source_config_sha256": "6b5e17a90fb78b6c45cf72b939790402f9872d5b5c286d830f53b1f6a91ea521",
+    "source_run": "tita_flash_sac_180212_290240/model_50000",
+    "note": "Training gains, 34 observations and saved MA2 retained; existing real joystick caps 1/1."
+  }
+}

@@ -27,9 +27,8 @@ tita_gluon_wbc/
 - **`innfos-cpp-sdk/` & `innfos-gluon-controller/`**: INNFOS GLUON upper-body robotic arm C++ SDK & motor controller driver.
 
 ### 3. `sim2sim/` (Sim-to-Sim Validation & Assets)
-- **`cosim/`**: MuJoCo physics-based sim-to-sim validation environment.
-- **`tita_gluon_urdf/`**: Combined URDF, Mesh, and USD assets for TITA + GLUON.
-- **`gluon_urdf/` & `gluon_2L6_4L3_urdf/`**: Standalone GLUON arm URDF files.
+- **`sim2sim_ros2_jazzy/`**: TITA PPO/FlashSAC MuJoCo playback and read-only state mirror.
+- **`robot/{tita,gluon,tita_gluon}/`**: Robot URDF, shared mesh and USD assets.
 
 ### 4. `tita_gluon_ws/` (ROS 2 Real Robot Deployment)
 - **`src/`**: ROS 2 packages including `ddt_ros2_control` and `tita_stage1_controller` for Whole-Body Control (WBC).

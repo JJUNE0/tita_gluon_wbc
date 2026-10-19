@@ -53,6 +53,7 @@ def track_ang_vel_z_exp(
 def track_lin_vel_xy_yaw_frame_exp(
     env, std: float, command_name: str, asset_cfg: SceneEntityCfg = SceneEntityCfg("robot")
 ) -> torch.Tensor:
+
     """Reward tracking of linear velocity commands (xy axes) in the gravity aligned robot frame using exponential kernel."""
     # extract the used quantities (to enable type-hinting)
     asset = env.scene[asset_cfg.name]
@@ -259,20 +260,41 @@ class GaitReward(ManagerTermBase):
         return torch.exp(-(se_act_0 + se_act_1) / self.std)
 
 
-def joint_mirror(env: ManagerBasedRLEnv, asset_cfg: SceneEntityCfg, mirror_joints: list[list[str]]) -> torch.Tensor:
+def joint_mirror(
+    env: ManagerBasedRLEnv,
+    asset_cfg: SceneEntityCfg,
+    mirror_joints: list[list[str | list[str]]],
+    mirror_signs: list[list[float]] | None = None,
+) -> torch.Tensor:
+    """Penalize left/right joint asymmetry: sum of (q_left - sign * q_right)^2.
+
+    ``mirror_signs`` gives one sign per matched joint of each pair (default +1).
+    Use -1 for joints whose left/right axes are parallel rather than mirrored
+    (TITA ``leg_1``), where the symmetric posture is q_left = -q_right.
+    """
     # extract the used quantities (to enable type-hinting)
     asset: Articulation = env.scene[asset_cfg.name]
     if not hasattr(env, "joint_mirror_joints_cache") or env.joint_mirror_joints_cache is None:
         # Cache joint positions for all pairs
         env.joint_mirror_joints_cache = [
-            [asset.find_joints(joint_name) for joint_name in joint_pair] for joint_pair in mirror_joints
+            [asset.find_joints(joint_name, preserve_order=True) for joint_name in joint_pair]
+            for joint_pair in mirror_joints
         ]
+        env.joint_mirror_signs_cache = []
+        for index, joint_pair in enumerate(env.joint_mirror_joints_cache):
+            count = len(joint_pair[0][0])
+            signs = [1.0] * count if mirror_signs is None else mirror_signs[index]
+            if len(joint_pair[1][0]) != count or len(signs) != count:
+                raise ValueError(f"joint_mirror pair {index} has mismatched joint/sign counts")
+            env.joint_mirror_signs_cache.append(torch.tensor(signs, device=env.device))
     reward = torch.zeros(env.num_envs, device=env.device)
     # Iterate over all joint pairs
-    for joint_pair in env.joint_mirror_joints_cache:
+    for joint_pair, signs in zip(env.joint_mirror_joints_cache, env.joint_mirror_signs_cache):
         # Calculate the difference for each pair and add to the total reward
         diff = torch.sum(
-            torch.square(asset.data.joint_pos[:, joint_pair[0][0]] - asset.data.joint_pos[:, joint_pair[1][0]]),
+            torch.square(
+                asset.data.joint_pos[:, joint_pair[0][0]] - signs * asset.data.joint_pos[:, joint_pair[1][0]]
+            ),
             dim=-1,
         )
         reward += diff
@@ -977,3 +999,76 @@ class ZeroCommandPositionDrift(ManagerTermBase):
 
         active = past_warmup & self.anchor_set
         return torch.where(active, reward, torch.zeros_like(reward))
+
+
+class ZeroCommandWheelActionIntegralPenalty(ManagerTermBase):
+    """I-controller-style penalty on accumulated wheel-joint action error while the velocity command is ~zero.
+
+    ``wheel_vel_penalty``/``zero_command_position_drift`` react to the
+    *consequences* of a nonzero wheel command (measured wheel velocity, base
+    drift) one physics step (or one drift-accumulation window) later. This
+    term instead penalizes the raw policy output for the wheel actuators
+    directly and immediately -- the action IsaacLab's ``JointVelocityActionCfg``
+    sends for ``.*_leg_4`` before any physics/estimator lag -- so the penalty
+    tracks command "spend", not the after-the-fact drift it eventually causes.
+
+    Rather than penalizing each step's ``|wheel_action|**exponent`` in
+    isolation (which resets to ~0 whenever the action momentarily dips near
+    zero), this term integrates that per-step term over time -- like the I
+    term of a PID controller -- for as long as the command stays in the
+    zero-band, so a small but persistent wheel bias compounds into a growing
+    penalty instead of being forgiven every time the action briefly touches
+    zero. The integral is reset to 0 on episode reset, and also dropped back
+    to 0 as soon as the command leaves the zero-band (same convention as
+    :class:`ZeroCommandPositionDrift`'s anchor) -- each zero-command hold
+    starts its own fresh integration window rather than carrying over stale
+    error from a previous hold.
+
+    ``command_threshold`` defaults to ``0.0`` (exact-zero match via ``<=``,
+    same convention as :class:`ZeroCommandPositionDrift`) rather than a
+    dead-zone: a nonzero command, however small, should be tracked, not
+    suppressed by this term.
+
+    The returned reward is ``integral_error ** integral_exponent``, not the
+    raw integral. ``integral_exponent < 1`` (e.g. the default ``0.5``, a
+    square root) makes the kernel steep near zero and flat for large values --
+    the opposite shape of the ``exponent=4`` used on the raw per-step
+    ``wheel_action`` above. That per-step quartic exists to *tolerate* small
+    residual chatter; this integral kernel exists to do the opposite --
+    refuse to tolerate even a small but persistent nonzero integral, since a
+    concave (``p < 1``) kernel penalizes small nonzero values disproportionately
+    more (relative to their size) than large ones, the same reason L1-style
+    penalties drive residuals to exactly zero instead of merely small.
+    """
+
+    def __init__(self, cfg: RewTerm, env: ManagerBasedRLEnv):
+        super().__init__(cfg, env)
+        self.integral_error = torch.zeros(env.num_envs, device=env.device)
+
+    def reset(self, env_ids: Sequence[int] | None = None) -> None:
+        if env_ids is None:
+            env_ids = slice(None)
+        self.integral_error[env_ids] = 0.0
+
+    def __call__(
+        self,
+        env: ManagerBasedRLEnv,
+        command_name: str,
+        wheel_asset_cfg: SceneEntityCfg,
+        exponent: float = 4.0,
+        integral_exponent: float = 0.5,
+        command_threshold: float = 0.0,
+    ) -> torch.Tensor:
+        cmd = env.command_manager.get_command(command_name)
+        # `<=` (not `<`) so `command_threshold=0.0` still matches an exact-zero
+        # emitted command instead of never triggering.
+        is_zero_cmd = torch.linalg.norm(cmd, dim=1) <= command_threshold
+
+        wheel_action = env.action_manager.action[:, wheel_asset_cfg.joint_ids]
+        step_error = torch.sum(torch.abs(wheel_action) ** exponent, dim=1)
+        step_error *= torch.clamp(-env.scene["robot"].data.projected_gravity_b[:, 2], 0, 0.7) / 0.7
+
+        self.integral_error = torch.where(
+            is_zero_cmd, self.integral_error + step_error * env.step_dt, torch.zeros_like(self.integral_error)
+        )
+        return self.integral_error**integral_exponent

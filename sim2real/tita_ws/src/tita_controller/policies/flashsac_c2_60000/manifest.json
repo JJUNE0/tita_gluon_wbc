@@ -1,0 +1,46 @@
+{
+  "execution_domain": "VALIDATION_SIM",
+  "evidence_status": "PASS",
+  "checkpoint_sha256": "b4c8ae072787c3119864e75c2ebfbaf8284a02976dc68f1f282ad9480ae2e116",
+  "onnx_sha256": "b12e40267bb3247762b0dd6283bd9f9cafffac52597ca74b387790bb4e925b7f",
+  "config_sha256": "9561fd1a7d9e5f75a1a9916e0c32d4a705109c4795dac9636fbac0ad877ffde1",
+  "fingerprint": "75a23a52475271b1205cc2cc6264f4f45f4bdd6738fa9f8ab0615e3ce6b705f8",
+  "parity": {
+    "samples": 256,
+    "max_abs_error": 3.337860107421875e-06
+  },
+  "deployment_overrides": {
+    "command": {
+      "max_lin_x": 1.0,
+      "max_ang_z": 1.0
+    },
+    "source_config_sha256": "f039002421ef7b19e9f6e280bb7af6c036b10e28a3de289cdd97d6b5cdd15d8c",
+    "robot": {
+      "joint_kp": [
+        60.0,
+        60.0,
+        60.0,
+        0.0,
+        60.0,
+        60.0,
+        60.0,
+        0.0
+      ],
+      "joint_kd": [
+        1.5,
+        1.5,
+        1.5,
+        0.5,
+        1.5,
+        1.5,
+        1.5,
+        0.5
+      ],
+      "note": "training defaults; no deployment-side leg compensation"
+    },
+    "source_task": "DDT-Velocity-Flat-Tita-My-LegScale-Reward-v0",
+    "source_run": "tita_flash_sac_114500_483968/model_60000",
+    "selection": "docs/exp/2026-10-18/flashsac_legscale_sim2sim.md (section 3a)",
+    "hardware_status": "NOT_TESTED"
+  }
+}

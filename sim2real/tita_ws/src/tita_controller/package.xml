@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>tita_controller</name>
+  <version>0.1.0</version>
+  <description>TITA sim2real: state machine (damp -> transform_up -> sit -> rl) and ONNX policy, same structure as sim2sim.</description>
+  <maintainer email="research@example.com">TITA research</maintainer>
+  <license>BSD-3-Clause</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
+  <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>tita_robot</depend>
+  <depend>eigen</depend>
+  <exec_depend>teleop_command</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

@@ -8,6 +8,7 @@
 from .exporter import export_policy_as_jit, export_policy_as_onnx, export_srm_as_onnx, export_student_onnx
 from .rl_cfg import (
     CoRlPolicyRunnerCfg,
+    CoRlHybridPpoActorCriticCfg,
     CoRlPpoActorCriticCfg,
     CoRlPpoAlgorithmCfg,
     CoRlSrmPpoAlgorithmCfg,
@@ -16,6 +17,7 @@ from .rl_cfg import (
     CoRlSIEPpoAlgorithmCfg,
     CoRlSIEActorCriticCfg,
     CoRlEstimatorActorCriticCfg,
+    CoRlRMATeacherActorCriticCfg,
     CoRlLipsNetActorCriticCfg,
     CoRlLipcsNetPolicyRunnerCfg,
     CoRlLipsPpoAlgorithmCfg,

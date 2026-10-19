@@ -1,0 +1,85 @@
+{
+  "execution_domain": "VALIDATION_SIM",
+  "evidence_status": "PASS",
+  "checkpoint_sha256": "79f9175bb8c3be0c5138866e30891b90cc1282b6c98023cdb76c2e33b229068c",
+  "onnx_sha256": "26f0d86b65a68475fb8a315fb31e829ae16eaa2cf16dabbbcf38e69f28c933e9",
+  "config_sha256": "a24c2137969f854fc98cc3027884dbbadad4060f18db7758b028c12ca1405719",
+  "fingerprint": "451a50b0df27ce46a6f4d1ac3f3ecc46e75ce785b09a9a0e136425e6967f6428",
+  "parity": {
+    "samples": 256,
+    "max_abs_error": 2.9802322387695312e-06
+  },
+  "deployment_overrides": {
+    "command": {
+      "max_lin_x": 1.0,
+      "max_ang_z": 1.0
+    },
+    "source_config_sha256": "a075c2813231d4c98f5491e0cfa5cbf8a42ce2fcec8c56c4660a8e4622bea10b",
+    "robot": {
+      "joint_kp": [
+        60.0,
+        60.0,
+        92.0,
+        0.0,
+        60.0,
+        60.0,
+        92.0,
+        0.0
+      ],
+      "joint_kd": [
+        1.5,
+        1.5,
+        2.3,
+        0.5,
+        1.5,
+        1.5,
+        2.3,
+        0.5
+      ]
+    },
+    "leg_pd_experiment": {
+      "joint_kp": [
+        60.0,
+        60.0,
+        92.0,
+        0.0,
+        60.0,
+        60.0,
+        92.0,
+        0.0
+      ],
+      "joint_kd": [
+        1.5,
+        1.5,
+        2.3,
+        0.5,
+        1.5,
+        1.5,
+        2.3,
+        0.5
+      ],
+      "previous_joint_kp": [
+        92.0,
+        92.0,
+        92.0,
+        0.0,
+        92.0,
+        92.0,
+        92.0,
+        0.0
+      ],
+      "previous_joint_kd": [
+        2.3,
+        2.3,
+        2.3,
+        0.5,
+        2.3,
+        2.3,
+        2.3,
+        0.5
+      ],
+      "scope": "RL native indices 0,1,4,5 restored to 60/1.5; knees 2,6 remain 92/2.3; wheel and state-machine gains unchanged",
+      "hardware_status": "NOT_TESTED"
+    }
+  }
+}

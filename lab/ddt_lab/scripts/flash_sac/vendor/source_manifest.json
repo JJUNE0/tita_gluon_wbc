@@ -1,0 +1,165 @@
+{
+  "execution_domain": "TRAINING_SIM",
+  "upstream_repository": "https://github.com/Holiday-Robot/FlashSAC.git",
+  "upstream_commit": null,
+  "upstream_commit_note": "No upstream remote-tracking refs are available locally; no network lookup was performed.",
+  "local_origin_repository": "git@github.com:JJUNE0/FlashSAC.git",
+  "local_source_directory": "/home/cocel/Desktop/Research/wolf-quadruped/rl/FlashSAC",
+  "local_source_head_commit": "87edc9061150ae9e962dd84e6544e27a1554b3ab",
+  "local_source_dirty": true,
+  "local_source_status_short": [
+    " M flash_rl/agents/flashSAC/agent.py",
+    " M flash_rl/agents/flashSAC/update.py",
+    " M flash_rl/buffers/torch_buffer.py",
+    " M flash_rl/types.py",
+    "?? tests/"
+  ],
+  "license": "MIT; Copyright (c) 2026 Holiday Robotics",
+  "scope": "PyTorch FlashSAC learner, networks, normalization, and n-step replay only",
+  "runtime_dependencies": [
+    "torch",
+    "numpy",
+    "gymnasium"
+  ],
+  "source_patches_preserved": [
+    "Separate actor and critic observations via critic_observation_offset",
+    "Per-transition n-step discounts at termination and timeout boundaries",
+    "Conditional type-checking-only JAX imports",
+    "CPU replay avoids eager page locking"
+  ],
+  "package_initializer_adaptations": {
+    "flash_rl/agents/__init__.py": "Exclude the unused OmegaConf agent factory and optional agents",
+    "flash_rl/buffers/__init__.py": "Retain BaseBuffer and Batch imports; exclude unused NumPy factories"
+  },
+  "files": [
+    {
+      "source_path": "flash_rl/__init__.py",
+      "vendored_path": "flash_rl/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "vendored_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/types.py",
+      "vendored_path": "flash_rl/types.py",
+      "source_sha256": "2d878d07432effcff4da4e3f019761fd5fe00bae5a203bc35ebaaeb3d1f1cbc6",
+      "vendored_sha256": "2d878d07432effcff4da4e3f019761fd5fe00bae5a203bc35ebaaeb3d1f1cbc6",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/agents/__init__.py",
+      "vendored_path": "flash_rl/agents/__init__.py",
+      "source_sha256": "921bf41fd77b2efdd7714dc966f69a0fbb3208f6feb4cb9088f7b1289cca81b8",
+      "vendored_sha256": "b69a3a9075a2a8c5d4a8d811653c005fc15ceaca4b710634e4a095788ffaa40a",
+      "copy_mode": "trimmed_package_initializer"
+    },
+    {
+      "source_path": "flash_rl/agents/base_agent.py",
+      "vendored_path": "flash_rl/agents/base_agent.py",
+      "source_sha256": "d58f98e02eed8887c16f5f7d83d97f16e4a7ac0d104dc40d1809bf3832a72dfc",
+      "vendored_sha256": "d58f98e02eed8887c16f5f7d83d97f16e4a7ac0d104dc40d1809bf3832a72dfc",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/agents/flashSAC/__init__.py",
+      "vendored_path": "flash_rl/agents/flashSAC/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "vendored_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/agents/flashSAC/agent.py",
+      "vendored_path": "flash_rl/agents/flashSAC/agent.py",
+      "source_sha256": "ced0dfe3524cdfef7df4f3bea635b4c37938f5907f2b08634813634561fe067b",
+      "vendored_sha256": "ced0dfe3524cdfef7df4f3bea635b4c37938f5907f2b08634813634561fe067b",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/agents/flashSAC/layer.py",
+      "vendored_path": "flash_rl/agents/flashSAC/layer.py",
+      "source_sha256": "7af7b2954c22a5ae56595b8d3139017e2a44b17dbd63c2f54c4e65dbd17ef7cc",
+      "vendored_sha256": "7af7b2954c22a5ae56595b8d3139017e2a44b17dbd63c2f54c4e65dbd17ef7cc",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/agents/flashSAC/network.py",
+      "vendored_path": "flash_rl/agents/flashSAC/network.py",
+      "source_sha256": "4068098466f195fac2c7d91e3cb1abe0c4daf42c4d1cd85f3940dca9edfd4c98",
+      "vendored_sha256": "4068098466f195fac2c7d91e3cb1abe0c4daf42c4d1cd85f3940dca9edfd4c98",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/agents/flashSAC/update.py",
+      "vendored_path": "flash_rl/agents/flashSAC/update.py",
+      "source_sha256": "50c571fc466276aa6caac56c2c13d3e42029bb669cce58a6a73a98bf9e01d5ba",
+      "vendored_sha256": "50c571fc466276aa6caac56c2c13d3e42029bb669cce58a6a73a98bf9e01d5ba",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/agents/utils/__init__.py",
+      "vendored_path": "flash_rl/agents/utils/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "vendored_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/agents/utils/distribution.py",
+      "vendored_path": "flash_rl/agents/utils/distribution.py",
+      "source_sha256": "30c2987d80238ccc9c59dd6f7a9dd4056ed01773901d3d08a0db8c40f61b76ed",
+      "vendored_sha256": "30c2987d80238ccc9c59dd6f7a9dd4056ed01773901d3d08a0db8c40f61b76ed",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/agents/utils/network.py",
+      "vendored_path": "flash_rl/agents/utils/network.py",
+      "source_sha256": "02b1e8c27ae2d75ba39969a5ea6b21e1bc596dbab71fdd6c5dc9cd5d7aab1d69",
+      "vendored_sha256": "3e44b1b8339738e144fd76b823cca4cdd4f79d66b4ece43bbc7cb1194a15b06d",
+      "copy_mode": "local_source_with_checkpoint_compatibility_patch"
+    },
+    {
+      "source_path": "flash_rl/agents/utils/reward_normalization.py",
+      "vendored_path": "flash_rl/agents/utils/reward_normalization.py",
+      "source_sha256": "b673f5fba40468f6bb183d3cc82daa05111e95407ccb6b73de854f338c7b70b8",
+      "vendored_sha256": "b673f5fba40468f6bb183d3cc82daa05111e95407ccb6b73de854f338c7b70b8",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/agents/utils/scheduler.py",
+      "vendored_path": "flash_rl/agents/utils/scheduler.py",
+      "source_sha256": "b3732509dbe01a01d76b3018d062386287bf7cb669973e2a465192c584030811",
+      "vendored_sha256": "b3732509dbe01a01d76b3018d062386287bf7cb669973e2a465192c584030811",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/buffers/__init__.py",
+      "vendored_path": "flash_rl/buffers/__init__.py",
+      "source_sha256": "b2dac97cf5043c9b533c694035194d9a7eb3a31056255f50e45fd54a70331438",
+      "vendored_sha256": "47d60b3394404c1eb99bb4abce2654c2b35c1fcb2b79e7c84232c9dd4d284b8d",
+      "copy_mode": "trimmed_package_initializer"
+    },
+    {
+      "source_path": "flash_rl/buffers/base_buffer.py",
+      "vendored_path": "flash_rl/buffers/base_buffer.py",
+      "source_sha256": "75a067a6d8a3d4d6098961a557d78bbb42e73bfd5e6e1e37b41c9d70fb263699",
+      "vendored_sha256": "75a067a6d8a3d4d6098961a557d78bbb42e73bfd5e6e1e37b41c9d70fb263699",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "flash_rl/buffers/torch_buffer.py",
+      "vendored_path": "flash_rl/buffers/torch_buffer.py",
+      "source_sha256": "a0b5303b90760c9587091102e6bd299e9b7e27cdd6175bc6aa69382366b78237",
+      "vendored_sha256": "a0b5303b90760c9587091102e6bd299e9b7e27cdd6175bc6aa69382366b78237",
+      "copy_mode": "exact_local_source"
+    },
+    {
+      "source_path": "LICENSE",
+      "vendored_path": "LICENSE.FlashSAC",
+      "source_sha256": "5e7a0ca5f1955091e476af95148f32b48b58feb851a36e09b5c89a0c05bd4421",
+      "vendored_sha256": "5e7a0ca5f1955091e476af95148f32b48b58feb851a36e09b5c89a0c05bd4421",
+      "copy_mode": "exact_local_source"
+    }
+  ],
+  "runtime_adaptations": {
+    "flash_rl/agents/utils/network.py": "Save/load original module state dictionaries across eager and torch.compile execution; load legacy _orig_mod-prefixed weights while retaining optimizer/scheduler and partial parameter restoration."
+  }
+}

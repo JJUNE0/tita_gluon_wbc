@@ -42,7 +42,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 COMBINED_URDF = (
     REPO_ROOT
     / "sim2sim"
-    / "tita_gluon_urdf"
+    / "robot" / "tita_gluon"
     / "urdf"
     / "tita_gluon_2L6_4L3.urdf"
 )

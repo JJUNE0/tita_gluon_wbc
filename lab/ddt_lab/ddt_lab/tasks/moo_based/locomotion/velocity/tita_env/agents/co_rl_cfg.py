@@ -9,6 +9,7 @@ from scripts.co_rl.core.wrapper import (
     CoRlMOOPolicyRunnerCfg,
     CoRlPpoActorCriticCfg,
     CoRlEstimatorActorCriticCfg,
+    CoRlRMATeacherActorCriticCfg,
     CoRlMooPpoAlgorithmCfg,
     ADDCfg,
 )
@@ -85,3 +86,25 @@ class TitaMOOPPORunnerCfg_Flat_Stand_Drive_Estimator(TitaMOOPPORunnerCfg_Flat_St
             estimator_output_dim=3,
         )
         self.algorithm.estimator_loss_coef = 1.0
+
+
+@configclass
+class TitaMOOPPORunnerCfg_Flat_Stand_Drive_RMATeacher(TitaMOOPPORunnerCfg_Flat_Stand_Drive):
+    """RMA teacher matching the validated 2026-08-08 TITA v4 run."""
+
+    def __post_init__(self):
+        super().__post_init__()
+        self.max_iterations = 10_000
+        self.num_policy_stacks = 1
+        self.use_rma_teacher = True
+        self.policy = CoRlRMATeacherActorCriticCfg(
+            init_noise_std=1.0,
+            actor_hidden_dims=[512, 256, 128],
+            critic_hidden_dims=[512, 256, 128],
+            activation="elu",
+            latent_dim=16,
+        )
+        self.experiment_description = (
+            "RMA Teacher v4 parent: pos_z 0.32-0.38 widens to 0.25-0.45 "
+            "over rollout steps 24000-120000"
+        )

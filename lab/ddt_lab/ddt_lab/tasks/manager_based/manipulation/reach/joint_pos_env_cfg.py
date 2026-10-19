@@ -93,4 +93,3 @@ class GluonReachEnvCfg_PLAY(GluonReachEnvCfg):
         self.scene.num_envs = 16
         self.commands.ee_pose.debug_vis = True
         self.observations.policy.enable_corruption = False
-

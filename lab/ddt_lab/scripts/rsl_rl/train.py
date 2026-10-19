@@ -125,6 +125,9 @@ def main():
 
     dump_yaml(os.path.join(log_dir, 'params', 'env.yaml'), env_cfg)
     dump_yaml(os.path.join(log_dir, 'params', 'agent.yaml'), agent_cfg)
+    if args_cli.task == 'DDT-Velocity-Flat-Tita-My-v0':
+        from ddt_lab.policy_interface import save_policy_interface
+        save_policy_interface(env, os.path.join(log_dir, 'params', 'policy_interface.json'))
 
     runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
     env.close()

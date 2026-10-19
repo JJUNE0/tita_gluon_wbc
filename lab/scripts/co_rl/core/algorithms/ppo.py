@@ -6,6 +6,7 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torch.nn.functional as functional
 
 from scripts.co_rl.core.modules import ActorCritic
 from scripts.co_rl.core.storage import RolloutStorage
@@ -55,6 +56,68 @@ class PPO:
         self.use_clipped_value_loss = use_clipped_value_loss
 
         self.cfg = None
+        self.behavior_cloning_observations = None
+        self.behavior_cloning_actions = None
+        self.behavior_cloning_reference_outputs = None
+        self.behavior_cloning_coefficient = 0.0
+        self.behavior_cloning_batch_size = 0
+        self.last_behavior_cloning_loss = 0.0
+
+    def set_behavior_cloning_reference(
+        self,
+        observations,
+        actions,
+        coefficient=1.0,
+        batch_size=4096,
+    ):
+        """Anchor a hybrid policy to scheduler demonstrations during PPO updates."""
+        if coefficient <= 0.0 or batch_size <= 0:
+            raise ValueError("behavior-cloning coefficient and batch size must be positive")
+        if not hasattr(self.actor_critic, "actor_body") or not hasattr(
+            self.actor_critic, "continuous_action_dim"
+        ):
+            raise TypeError("behavior-cloning anchoring requires a hybrid actor")
+        if observations.ndim != 2 or actions.ndim != 2 or len(observations) != len(actions):
+            raise ValueError("behavior-cloning observations/actions must be aligned rank-2 tensors")
+        labels = actions[:, self.actor_critic.continuous_action_dim].round().long()
+        class_counts = torch.bincount(
+            labels, minlength=self.actor_critic.discrete_action_dim
+        ).float()
+        if bool(torch.any(class_counts == 0)):
+            raise ValueError("behavior-cloning reference must contain every discrete class")
+        self.behavior_cloning_observations = observations.detach().clone().to(self.device)
+        self.behavior_cloning_actions = actions.detach().clone().to(self.device)
+        with torch.inference_mode():
+            self.behavior_cloning_reference_outputs = self.actor_critic.actor_body(
+                self.behavior_cloning_observations
+            ).detach().clone()
+        self.behavior_cloning_coefficient = float(coefficient)
+        self.behavior_cloning_batch_size = int(batch_size)
+
+    def set_actor_learning_rate_scale(self, scale):
+        """Use a lower actor step size while retaining the configured critic rate."""
+        if scale <= 0.0 or scale > 1.0:
+            raise ValueError("actor learning-rate scale must be in (0, 1]")
+        if not hasattr(self.actor_critic, "actor_body") or not hasattr(
+            self.actor_critic, "critic"
+        ):
+            raise TypeError("actor learning-rate scaling requires separate actor and critic modules")
+        actor_parameters = list(self.actor_critic.actor_body.parameters())
+        if hasattr(self.actor_critic, "std"):
+            actor_parameters.append(self.actor_critic.std)
+        actor_parameter_ids = {id(parameter) for parameter in actor_parameters}
+        critic_parameters = [
+            parameter
+            for parameter in self.actor_critic.parameters()
+            if id(parameter) not in actor_parameter_ids
+        ]
+        self.optimizer = optim.Adam(
+            [
+                {"params": actor_parameters, "lr": self.learning_rate * scale},
+                {"params": critic_parameters, "lr": self.learning_rate},
+            ]
+        )
+        self.actor_learning_rate_scale = float(scale)
 
     def init_storage(self, cfg, num_envs, num_transitions_per_env, actor_obs_shape, critic_obs_shape, action_shape):
         self.update_late_cfg(cfg)
@@ -107,6 +170,7 @@ class PPO:
     def update(self):
         mean_value_loss = 0
         mean_surrogate_loss = 0
+        mean_behavior_cloning_loss = 0
         if self.actor_critic.is_recurrent:
             generator = self.storage.reccurent_mini_batch_generator(self.num_mini_batches, self.num_learning_epochs)
         else:
@@ -172,7 +236,38 @@ class PPO:
             else:
                 value_loss = (returns_batch - value_batch).pow(2).mean()
 
-            loss = surrogate_loss + self.value_loss_coef * value_loss - self.entropy_coef * entropy_batch.mean() #+ self.actor_critic.actor.compute_regularization(obs_batch)
+            behavior_cloning_loss = torch.zeros((), device=self.device)
+            if self.behavior_cloning_observations is not None:
+                reference_count = len(self.behavior_cloning_observations)
+                reference_indices = torch.randint(
+                    reference_count,
+                    (min(self.behavior_cloning_batch_size, reference_count),),
+                    device=self.device,
+                )
+                reference_output = self.actor_critic.actor_body(
+                    self.behavior_cloning_observations[reference_indices]
+                )
+                frozen_reference_output = self.behavior_cloning_reference_outputs[
+                    reference_indices
+                ]
+                continuous_dim = self.actor_critic.continuous_action_dim
+                continuous_loss = functional.mse_loss(
+                    reference_output[:, :continuous_dim],
+                    frozen_reference_output[:, :continuous_dim],
+                )
+                categorical_loss = functional.kl_div(
+                    functional.log_softmax(reference_output[:, continuous_dim:], dim=-1),
+                    functional.softmax(frozen_reference_output[:, continuous_dim:], dim=-1),
+                    reduction="batchmean",
+                )
+                behavior_cloning_loss = continuous_loss + categorical_loss
+
+            loss = (
+                surrogate_loss
+                + self.value_loss_coef * value_loss
+                - self.entropy_coef * entropy_batch.mean()
+                + self.behavior_cloning_coefficient * behavior_cloning_loss
+            )
 
             # Gradient step
             self.optimizer.zero_grad()
@@ -182,10 +277,12 @@ class PPO:
 
             mean_value_loss += value_loss.item()
             mean_surrogate_loss += surrogate_loss.item()
+            mean_behavior_cloning_loss += behavior_cloning_loss.item()
 
         num_updates = self.num_learning_epochs * self.num_mini_batches
         mean_value_loss /= num_updates
         mean_surrogate_loss /= num_updates
+        self.last_behavior_cloning_loss = mean_behavior_cloning_loss / num_updates
         self.storage.clear()
 
         return mean_value_loss, mean_surrogate_loss
