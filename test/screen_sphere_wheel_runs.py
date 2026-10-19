@@ -72,6 +72,8 @@ SCENARIOS = {'stand': dict(duration=32., schedule=[(0., 0., 0.)], ramp=.5),
              'drive': dict(duration=106., schedule=DRIVE, ramp=.5),
              'drive_fast': dict(duration=70., schedule=DRIVE_FAST, ramp=2.),
              'probe': dict(duration=20., schedule=[(0., 0., 0.)], ramp=.5),
+             # 5-minute zero-command hold (render_real2sim_progression.py presentation video)
+             'stand300': dict(duration=300., schedule=[(0., 0., 0.)], ramp=.5),
              # in-place turn check (2026-10-19 real run: backward arc + thigh flexion while turning)
              'turn': dict(duration=30., schedule=[(0., 0., 0.), (8., 0., 1.), (13., 0., 0.), (18., 0., -1.), (23., 0., 0.)],
                           ramp=.5)}
@@ -142,8 +144,8 @@ def rollout(job):
     from sim2sim_ros2_jazzy.state_machine import StateMachine, SPLAY_POSE
 
     cfg = json.loads(Path(job['config']).read_text())
-    assert cfg['policy']['obs_dim'] in (34, 35)
-    mode = cfg['policy_interface']['leg_action_filter']
+    assert cfg['policy']['obs_dim'] in (33, 34, 35)
+    mode = cfg['policy_interface'].get('leg_action_filter', 'none')   # 33-obs exports predate the key
     options = ort.SessionOptions()
     options.intra_op_num_threads = options.inter_op_num_threads = 1
     policy = ort.InferenceSession(cfg['policy']['path'], sess_options=options, providers=['CPUExecutionProvider'])
@@ -191,12 +193,12 @@ def rollout(job):
     half = np.radians(plant.get('imu_pitch_deg', 0.)) / 2
     imu_offset = np.array([np.cos(half), 0., np.sin(half), 0.])               # body-frame rotation about y
     imu_rot = quat_wxyz_to_rotmat(imu_offset)
-    x_index = sum(term['size'] for term in cfg['policy_interface']['observations'][:next(
-        i for i, term in enumerate(cfg['policy_interface']['observations']) if term['kind'] == 'wheel_position_error')])
-    x_scale = float(next(term['scale'] for term in cfg['policy_interface']['observations']
-                         if term['kind'] == 'wheel_position_error'))
+    terms = cfg['policy_interface']['observations']
+    x_term = next((i for i, term in enumerate(terms) if term['kind'] == 'wheel_position_error'), None)
+    x_index = None if x_term is None else sum(term['size'] for term in terms[:x_term])
+    x_scale = None if x_term is None else float(terms[x_term]['scale'])
     keys = ('t', 'q', 'dq', 'rpy_deg', 'position', 'velocity_body', 'gyro', 'command', 'raw', 'applied', 'torque', 'x_err',
-            'imu_rpy_deg')
+            'imu_rpy_deg', 'qpos')
     rows = {k: [] for k in keys}
     failure, tick, was_rl = None, 0, False
     try:
@@ -221,6 +223,7 @@ def rollout(job):
             quat = env.base_quat_sensor()
             rot = quat_wxyz_to_rotmat(quat)
             q, dq, position = env.joint_pos(), env.joint_vel(), env.base_pos()
+            qpos = env.data.qpos.copy()                                   # same instant as q/position (pre-step)
             tilt = np.arccos(np.clip(rot[2, 2], -1., 1.))
             contact = any(c.dist < 0 and ((m.geom_bodyid[c.geom1] == base_body and c.geom2 == floor) or
                                           (m.geom_bodyid[c.geom2] == base_body and c.geom1 == floor))
@@ -246,8 +249,9 @@ def rollout(job):
             if not np.isfinite(env.data.qpos).all() or not np.isfinite(env.data.qvel).all():
                 raise ValueError('Nonfinite physics state')
             values = (t, q, dq, np.degrees(quat_wxyz_to_rpy(quat)), position, rot.T @ env.base_lin_vel(), gyro,
-                      command.copy(), raw.copy(), applied.copy(), np.mean(torques, axis=0), float(obs[x_index] / x_scale),
-                      np.degrees(quat_wxyz_to_rpy(imu_quat)))
+                      command.copy(), raw.copy(), applied.copy(), np.mean(torques, axis=0),
+                      float('nan') if x_index is None else float(obs[x_index] / x_scale),
+                      np.degrees(quat_wxyz_to_rpy(imu_quat)), qpos)
             for k, v in zip(keys, values):
                 rows[k].append(v)
             last = raw.copy()
@@ -257,7 +261,7 @@ def rollout(job):
         failure = dict(kind=type(error).__name__, detail=str(error), t_rl_s=tick * DT)
     finally:
         env.close()
-    s = {k: np.asarray(v, dtype=np.float32) for k, v in rows.items()}
+    s = {k: np.asarray(v, dtype=np.float64 if k == 'qpos' else np.float32) for k, v in rows.items()}
     result = dict(job=job, leg_action_filter=mode, rl_steps=tick, failure=failure,
                   evidence_status='FAIL' if failure or tick != round(sc['duration'] / DT) else 'PASS')
     if result['evidence_status'] == 'PASS':
@@ -312,7 +316,7 @@ def metrics(s, scenario):
     raw_legs = s['raw'][:, LEGS].astype(float)
     out = {}
     zero = np.max(np.abs(cmd), axis=1) < 1e-7
-    if scenario in ('stand', 'probe'):
+    if scenario in ('stand', 'probe', 'stand300'):
         m = t >= 8.
         tt = t[m] - t[m][0]
         out.update(yaw_rate_dps=float(np.degrees(np.polyfit(tt, yaw[m], 1)[0])),

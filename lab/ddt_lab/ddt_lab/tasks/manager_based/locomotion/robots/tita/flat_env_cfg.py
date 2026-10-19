@@ -9,7 +9,8 @@ Promoted from MyTitaFlatPosKneeSphereHeadingObsW0EnvCfg (headw0 50k/65k).
 Final settings are declared here without inheriting experiment variants:
 35 policy / 39 critic observations, sphere wheel collisions, plain leg position
 actions, knee PD 92/2.3 with output randomization, and zero-warmup heading hold.
-Commands retain the 0.5 ramp and +/-1.0 m/s, +/-1.5 rad/s ranges.
+Commands apply targets immediately, with no initial settle window and
++/-1.5 m/s, +/-3.0 rad/s ranges.
 
 Selection and limitations: docs/exp/2026-10-19/flashsac_headw0_65000_153755_review.md.
 The real-run position-hold and turning gaps documented there remain unresolved.
@@ -126,7 +127,7 @@ class SceneCfg(InteractiveSceneCfg):
 
 @configclass
 class CommandsCfg:
-    """Ramped velocity targets with 10% standing command sampling."""
+    """Immediate velocity targets with 10% standing command sampling."""
 
     base_velocity: mdp.RampedVelocityCommandCfg = mdp.RampedVelocityCommandCfg(
         asset_name="robot",
@@ -137,12 +138,13 @@ class CommandsCfg:
         heading_control_stiffness=0.5,
         debug_vis=True,
         ranges=mdp.RampedVelocityCommandCfg.Ranges(
-            lin_vel_x=(-1.0, 1.0),
+            lin_vel_x=(-1.5, 1.5),
             lin_vel_y=(-0.0, 0.0),
-            ang_vel_z=(-1.5, 1.5),
+            ang_vel_z=(-3.0, 3.0),
             heading=(-3.14159265, 3.14159265),
         ),
-        ramp_rate=0.5,
+        ramp_rate=0,
+        initial_phase_time=0.0,
     )
 
 

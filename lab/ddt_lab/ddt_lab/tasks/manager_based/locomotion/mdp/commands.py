@@ -146,7 +146,7 @@ class RampedVelocityCommand(UniformVelocityCommand):
     plain ``super()`` calls, unchanged. ``self._emitted_command_b`` is the
     actual output (the ``command`` property read by observations/rewards),
     ramped toward the target by at most ``cfg.ramp_rate`` units/s per axis
-    per step.
+    per step. Setting ``cfg.ramp_rate`` to zero emits the target immediately.
 
     Two additional fixes vs. the original My7 version (2026-07-20):
 
@@ -217,9 +217,12 @@ class RampedVelocityCommand(UniformVelocityCommand):
         if len(settling_env_ids) > 0:
             self.vel_command_b[settling_env_ids, :] = 0.0
 
-        max_step = self.cfg.ramp_rate * self._env.step_dt
-        delta = torch.clamp(self.vel_command_b - self._emitted_command_b, -max_step, max_step)
-        self._emitted_command_b = self._emitted_command_b + delta
+        if self.cfg.ramp_rate == 0.0:
+            self._emitted_command_b.copy_(self.vel_command_b)
+        else:
+            max_step = self.cfg.ramp_rate * self._env.step_dt
+            delta = torch.clamp(self.vel_command_b - self._emitted_command_b, -max_step, max_step)
+            self._emitted_command_b.add_(delta)
 
 
 @configclass
@@ -231,7 +234,8 @@ class RampedVelocityCommandCfg(UniformVelocityCommandCfg):
     ramp_rate: float = 2.5
     """Max rate of change of the emitted command per axis, in units/s (m/s^2 for
     linear axes, rad/s^2 for yaw). Default 2.5 matches ~0.05 per 0.02s control
-    step, mirroring the keyboard teleop node's per-keypress increment."""
+    step, mirroring the keyboard teleop node's per-keypress increment.
+    Zero disables ramping and emits the target immediately."""
 
     initial_phase_time: float = 2.0
     """Seconds after each reset during which the target command is held at

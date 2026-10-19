@@ -301,10 +301,10 @@ def sphere_wheel_urdf(source: str) -> str:
     0.30 N m of right-left wheel torque turned the posma2_50000 robot at 0.17 deg/s, while the real
     robot turned at 3.8 deg/s with 0.37 N m (``docs/exp/2026-10-18/flashsac_posma2_50000_202450_review.md``
     section 7). A sphere gives one contact point and no scrub torque. Visual meshes, inertia and all
-    other collisions are unchanged; ``package://tita_description/`` paths become absolute so the copy
-    can live outside the package.
+    other collisions are unchanged; relative mesh paths and ``package://tita_description/`` paths
+    become absolute so the copy can live outside the source package.
     """
-    src = Path(source)
+    src = Path(source).resolve()
     root = ET.fromstring(src.read_text())
     replaced = 0
     for link in root.findall("link"):
@@ -322,7 +322,12 @@ def sphere_wheel_urdf(source: str) -> str:
         raise ValueError(f"replaced {replaced} wheel collisions, expected {len(WHEEL_LINKS)}")
     package = src.parents[1]
     for mesh in root.iter("mesh"):
-        mesh.set("filename", mesh.get("filename").replace("package://tita_description/", f"{package}/"))
+        filename = mesh.get("filename")
+        if filename.startswith("package://tita_description/"):
+            filename = str(package / filename.removeprefix("package://tita_description/"))
+        elif "://" not in filename and not Path(filename).is_absolute():
+            filename = str((src.parent / filename).resolve())
+        mesh.set("filename", filename)
     text = ET.tostring(root, encoding="unicode")
     out = Path(tempfile.gettempdir()) / "ddt_lab_real2sim" / (
         f"tita_sphere_wheels_{hashlib.sha256(text.encode()).hexdigest()[:12]}.urdf")

@@ -24,11 +24,12 @@ from isaaclab.actuators import (  # noqa: F401
 )
 from isaaclab.assets.articulation import ArticulationCfg
 
-# DDT_MODEL_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/robots"))
-# tita_gluon_wbc workspace layout nests ddt_ros2_control one level deeper than the
-# original DDT_Lab repo (under tita_gluon_ws/src/, not directly at the repo root).
+# Legacy D1 asset root. TITA uses the tracked sim2sim model below.
 DDT_MODEL_DIR = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "../../../../tita_gluon_ws/src/ddt_ros2_control/urdfs")
+)
+DDT_TITA_URDF = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "../../../../sim2sim/robot/tita/urdf/tita.urdf")
 )
 
 
@@ -37,7 +38,7 @@ DDT_TITA_CFG = ArticulationCfg(
         fix_base=False,
         merge_fixed_joints=True,
         replace_cylinders_with_capsules=False,
-        asset_path=f"{DDT_MODEL_DIR}/tita_description/urdf/robot.urdf",
+        asset_path=DDT_TITA_URDF,
         activate_contact_sensors=True,
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
