@@ -21,6 +21,14 @@ ONNX_SHA256 = '26f0d86b65a68475fb8a315fb31e829ae16eaa2cf16dabbbcf38e69f28c933e9'
 CONFIG_SHA256 = 'a24c2137969f854fc98cc3027884dbbadad4060f18db7758b028c12ca1405719'
 # Selectable frozen bundles: (checkpoint, ONNX, config) SHA256. flashsac_80000 stays the default.
 BUNDLES = {
+    # Warmup-0 heading run model_65000: best in-place turn in sim (2026-10-19 screen).
+    'flashsac_headw0_65000': ('ff083cbfc8a8571009a27454e75dc88463e9ebc796fa79e8782ccb4a5bea239d',
+                              'ede50fde5cc1863758d2c50e70f7902cafb31e2a677c985e0d69b80c2560be0b',
+                              '804c94a365ccc4b0d9b3bf08022699d81012ccd251d8606a4646624c88ed1db2'),
+    # Warmup-0 heading run model_50000: sphere wheels, no MA2, gyro heading_error (35 obs) (2026-10-19).
+    'flashsac_headw0_50000': ('0a6f8ef2bb8a324bf6f6fb7689297f9001bd4b57896daa0cb9ead4953162f4a7',
+                              '284b4166297fafe5606e58d7b66d9e4570980b839ebde433cbd7a85549313a4c',
+                              '804d2ab9f0fdb80232706a9dc99f4daacad4b2c0f194c914f99b1d8fd1b7c428'),
     'flashsac_sphere2_60000': ('a4c2bfbf6a58240a6623ee8bb8d863774b9336f62df7de3d1993b76725334b2a',
                                 'b744091bb984f3540ec9517f4d3a8a70b5d76cf0f1c7a811d122baac15017040',
                                 '7c0b597a7750ec63ae2182edad9af67de616fe069d4630e1810b8e129d4e4c06'),

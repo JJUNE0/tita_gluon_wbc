@@ -1,0 +1,22 @@
+{
+  "execution_domain": "DESKTOP_DRY_RUN",
+  "evidence_status": "PASS",
+  "checkpoint_sha256": "0a6f8ef2bb8a324bf6f6fb7689297f9001bd4b57896daa0cb9ead4953162f4a7",
+  "onnx_sha256": "284b4166297fafe5606e58d7b66d9e4570980b839ebde433cbd7a85549313a4c",
+  "config_sha256": "804d2ab9f0fdb80232706a9dc99f4daacad4b2c0f194c914f99b1d8fd1b7c428",
+  "fingerprint": "5c69e1221125dcdb89a1974aabf68ad7963f3f346fb57467f2cb2aee7894437b",
+  "parity": {
+    "samples": 256,
+    "max_abs_error": 3.21120023727417e-06
+  },
+  "hardware_status": "NOT_TESTED",
+  "deployment_overrides": {
+    "command": {
+      "max_lin_x": 1.0,
+      "max_ang_z": 1.0
+    },
+    "source_config_sha256": "fc4a4a8f81c7bf61ed372b43e2892745d387928e6139dd20248c78c7c6d07ae8",
+    "source_run": "tita_flash_sac_125547_806511/model_50000",
+    "note": "Training observations/actions/gains retained (no MA2, heading_error warmup 0); real joystick caps 1/1 and 0.5/s ramp; gyro bias from pre-RL stationary samples."
+  }
+}

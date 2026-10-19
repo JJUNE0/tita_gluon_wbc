@@ -123,3 +123,27 @@ gym.register(
     disable_env_checker=True,
     kwargs={"env_cfg_entry_point": env_cfg.MyTitaFlatPosKneeMA2SphereFastHeadingEnvCfg, **_AGENT_ENTRY_POINTS},
 )
+
+# Heading run with the gyro heading error also in the actor (35 policy observations).
+gym.register(
+    id="DDT-Velocity-Flat-Tita-My-PosKneeMA2-Sphere-Fast-HeadingObs-v0",
+    entry_point="isaaclab.envs:ManagerBasedRLEnv",
+    disable_env_checker=True,
+    kwargs={"env_cfg_entry_point": env_cfg.MyTitaFlatPosKneeMA2SphereFastHeadingObsEnvCfg, **_AGENT_ENTRY_POINTS},
+)
+
+# No-MA2 heading run: experiment 2 (sphere, no MA2, default commands) + the same heading reward/observations.
+gym.register(
+    id="DDT-Velocity-Flat-Tita-My-PosKnee-Sphere-HeadingObs-v0",
+    entry_point="isaaclab.envs:ManagerBasedRLEnv",
+    disable_env_checker=True,
+    kwargs={"env_cfg_entry_point": env_cfg.MyTitaFlatPosKneeSphereHeadingObsEnvCfg, **_AGENT_ENTRY_POINTS},
+)
+
+# No-MA2 heading run without the 1 s heading warmup (reward anchor and observation start at the stop).
+gym.register(
+    id="DDT-Velocity-Flat-Tita-My-PosKnee-Sphere-HeadingObsW0-v0",
+    entry_point="isaaclab.envs:ManagerBasedRLEnv",
+    disable_env_checker=True,
+    kwargs={"env_cfg_entry_point": env_cfg.MyTitaFlatPosKneeSphereHeadingObsW0EnvCfg, **_AGENT_ENTRY_POINTS},
+)

@@ -46,6 +46,8 @@ class Sim2SimNode(Node):
             'lin_vel_x': [-caps['max_lin_x'], caps['max_lin_x']],
             'ang_vel_z': [-caps['max_ang_z'], caps['max_ang_z']],
         })
+        # Training command ramp [units/s]; None = step change. Configs exported before this key keep 0.5/s.
+        self.command_ramp = self.cfg.get('sim_command_ramp', .5)
         self.env = TitaMujocoEnv(self.cfg, viewer_enabled=self.get_parameter('viewer').value)
         self.residual = None
         if velocity_bias:
@@ -155,6 +157,9 @@ class Sim2SimNode(Node):
         last_key = previous = time.monotonic()
         print('[VALIDATION_SIM] 1: splay -> sit, 0: policy (after sit), 6: idle, 2: reset, '
               'w/s: forward/back, a/d: yaw, r: stop, Ctrl-C: quit.', flush=True)
+        print(f"[VALIDATION_SIM] commands as trained: lin_vel_x {self.command_ranges['lin_vel_x']} m/s, "
+              f"ang_vel_z {self.command_ranges['ang_vel_z']} rad/s, ramp "
+              f"{'step' if self.command_ramp is None else f'{self.command_ramp:g}/s'}", flush=True)
         try:
             tty.setcbreak(sys.stdin.fileno())
             while rclpy.ok() and self.env.is_running():
@@ -178,7 +183,8 @@ class Sim2SimNode(Node):
                 dt, previous = now - previous, now
                 if now - last_key > .5:
                     target[:] = 0.
-                current += np.clip(target - current, -.5 * dt, .5 * dt)
+                step = np.inf if self.command_ramp is None else self.command_ramp * dt
+                current += np.clip(target - current, -step, step)
                 message = Twist()
                 message.linear.x, message.angular.z = current.tolist()
                 self._cmd_twist_cb(message)

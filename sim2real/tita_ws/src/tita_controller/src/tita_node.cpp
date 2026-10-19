@@ -8,6 +8,7 @@
 // Sticks: axes[2] forward/back, axes[3] yaw.
 
 #include <atomic>
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <limits>
@@ -42,6 +43,11 @@ constexpr double kLoopDt = 0.002;     // 500 Hz motor loop
 constexpr double kFallTilt = 0.65;    // rad; beyond this -> damp
 constexpr double kJoyTimeout = 0.5;   // s; stale joystick after enabling -> latched stop
 constexpr double kCommandRamp = 0.5;  // units/s, same as sim2sim keyboard
+// Heading gyro bias: median of the latest stationary Idle/Sit gyro z samples, taken on RL entry.
+constexpr std::size_t kGyroBiasWindow = 2500;     // 5 s at 500 Hz
+constexpr std::size_t kGyroBiasMinSamples = 500;  // 1 s
+constexpr double kStillJointVel = 0.02;           // rad/s, every joint
+constexpr double kStillGyro = 0.05;               // rad/s, every axis
 
 const std::vector<std::string> kJointNames{
   "joint_left_leg_1", "joint_left_leg_2", "joint_left_leg_3", "joint_left_leg_4",
@@ -53,7 +59,8 @@ public:
   TitaNode()
   : Node("tita"),
     sm_(joints("torque_limit")),
-    obs_builder_(obs_layout(), joints("default_joint_angles"), joints("default_joint_velocities"), position_config()),
+    obs_builder_(obs_layout(), joints("default_joint_angles"), joints("default_joint_velocities"), position_config(),
+      heading_config()),
     action_adapter_(action_terms(), joints("joint_kp"), joints("joint_kd"), joints("torque_limit")),
     leg_filter_(declare_parameter("leg_action_filter", std::string("none")),
       param<std::vector<int64_t>>("action_joint"),
@@ -68,6 +75,14 @@ public:
       left_button_axis_ > 7 || right_button_axis_ > 7 || left_button_axis_ == right_button_axis_)
     {
       throw std::runtime_error("button axes must be distinct indices in [4, 7]");
+    }
+    heading_bias_fallback_ = declare_parameter("heading_gyro_bias_fallback", 0.);
+    if (!std::isfinite(heading_bias_fallback_)) throw std::runtime_error("non-finite heading gyro bias fallback");
+    if (obs_builder_.heading_enabled()) {
+      gyro_samples_.reserve(kGyroBiasWindow);
+      RCLCPP_INFO(get_logger(), "heading error observation ON: gyro z bias = median of the last %.0f s of "
+        "stationary idle/sit samples on RL entry (min %.0f s, else fallback %.5f rad/s)",
+        kGyroBiasWindow * kLoopDt, kGyroBiasMinSamples * kLoopDt, heading_bias_fallback_);
     }
     max_lin_x_ = declare_parameter("max_lin_x", 0.2);
     max_ang_z_ = declare_parameter("max_ang_z", 0.3);
@@ -235,6 +250,49 @@ private:
     return cfg;
   }
 
+  HeadingConfig heading_config()
+  {
+    HeadingConfig cfg;
+    cfg.clip_rad = declare_parameter("heading_clip_rad", 0.);
+    cfg.warmup_s = declare_parameter("heading_warmup_s", 0.);
+    cfg.dt = param<double>("policy_dt");
+    const auto thresholds = declare_parameter("heading_zero_thresholds", std::vector<double>{0., 0., 0.});
+    if (thresholds.size() != 3) throw std::runtime_error("heading zero thresholds need 3 values");
+    std::copy(thresholds.begin(), thresholds.end(), cfg.zero_thresholds.begin());
+    return cfg;
+  }
+
+  // Stationary gyro z samples while idle/sit; the newest kGyroBiasWindow are kept.
+  void sample_gyro_bias(const RobotState & s, bool valid)
+  {
+    const auto state = sm_.state();
+    if (!valid || (state != State::Idle && state != State::Sit)) return;
+    for (double v : s.joint_vel) if (std::abs(v) >= kStillJointVel) return;
+    for (double w : s.ang_vel) if (std::abs(w) >= kStillGyro) return;
+    if (gyro_samples_.size() < kGyroBiasWindow) {
+      gyro_samples_.push_back(s.ang_vel[2]);
+    } else {
+      gyro_samples_[gyro_next_] = s.ang_vel[2];
+    }
+    gyro_next_ = (gyro_next_ + 1) % kGyroBiasWindow;
+  }
+
+  void apply_gyro_bias()
+  {
+    double bias = heading_bias_fallback_;
+    if (gyro_samples_.size() >= kGyroBiasMinSamples) {
+      auto values = gyro_samples_;
+      std::nth_element(values.begin(), values.begin() + values.size() / 2, values.end());
+      bias = values[values.size() / 2];
+      RCLCPP_INFO(get_logger(), "heading gyro bias %.5f rad/s (%.3f deg/s) from %zu stationary samples",
+        bias, bias * 180. / M_PI, gyro_samples_.size());
+    } else {
+      RCLCPP_WARN(get_logger(), "heading gyro bias: only %zu stationary samples (< %zu); using fallback %.5f rad/s",
+        gyro_samples_.size(), kGyroBiasMinSamples, bias);
+    }
+    obs_builder_.set_gyro_bias(bias);
+  }
+
   // Returns false when IMU/motor data is stale or non-finite.
   bool read(RobotState & s)
   {
@@ -337,6 +395,11 @@ private:
       if (changed || sm_.state() != State::Rl) obs_builder_.reset();
       if (changed) RCLCPP_INFO(get_logger(), "state: %s", name(sm_.state()));
       last_state = sm_.state();
+      if (obs_builder_.heading_enabled()) {
+        sample_gyro_bias(s, valid);
+        if (changed && sm_.state() == State::Rl) apply_gyro_bias();
+        if (sm_.state() != State::Rl) last_heading_build_ = {};
+      }
 
       if (sm_.state() != State::Rl) {
         std::fill(last_action_.begin(), last_action_.end(), 0.f);
@@ -371,7 +434,16 @@ private:
       std::vector<float> obs;
       if (publish_now) {
         try {
-          obs = obs_builder_.build(s, command_, last_action_);
+          // Heading integrates over the measured interval between RL observations (nominal policy_dt).
+          double heading_dt = -1.;
+          if (sm_.state() == State::Rl && obs_builder_.heading_enabled()) {
+            if (last_heading_build_.time_since_epoch().count() != 0) {
+              heading_dt = std::clamp(std::chrono::duration<double>(sample_time - last_heading_build_).count(),
+                .25 * decimation_ * kLoopDt, 2.5 * decimation_ * kLoopDt);
+            }
+            last_heading_build_ = sample_time;
+          }
+          obs = obs_builder_.build(s, command_, last_action_, heading_dt);
           if (sm_.state() == State::Rl) {
             last_action_ = infer(obs);
             applied_action_ = leg_filter_.update(last_action_);
@@ -565,6 +637,10 @@ private:
   tita_robot robot_;
   bool output_enabled_{false};
   double max_lin_x_{0.2}, max_ang_z_{0.3};
+  double heading_bias_fallback_{0.};
+  std::vector<double> gyro_samples_;
+  std::size_t gyro_next_{0};
+  std::chrono::steady_clock::time_point last_heading_build_{};
   int decimation_{10};
   int left_button_axis_{4}, right_button_axis_{6};
   std::array<double, 3> command_{};

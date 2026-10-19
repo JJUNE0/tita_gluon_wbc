@@ -53,7 +53,7 @@ def main() -> None:
     obs = np.array([s.observation for s in samples], dtype=float)
     quat = np.array([s.quaternion_wxyz for s in samples])
     rl = d['state'] == 'rl'
-    assert obs.shape[1] == 34, obs.shape
+    assert obs.shape[1] in (34, 35), obs.shape        # 35: + gyro heading_error (scale 2) last
     t = (d['mono'] - d['mono'][rl][0]) * 1e-9
     dt = np.r_[.02, np.diff(t)]
     yaw, pitch, roll = quat_ypr(quat)

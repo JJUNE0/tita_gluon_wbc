@@ -3,15 +3,21 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
+import sys
+
 import gymnasium as gym
 
-from . import agents, flat_env_cfg, jump_env_cfg, my_flat_env_cfg, rough_env_cfg
+from . import agents, flat_env_cfg, jump_env_cfg, rough_env_cfg
+from .real2sim import base_env_cfg
+
+# Saved config.pkl files still resolve the deleted module's classes here.
+sys.modules[f"{__name__}.my_flat_env_cfg"] = base_env_cfg
 
 
 
 ##
-# Register Gym environments. All Tita tasks are wired to NP3O (BarlowTwins-PPO);
-# stock PPO is no longer supported because the policy obs is now 3D.
+# Flat uses the selected 35-observation FlashSAC/PPO configuration.
+# Historical My IDs retain their 33-observation baseline; jump/rough use NP3O.
 ##
 
 gym.register(
@@ -20,7 +26,8 @@ gym.register(
     disable_env_checker=True,
     kwargs={
         "env_cfg_entry_point": flat_env_cfg.TitaFlatEnvCfg,
-        "np3o_cfg_entry_point": f"{agents.__name__}.np3o_cfg:tita_flat_np3o_runner_cfg",
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:TitaFlatEstimatorPPORunnerCfg",
+        "flash_sac_cfg_entry_point": f"{agents.__name__}.flash_sac_cfg:TitaFlatFlashSACRunnerCfg",
     },
 )
 
@@ -30,7 +37,8 @@ gym.register(
     disable_env_checker=True,
     kwargs={
         "env_cfg_entry_point": flat_env_cfg.TitaFlatEnvCfg_PLAY,
-        "np3o_cfg_entry_point": f"{agents.__name__}.np3o_cfg:tita_flat_np3o_runner_cfg",
+        "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:TitaFlatEstimatorPPORunnerCfg",
+        "flash_sac_cfg_entry_point": f"{agents.__name__}.flash_sac_cfg:TitaFlatFlashSACRunnerCfg",
     },
 )
 
@@ -39,7 +47,7 @@ gym.register(
     entry_point="isaaclab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={
-        "env_cfg_entry_point": my_flat_env_cfg.MyTitaFlatEnvCfg,
+        "env_cfg_entry_point": base_env_cfg.MyTitaFlatEnvCfg,
         "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:TitaFlatEstimatorPPORunnerCfg",
         "flash_sac_cfg_entry_point": f"{agents.__name__}.flash_sac_cfg:TitaFlatFlashSACRunnerCfg",
     },
@@ -50,7 +58,7 @@ gym.register(
     entry_point="isaaclab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={
-        "env_cfg_entry_point": my_flat_env_cfg.MyTitaFlatEnvCfg_PLAY,
+        "env_cfg_entry_point": base_env_cfg.MyTitaFlatEnvCfg_PLAY,
         "rsl_rl_cfg_entry_point": f"{agents.__name__}.rsl_rl_ppo_cfg:TitaFlatEstimatorPPORunnerCfg",
         "flash_sac_cfg_entry_point": f"{agents.__name__}.flash_sac_cfg:TitaFlatFlashSACRunnerCfg",
     },

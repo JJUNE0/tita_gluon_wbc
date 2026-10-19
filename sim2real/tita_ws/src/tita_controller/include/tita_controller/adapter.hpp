@@ -14,7 +14,7 @@
 namespace tita
 {
 // Observation element sources (must match OBS_KINDS in launch/tita.launch.py).
-enum ObsKind { AngVel, Gravity, Command, JointPos, JointVel, LastAction, Zero, WheelPositionError };
+enum ObsKind { AngVel, Gravity, Command, JointPos, JointVel, LastAction, Zero, WheelPositionError, HeadingError };
 
 struct ObsElement { int kind; int index; double scale, low, high; };
 struct ActionTerm { int joint; bool velocity; double scale, offset, low, high; };
@@ -22,6 +22,14 @@ struct ActionTerm { int joint; bool velocity; double scale, offset, low, high; }
 struct WheelPositionConfig
 {
   double radius{0.}, clip_m{0.};
+  std::array<double, 3> zero_thresholds{};
+};
+
+// Gyro heading error (training GyroHeadingError / sim2sim adapter.py heading_error): inside the command zero band and
+// after warmup, integrate (gyro z - bias) * dt; 0 otherwise; output clipped, internal integral kept.
+struct HeadingConfig
+{
+  double clip_rad{0.}, warmup_s{0.}, dt{0.};
   std::array<double, 3> zero_thresholds{};
 };
 
@@ -43,9 +51,22 @@ class ObservationBuilder
 {
 public:
   ObservationBuilder(std::vector<ObsElement> layout, Joints default_pos, Joints default_vel,
-    WheelPositionConfig position = {})
-  : layout_(std::move(layout)), default_pos_(default_pos), default_vel_(default_vel), position_(position)
+    WheelPositionConfig position = {}, HeadingConfig heading = {})
+  : layout_(std::move(layout)), default_pos_(default_pos), default_vel_(default_vel), position_(position),
+    heading_cfg_(heading)
   {
+    heading_enabled_ = std::any_of(layout_.begin(), layout_.end(),
+      [](const auto & e) {return e.kind == HeadingError;});
+    if (heading_enabled_) {
+      if (!std::isfinite(heading.clip_rad) || heading.clip_rad <= 0. || !std::isfinite(heading.warmup_s) ||
+        heading.warmup_s < 0. || !std::isfinite(heading.dt) || heading.dt <= 0. ||
+        !std::all_of(heading.zero_thresholds.begin(), heading.zero_thresholds.end(),
+          [](double x) {return std::isfinite(x) && x >= 0.;}))
+      {
+        throw std::runtime_error("invalid heading error parameters");
+      }
+      heading_warmup_steps_ = std::max<long>(1, std::lround(heading.warmup_s / heading.dt));
+    }
     position_enabled_ = std::any_of(layout_.begin(), layout_.end(),
       [](const auto & e) {return e.kind == WheelPositionError;});
     if (position_enabled_ && (!std::isfinite(position.radius) || position.radius <= 0. ||
@@ -57,13 +78,31 @@ public:
     }
   }
 
-  void reset() {position_initialized_ = false;}
+  void reset()
+  {
+    position_initialized_ = false;
+    heading_hold_ = 0;
+    heading_ = 0.;
+  }
 
+  bool heading_enabled() const {return heading_enabled_;}
+  // Gyro z bias [rad/s] subtracted before integration (robot: pre-RL stationary estimate).
+  void set_gyro_bias(double bias)
+  {
+    if (!std::isfinite(bias)) throw std::runtime_error("non-finite gyro bias");
+    gyro_bias_ = bias;
+  }
+  double gyro_bias() const {return gyro_bias_;}
+
+  // heading_dt > 0 overrides the configured policy period for this call (robot: measured interval).
   std::vector<float> build(
-    const RobotState & s, const std::array<double, 3> & command, const std::vector<float> & last_action)
+    const RobotState & s, const std::array<double, 3> & command, const std::vector<float> & last_action,
+    double heading_dt = -1.)
   {
     const auto gravity = projected_gravity(s.quat_wxyz);
     const double position_error = position_enabled_ ? wheel_position_error(s, command) : 0.;
+    const double heading_error = heading_enabled_ ?
+      gyro_heading_error(s, command, heading_dt > 0. ? heading_dt : heading_cfg_.dt) : 0.;
     std::vector<float> obs;
     obs.reserve(layout_.size());
     for (const auto & e : layout_) {
@@ -77,6 +116,7 @@ public:
         case LastAction: v = last_action[e.index]; break;
         case Zero: v = 0.; break;
         case WheelPositionError: v = position_error; break;
+        case HeadingError: v = heading_error; break;
         default: throw std::runtime_error("unknown observation kind");
       }
       const float value = static_cast<float>(std::clamp(v, e.low, e.high) * e.scale);
@@ -87,6 +127,21 @@ public:
   }
 
 private:
+  double gyro_heading_error(const RobotState & s, const std::array<double, 3> & command, double dt)
+  {
+    if (!std::isfinite(s.ang_vel[2]) || !std::isfinite(dt) || dt <= 0.) {
+      throw std::runtime_error("non-finite heading inputs");
+    }
+    bool zero = true;
+    for (std::size_t i = 0; i < 3; ++i) {
+      if (!std::isfinite(command[i])) throw std::runtime_error("non-finite command");
+      zero &= std::abs(static_cast<float>(command[i])) <= static_cast<float>(heading_cfg_.zero_thresholds[i]);
+    }
+    heading_hold_ = zero ? heading_hold_ + 1 : 0;
+    heading_ = zero && heading_hold_ > heading_warmup_steps_ ? heading_ + (s.ang_vel[2] - gyro_bias_) * dt : 0.;
+    return std::clamp(heading_, -heading_cfg_.clip_rad, heading_cfg_.clip_rad);
+  }
+
   double wheel_position_error(const RobotState & s, const std::array<double, 3> & command)
   {
     for (double x : s.joint_pos) {
@@ -127,6 +182,10 @@ private:
   bool position_enabled_{false}, position_initialized_{false};
   std::array<double, 2> previous_wheels_{}, unwrapped_wheels_{};
   double reference_{0.};
+  HeadingConfig heading_cfg_;
+  bool heading_enabled_{false};
+  long heading_warmup_steps_{1}, heading_hold_{0};
+  double heading_{0.}, gyro_bias_{0.};
 };
 
 // Map policy order to native order, then apply position/velocity PD.

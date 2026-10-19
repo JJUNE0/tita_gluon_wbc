@@ -42,6 +42,8 @@ class FlashSACConfigTest(unittest.TestCase):
 
     def test_extracting_defaults_preserves_original_cli_and_all_learner_fields(self):
         original = json.loads((ROOT / "test/fixtures/tita_flash_sac_before_cfg_extraction.json").read_text())
+        # The selected flat task replaces the historical My task as CLI default.
+        original["cli_defaults"]["task"] = "DDT-Velocity-Flat-Tita-v0"
         args = build_parser().parse_args([])
         self.assertEqual({name: getattr(args, name) for name in original["cli_defaults"]}, original["cli_defaults"])
         self.assertEqual(asdict(create_agent_config(args)), original["agent_defaults"])
@@ -108,7 +110,7 @@ class FlashSACConfigTest(unittest.TestCase):
         values = {"gym": SimpleNamespace(register=register), "agents": agents}
         for name, classes in {
             "flat_env_cfg": ("TitaFlatEnvCfg", "TitaFlatEnvCfg_PLAY"),
-            "my_flat_env_cfg": ("MyTitaFlatEnvCfg", "MyTitaFlatEnvCfg_PLAY"),
+            "base_env_cfg": ("MyTitaFlatEnvCfg", "MyTitaFlatEnvCfg_PLAY"),
             "jump_env_cfg": ("TitaJumpEnvCfg", "TitaJumpEnvCfg_PLAY"),
             "rough_env_cfg": ("TitaRoughEnvCfg", "TitaRoughEnvCfg_PLAY"),
         }.items():
@@ -117,7 +119,8 @@ class FlashSACConfigTest(unittest.TestCase):
         tree = ast.parse(path.read_text())
         tree.body = [node for node in tree.body if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call)]
         exec(compile(tree, str(path), "exec"), values)
-        for task in ("DDT-Velocity-Flat-Tita-My-v0", "DDT-Velocity-Flat-Tita-My-Play-v0"):
+        for task in ("DDT-Velocity-Flat-Tita-v0", "DDT-Velocity-Flat-Tita-Play-v0",
+                     "DDT-Velocity-Flat-Tita-My-v0", "DDT-Velocity-Flat-Tita-My-Play-v0"):
             self.assertEqual(registrations[task]["flash_sac_cfg_entry_point"],
                              f"{agents.__name__}.flash_sac_cfg:TitaFlatFlashSACRunnerCfg")
             self.assertIn("rsl_rl_cfg_entry_point", registrations[task])

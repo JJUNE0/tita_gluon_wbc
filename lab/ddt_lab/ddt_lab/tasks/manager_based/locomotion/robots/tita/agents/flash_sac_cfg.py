@@ -54,9 +54,9 @@ class FlashSACAlgorithmCfg:
 
 @dataclass
 class TitaFlatFlashSACRunnerCfg:
-    """Training settings and observation policy for the My flat task."""
+    """Training settings and observation policy for the selected flat task."""
 
-    task: str = "DDT-Velocity-Flat-Tita-My-v0"
+    task: str = "DDT-Velocity-Flat-Tita-v0"
     seed: int = 42
     num_envs: int = 1024
     steps: int = 100000

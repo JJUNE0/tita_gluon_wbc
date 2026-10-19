@@ -35,14 +35,33 @@ RUNS = {
     'exp4_sphere_noma2_fast': ('tita_flash_sac_055626_985460', [50000, 60000, 70000, 80000, 90000, 100000]),
     'exp5_cyl_noma2': ('', [50000, 60000, 70000, 80000, 90000, 100000]),
     'ref_posma2': ('tita_flash_sac_180212_290240', [50000, 75000]),   # real-tested (50k yawed, 75k good)
+    # 2026-10-19 heading run: exp3 + heading drift reward + actor/critic gyro heading error (35 observations)
+    'exp6_heading_ma2_fast': ('tita_flash_sac_102630_755853', [50000, 60000, 70000, 80000, 90000, 100000]),
+    # warmup-0 heading run: exp2 (sphere, no MA2, default commands) + heading reward/observation without warmup
+    'exp7_heading_noma2_w0': ('tita_flash_sac_125547_806511', [35000, 40000, 45000, 50000, 55000, 60000, 65000,
+                                                               70000, 75000, 80000, 85000, 90000, 95000, 100000]),
 }
-FAST = {'exp3_sphere_ma2_fast', 'exp4_sphere_noma2_fast'}
+FAST = {'exp3_sphere_ma2_fast', 'exp4_sphere_noma2_fast', 'exp6_heading_ma2_fast'}
 PLANTS = {'A': dict(wheel='sphere', knee=(.60, .75)), 'B': dict(wheel='cylinder', knee=(.60, .75)),
           # --robust: knee mirrored / symmetric / nominal on sphere wheels
           'A_mirror': dict(wheel='sphere', knee=(.75, .60)), 'A_sym068': dict(wheel='sphere', knee=(.68, .68)),
-          'A_sym055': dict(wheel='sphere', knee=(.55, .55)), 'A_nom': dict(wheel='sphere', knee=(1., 1.))}
+          'A_sym055': dict(wheel='sphere', knee=(.55, .55)), 'A_nom': dict(wheel='sphere', knee=(1., 1.)),
+          # interactive sim2sim viewer plant: public MuJoCo cylinder wheels, nominal knees
+          'B_nom': dict(wheel='cylinder', knee=(1., 1.))}
+# --g6 (gap.md G6, 2026-10-19 65k real fore-aft hunting): plant A + base-link CoM x shift [m] (base 11.4 of 25.7 kg)
+# or an IMU pitch mounting offset [deg] (measured quaternion/gyro = true rotated about body y; physics unchanged)
+G6_PLANTS = {f'A_com{dx:+g}': dict(PLANTS['A'], com_dx=dx / 100) for dx in (-2, -4, -6, 2, 4)}
+G6_PLANTS.update({f'A_imu{d:+g}': dict(PLANTS['A'], imu_pitch_deg=d) for d in (-1.5, -3, 1.5, 3)})
+# compensation check: a backward CoM shift plus an opposite measured-pitch offset (deployable gravity-obs correction)
+G6_PLANTS.update({f'A_com{dx:+g}_imu{d:+g}': dict(PLANTS['A'], com_dx=dx / 100, imu_pitch_deg=d)
+                  for dx in (-4, -6) for d in (-1.5, -3, -4.5)})
+PLANTS.update(G6_PLANTS)
+G6 = [('exp7_heading_noma2_w0', 50000), ('exp7_heading_noma2_w0', 65000)]
 ROBUST = [('exp2_sphere_noma2', 60000), ('exp1_sphere_ma2', 70000), ('exp1_sphere_ma2', 90000),
-          ('exp1_sphere_ma2', 100000), ('exp3_sphere_ma2_fast', 70000), ('ref_posma2', 75000)]
+          ('exp1_sphere_ma2', 100000), ('exp3_sphere_ma2_fast', 70000), ('ref_posma2', 75000),
+          ('exp7_heading_noma2_w0', 45000), ('exp7_heading_noma2_w0', 50000),
+          ('exp7_heading_noma2_w0', 60000), ('exp7_heading_noma2_w0', 65000)]
+ROBUST += [('exp7_heading_noma2_w0', step) for step in range(75000, 100001, 5000)]   # exp7 tail after training end
 DT = .02
 DRIVE = [(0., 0., 0.), (8., .6, 0.), (14., 0., 0.), (20., -.6, 0.), (26., 0., 0.), (32., 0., 1.), (38., 0., 0.),
          (44., 0., -1.), (50., 0., 0.), (56., 1., 0.), (62., 0., 0.), (68., -1., 0.), (74., 0., 0.),
@@ -52,8 +71,19 @@ DRIVE_FAST = [(0., 0., 0.), (8., 1.5, 0.), (14., 0., 0.), (20., -1.5, 0.), (26.,
 SCENARIOS = {'stand': dict(duration=32., schedule=[(0., 0., 0.)], ramp=.5),
              'drive': dict(duration=106., schedule=DRIVE, ramp=.5),
              'drive_fast': dict(duration=70., schedule=DRIVE_FAST, ramp=2.),
-             'probe': dict(duration=20., schedule=[(0., 0., 0.)], ramp=.5)}
+             'probe': dict(duration=20., schedule=[(0., 0., 0.)], ramp=.5),
+             # in-place turn check (2026-10-19 real run: backward arc + thigh flexion while turning)
+             'turn': dict(duration=30., schedule=[(0., 0., 0.), (8., 0., 1.), (13., 0., 0.), (18., 0., -1.), (23., 0., 0.)],
+                          ramp=.5)}
 LEGS = [0, 1, 2, 4, 5, 6]
+
+
+def quat_mul(a, b):
+    """Hamilton product of wxyz quaternions."""
+    w1, x1, y1, z1 = a
+    w2, x2, y2, z2 = b
+    return np.array([w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2, w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
+                     w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2, w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2], dtype=np.float32)
 
 
 def write_json(path, value):
@@ -69,8 +99,13 @@ def run_dir(tag, run):
     return match.group(1) if match else ''
 
 
+TAGS = None  # --tags: restrict prepare/evaluate to these run tags
+
+
 def checkpoint_dirs():
     for tag, (run, steps) in RUNS.items():
+        if TAGS and tag not in TAGS:
+            continue
         run = run_dir(tag, run)
         if not run:
             continue
@@ -82,6 +117,8 @@ def checkpoint_dirs():
 
 def prepare(output):
     from sim2sim_ros2_jazzy.checkpoint import prepare_checkpoint, prepared_config, sha256
+    policies_path = output / 'policies.json'
+    keep = json.loads(policies_path.read_text()) if policies_path.exists() and TAGS else []
     rows = []
     for tag, step, path in checkpoint_dirs():
         config = prepared_config(path) or prepare_checkpoint(path, Path.home() / 'venvs/cosim_ros2_jazzy/bin/python')
@@ -92,7 +129,8 @@ def prepare(output):
                          leg_action_filter=pi['leg_action_filter'], obs_dim=cfg['policy']['obs_dim'],
                          parity=json.loads((Path(config).parent / 'manifest.json').read_text())['parity']))
         print(f"[VALIDATION_SIM] prepared {tag} {step} filter={pi['leg_action_filter']} {rows[-1]['parity']}", flush=True)
-    write_json(output / 'policies.json', rows)
+    done = {(r['tag'], r['step']) for r in rows}
+    write_json(policies_path, [r for r in keep if (r['tag'], r['step']) not in done] + rows)
 
 
 def rollout(job):
@@ -104,7 +142,7 @@ def rollout(job):
     from sim2sim_ros2_jazzy.state_machine import StateMachine, SPLAY_POSE
 
     cfg = json.loads(Path(job['config']).read_text())
-    assert cfg['policy']['obs_dim'] == 34
+    assert cfg['policy']['obs_dim'] in (34, 35)
     mode = cfg['policy_interface']['leg_action_filter']
     options = ort.SessionOptions()
     options.intra_op_num_threads = options.inter_op_num_threads = 1
@@ -135,6 +173,7 @@ def rollout(job):
             m.geom_aabb[g] = [0., 0., 0., r, r, r]
     adapter = ActionAdapter(runtime)
     builder = ObservationBuilder(cfg)
+    builder.gyro_bias = float(job.get('heading_bias', 0.))  # residual of the robot's bias calibration [rad/s]
     filter_ = LegActionFilter(mode, adapter.order)
     legs = np.array([j not in (3, 7) for j in adapter.order])
     sm = StateMachine(cfg['robot']['torque_limit'], auto_rl=True)
@@ -148,7 +187,16 @@ def rollout(job):
     command = np.zeros(3, dtype=np.float32)
     last = np.zeros(8, dtype=np.float32)
     previous_raw = None
-    keys = ('t', 'q', 'dq', 'rpy_deg', 'position', 'velocity_body', 'gyro', 'command', 'raw', 'applied', 'torque', 'x_err')
+    m.body_ipos[base_body, 0] += plant.get('com_dx', 0.)
+    half = np.radians(plant.get('imu_pitch_deg', 0.)) / 2
+    imu_offset = np.array([np.cos(half), 0., np.sin(half), 0.])               # body-frame rotation about y
+    imu_rot = quat_wxyz_to_rotmat(imu_offset)
+    x_index = sum(term['size'] for term in cfg['policy_interface']['observations'][:next(
+        i for i, term in enumerate(cfg['policy_interface']['observations']) if term['kind'] == 'wheel_position_error')])
+    x_scale = float(next(term['scale'] for term in cfg['policy_interface']['observations']
+                         if term['kind'] == 'wheel_position_error'))
+    keys = ('t', 'q', 'dq', 'rpy_deg', 'position', 'velocity_body', 'gyro', 'command', 'raw', 'applied', 'torque', 'x_err',
+            'imu_rpy_deg')
     rows = {k: [] for k in keys}
     failure, tick, was_rl = None, 0, False
     try:
@@ -181,7 +229,8 @@ def rollout(job):
                 failure = dict(kind='fall', t_rl_s=t, tilt_deg=float(np.degrees(tilt)), base_floor_contact=contact)
                 break
             gyro = env.base_ang_vel()
-            obs = builder.build(ObsState(q, dq, quat, gyro, command, last))
+            imu_quat = quat_mul(quat, imu_offset)
+            obs = builder.build(ObsState(q, dq, imu_quat, imu_rot.T @ gyro, command, last))
             raw = policy.run(['nn_output'], {'nn_input0': obs.reshape(1, -1)})[0].reshape(8)
             pe = raw.copy()
             if previous_raw is not None and job['g']:
@@ -197,7 +246,8 @@ def rollout(job):
             if not np.isfinite(env.data.qpos).all() or not np.isfinite(env.data.qvel).all():
                 raise ValueError('Nonfinite physics state')
             values = (t, q, dq, np.degrees(quat_wxyz_to_rpy(quat)), position, rot.T @ env.base_lin_vel(), gyro,
-                      command.copy(), raw.copy(), applied.copy(), np.mean(torques, axis=0), float(obs[-1] / 5.))
+                      command.copy(), raw.copy(), applied.copy(), np.mean(torques, axis=0), float(obs[x_index] / x_scale),
+                      np.degrees(quat_wxyz_to_rpy(imu_quat)))
             for k, v in zip(keys, values):
                 rows[k].append(v)
             last = raw.copy()
@@ -227,7 +277,35 @@ def intervals(mask):
     return [v for v in np.split(idx, np.flatnonzero(np.diff(idx) > 1) + 1) if len(v)]
 
 
+def turn_metrics(s):
+    t, cmd = s['t'].astype(float), s['command'].astype(float)
+    yaw = np.unwrap(np.radians(s['rpy_deg'][:, 2].astype(float)))
+    q, pitch = np.degrees(s['q'].astype(float)), s['rpy_deg'][:, 1].astype(float)
+    before = (t >= 4.) & (t < 8.)
+    out = dict(turns=[])
+    for start, end in ((8., 13.), (18., 23.)):
+        m = (t >= start) & (t < end) & (np.abs(cmd[:, 2]) >= .95)
+        w = (t >= start) & (t < end + 1.)
+        out['turns'].append(dict(
+            cmd_wz=float(cmd[m, 2].mean()), wz=float(s['gyro'][m, 2].mean()),
+            vx_mean=float(s['velocity_body'][m, 0].mean()), vx_abs_mean=float(np.abs(s['velocity_body'][m, 0]).mean()),
+            base_travel_m=float(np.linalg.norm(s['position'][w][-1, :2] - s['position'][w][0, :2])),
+            thigh_change_deg=float(q[m][:, [1, 5]].mean() - q[before][:, [1, 5]].mean()),
+            pitch_change_deg=float(pitch[m].mean() - pitch[before].mean())))
+    tail = (t >= 25.) & (t < 30.)
+    out.update(
+        vx_abs_mean=float(np.mean([x['vx_abs_mean'] for x in out['turns']])),
+        travel_max_m=float(max(x['base_travel_m'] for x in out['turns'])),
+        thigh_change_max_deg=float(max(abs(x['thigh_change_deg']) for x in out['turns'])),
+        pitch_change_max_deg=float(max(abs(x['pitch_change_deg']) for x in out['turns'])),
+        wz_ratio=float(np.mean([x['wz'] / x['cmd_wz'] for x in out['turns']])),
+        stop_yaw_dps=float(np.degrees((yaw[tail][-1] - yaw[tail][0]) / (t[tail][-1] - t[tail][0]))))
+    return out
+
+
 def metrics(s, scenario):
+    if scenario == 'turn':
+        return turn_metrics(s)
     t, cmd = s['t'].astype(float), s['command'].astype(float)
     yaw = np.unwrap(np.radians(s['rpy_deg'][:, 2].astype(float)))
     speed = np.linalg.norm(s['velocity_body'][:, :2], axis=1)
@@ -285,7 +363,8 @@ def metrics(s, scenario):
 
 
 def job_id(job):
-    return f"{job['tag']}_{job['step']}_{job['plant']}_{job['scenario']}_g{job['g']:g}"
+    bias = f"_hb{job['heading_bias']:g}" if job.get('heading_bias') else ''
+    return f"{job['tag']}_{job['step']}_{job['plant']}_{job['scenario']}_g{job['g']:g}{bias}"
 
 
 def jobs_for(policies, output):
@@ -315,13 +394,27 @@ def robust_jobs(policies, output):
     return jobs
 
 
-def evaluate(output, workers, robust=False):
+def g6_jobs(policies, output):
+    return [dict(tag=p['tag'], step=p['step'], config=p['config'], output=str(output), plant=plant, scenario=scenario,
+                 g=0., save=True) for p in policies if (p['tag'], p['step']) in G6
+            for plant in ['A', *G6_PLANTS] for scenario in ('stand', 'drive', 'turn')]
+
+
+def turn_jobs(policies, output):
+    return [dict(tag=p['tag'], step=p['step'], config=p['config'], output=str(output), plant=plant, scenario='turn',
+                 g=0., save=False) for p in policies for plant in ('A', 'A_nom', 'B_nom')]
+
+
+def evaluate(output, workers, robust=False, turn=False, g6=False):
     policies = json.loads((output / 'policies.json').read_text())
     (output / 'signals').mkdir(exist_ok=True)
     done_path = output / 'results.json'
     results = json.loads(done_path.read_text()) if done_path.exists() else []
     done = {job_id(r['job']) for r in results}
-    todo = [j for j in (robust_jobs if robust else jobs_for)(policies, output) if job_id(j) not in done]
+    if TAGS:
+        policies = [p for p in policies if p['tag'] in TAGS]
+    make = g6_jobs if g6 else turn_jobs if turn else robust_jobs if robust else jobs_for
+    todo = [j for j in make(policies, output) if job_id(j) not in done]
     began = time.monotonic()
     with ProcessPoolExecutor(max_workers=workers) as pool:
         futures = [pool.submit(rollout, j) for j in todo]
@@ -391,12 +484,17 @@ def main():
     mode.add_argument('--summarize', action='store_true')
     ap.add_argument('--workers', type=int, default=8)
     ap.add_argument('--robust', action='store_true', help='with --evaluate: extra plants/probes for ROBUST candidates')
+    ap.add_argument('--tags', nargs='+', help='only these run tags (prepare merges into policies.json)')
+    ap.add_argument('--turn', action='store_true', help='with --evaluate: in-place turn scenario (plants A, A_nom, B_nom)')
+    ap.add_argument('--g6', action='store_true', help='with --evaluate: CoM / IMU pitch offset plants for G6 candidates')
     a = ap.parse_args()
+    global TAGS
+    TAGS = set(a.tags) if a.tags else None
     a.output.mkdir(parents=True, exist_ok=True)
     if a.prepare:
         prepare(a.output)
     elif a.evaluate:
-        evaluate(a.output, a.workers, a.robust)
+        evaluate(a.output, a.workers, a.robust, a.turn, a.g6)
     else:
         summarize(a.output)
 

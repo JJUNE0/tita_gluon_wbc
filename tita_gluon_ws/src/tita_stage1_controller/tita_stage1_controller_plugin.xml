@@ -1,7 +1,0 @@
-<library path="tita_stage1_controller">
-  <class name="tita_stage1_controller/Stage1Controller"
-         type="tita_stage1_controller::Stage1Controller"
-         base_class_type="controller_interface::ControllerInterface">
-    <description>Single command owner for official TITA TransformUp, settle, and SAFE_HOLD.</description>
-  </class>
-</library>

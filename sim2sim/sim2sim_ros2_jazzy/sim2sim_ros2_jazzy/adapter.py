@@ -44,12 +44,20 @@ class ObservationBuilder:
         self.defaults = np.asarray(cfg['robot']['default_joint_angles'], dtype=np.float32)
         self.vel_defaults = np.asarray(cfg['robot']['default_joint_velocities'], dtype=np.float32)
         self.position_term = next((term for term in self.layout if term['kind'] == 'wheel_position_error'), None)
+        self.heading_term = next((term for term in self.layout if term['kind'] == 'heading_error'), None)
+        if self.heading_term is not None:
+            self.dt = cfg['control']['sim_timestep'] * cfg['control']['decimation']
+            self.heading_warmup = max(1, round(self.heading_term['params']['warmup_s'] / self.dt))
+        # Gyro z bias [rad/s] subtracted before integration; the robot uses its pre-RL stationary estimate.
+        self.gyro_bias = 0.
         self.reset()
 
     def reset(self):
         self.previous_wheels = None
         self.unwrapped_wheels = None
         self.reference = None
+        self.heading_hold = 0
+        self.heading = 0.
 
     def wheel_position_error(self, state):
         params = self.position_term['params']
@@ -73,6 +81,21 @@ class ObservationBuilder:
         error = distance - self.reference if zero else 0.
         return np.array([np.clip(error, -params['clip_m'], params['clip_m'])], dtype=np.float32)
 
+    def heading_error(self, state):
+        # Same rule as the training GyroHeadingError: integrate after warmup inside the zero band, clip output only.
+        params = self.heading_term['params']
+        gyro_z = float(np.asarray(state.base_ang_vel, dtype=np.float64)[2])
+        if not (np.isfinite(gyro_z) and np.isfinite(state.command).all()):
+            raise ValueError('non-finite heading inputs')
+        zero = (np.abs(np.asarray(state.command, dtype=np.float32))
+                <= np.asarray(params['zero_thresholds'], dtype=np.float32)).all()
+        self.heading_hold = self.heading_hold + 1 if zero else 0
+        if zero and self.heading_hold > self.heading_warmup:
+            self.heading += (gyro_z - self.gyro_bias) * self.dt
+        else:
+            self.heading = 0.
+        return np.array([np.clip(self.heading, -params['clip_rad'], params['clip_rad'])], dtype=np.float32)
+
     def build(self, state):
         values = {
             'ang_vel': state.base_ang_vel,
@@ -85,6 +108,8 @@ class ObservationBuilder:
         }
         if self.position_term is not None:
             values['wheel_position_error'] = self.wheel_position_error(state)
+        if self.heading_term is not None:
+            values['heading_error'] = self.heading_error(state)
         parts = []
         for term in self.layout:
             value = np.asarray(values[term['kind']], dtype=np.float32).copy()

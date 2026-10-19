@@ -84,7 +84,8 @@ def observation_layout(group, captured, asset_joints):
                  'generated_commands': 'commands', 'last_action': 'last_action',
                  'joint_pos_rel': 'joint_pos', 'joint_pos_rel_without_wheel': 'joint_pos',
                  'joint_pos_rel_without_wheel_biased': 'joint_pos', 'joint_vel_rel': 'joint_vel',
-                 'base_lin_vel': 'lin_vel', 'WheelPositionError': 'wheel_position_error'}
+                 'base_lin_vel': 'lin_vel', 'WheelPositionError': 'wheel_position_error',
+                 'GyroHeadingError': 'heading_error'}
     for name, term in group.items():
         if not isinstance(term, dict) or 'func' not in term:
             continue
@@ -106,6 +107,17 @@ def observation_layout(group, captured, asset_joints):
             if (len(params['zero_thresholds']) != 3 or not all(math.isfinite(v) for v in numbers)
                     or params['radius'] <= 0 or params['clip_m'] <= 0 or min(params['zero_thresholds']) < 0):
                 raise ValueError('Invalid WheelPositionError parameters')
+            item['size'] = 1
+        elif item['kind'] == 'heading_error':
+            params = term['params']
+            if params['command_name'] != 'base_velocity' or params.get('asset_cfg', {}).get('name', 'robot') != 'robot':
+                raise ValueError('GyroHeadingError requires the robot gyro and base_velocity commands')
+            # bias_range is a training-only randomization; deployment subtracts a calibrated bias instead.
+            item['params'] = {key: params[key] for key in ('clip_rad', 'zero_thresholds', 'warmup_s')}
+            numbers = [params['clip_rad'], params['warmup_s'], *params['zero_thresholds']]
+            if (len(params['zero_thresholds']) != 3 or not all(math.isfinite(v) for v in numbers)
+                    or params['clip_rad'] <= 0 or params['warmup_s'] < 0 or min(params['zero_thresholds']) < 0):
+                raise ValueError('Invalid GyroHeadingError parameters')
             item['size'] = 1
         elif item['kind'] in ('joint_pos', 'joint_vel'):
             entity = term.get('params', {}).get('asset_cfg', {})
@@ -171,6 +183,11 @@ def simulation_config(env, defaults, observations):
     for name, bounds in cfg['sim_command_ranges'].items():
         if len(bounds) != 2 or not all(math.isfinite(value) for value in bounds) or not bounds[0] <= 0 <= bounds[1]:
             raise ValueError(f'Invalid saved simulation command range: {name} / {bounds}')
+    # Viewer keyboard ramp follows the training command ramp (RampedVelocityCommand.ramp_rate, units/s); None = step.
+    ramp = env['commands']['base_velocity'].get('ramp_rate')
+    if ramp is not None and not (math.isfinite(ramp) and ramp > 0):
+        raise ValueError(f'Invalid saved command ramp: {ramp}')
+    cfg['sim_command_ramp'] = None if ramp is None else float(ramp)
     cfg['policy'] = {'obs_dim': sum(item['size'] for item in observations)}
     return cfg
 

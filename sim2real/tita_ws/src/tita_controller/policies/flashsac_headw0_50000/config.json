@@ -1,0 +1,329 @@
+{
+  "model": {
+    "scene_xml": "tita_gluon_ws/src/ddt_ros2_control/urdfs/tita_description/mujoco_corrected/scene.xml"
+  },
+  "control": {
+    "sim_timestep": 0.005,
+    "decimation": 4
+  },
+  "command": {
+    "max_lin_x": 1.0,
+    "max_ang_z": 1.0
+  },
+  "robot": {
+    "default_joint_angles": [
+      0.0,
+      0.8,
+      -1.5,
+      0.0,
+      0.0,
+      0.8,
+      -1.5,
+      0.0
+    ],
+    "reset_base_pos": [
+      0.0,
+      0.0,
+      0.4
+    ],
+    "reset_base_quat": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "default_joint_velocities": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "joint_kp": [
+      60.0,
+      60.0,
+      92.0,
+      0.0,
+      60.0,
+      60.0,
+      92.0,
+      0.0
+    ],
+    "joint_kd": [
+      1.5,
+      1.5,
+      2.3,
+      0.5,
+      1.5,
+      1.5,
+      2.3,
+      0.5
+    ],
+    "torque_limit": [
+      60.0,
+      60.0,
+      60.0,
+      12.0,
+      60.0,
+      60.0,
+      60.0,
+      12.0
+    ]
+  },
+  "sim_command_ranges": {
+    "lin_vel_x": [
+      -1.0,
+      1.0
+    ],
+    "ang_vel_z": [
+      -1.5,
+      1.5
+    ]
+  },
+  "sim_command_ramp": 0.5,
+  "policy": {
+    "obs_dim": 35,
+    "path": "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_125547_806511/model_50000/sim2sim/actor/policy.onnx"
+  },
+  "policy_interface": {
+    "schema_version": 1,
+    "observations": [
+      {
+        "name": "base_ang_vel",
+        "kind": "ang_vel",
+        "scale": 0.25,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "size": 3
+      },
+      {
+        "name": "projected_gravity",
+        "kind": "gravity",
+        "scale": 1.0,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "size": 3
+      },
+      {
+        "name": "velocity_commands",
+        "kind": "commands",
+        "scale": [
+          2.0,
+          2.0,
+          0.25
+        ],
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "size": 3
+      },
+      {
+        "name": "joint_pos",
+        "kind": "joint_pos",
+        "scale": 1.0,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "joints": [
+          "joint_left_leg_1",
+          "joint_right_leg_1",
+          "joint_left_leg_2",
+          "joint_right_leg_2",
+          "joint_left_leg_3",
+          "joint_right_leg_3",
+          "joint_left_leg_4",
+          "joint_right_leg_4"
+        ],
+        "zero_wheel_pos": true,
+        "size": 8
+      },
+      {
+        "name": "joint_vel",
+        "kind": "joint_vel",
+        "scale": 0.05000000074505806,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "joints": [
+          "joint_left_leg_1",
+          "joint_right_leg_1",
+          "joint_left_leg_2",
+          "joint_right_leg_2",
+          "joint_left_leg_3",
+          "joint_right_leg_3",
+          "joint_left_leg_4",
+          "joint_right_leg_4"
+        ],
+        "zero_wheel_pos": false,
+        "size": 8
+      },
+      {
+        "name": "actions",
+        "kind": "last_action",
+        "scale": 1.0,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "size": 8
+      },
+      {
+        "name": "wheel_position_error",
+        "kind": "wheel_position_error",
+        "scale": 5.0,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "params": {
+          "radius": 0.0925,
+          "clip_m": 0.3,
+          "zero_thresholds": [
+            0.02,
+            0.02,
+            0.03
+          ]
+        },
+        "size": 1
+      },
+      {
+        "name": "heading_error",
+        "kind": "heading_error",
+        "scale": 2.0,
+        "clip": [
+          -100.0,
+          100.0
+        ],
+        "params": {
+          "clip_rad": 0.5,
+          "zero_thresholds": [
+            0.02,
+            0.02,
+            0.03
+          ],
+          "warmup_s": 0.0
+        },
+        "size": 1
+      }
+    ],
+    "actions": [
+      {
+        "joint": "joint_left_leg_1",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_left_leg_2",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.8,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_left_leg_3",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": -1.5,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_left_leg_4",
+        "kind": "velocity",
+        "scale": 20.0,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_1",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_2",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.8,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_3",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": -1.5,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_4",
+        "kind": "velocity",
+        "scale": 20.0,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      }
+    ],
+    "leg_action_filter": "none",
+    "articulation_joint_names": [
+      "joint_left_leg_1",
+      "joint_right_leg_1",
+      "joint_left_leg_2",
+      "joint_right_leg_2",
+      "joint_left_leg_3",
+      "joint_right_leg_3",
+      "joint_left_leg_4",
+      "joint_right_leg_4"
+    ],
+    "joint_order_source": "resolved training interface",
+    "checkpoint": "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_125547_806511/model_50000/actor.pt",
+    "algorithm": "FlashSAC",
+    "checkpoint_sha256": "0a6f8ef2bb8a324bf6f6fb7689297f9001bd4b57896daa0cb9ead4953162f4a7",
+    "sources": {
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_125547_806511/env.yaml": "d5870a382e7d51631eab66b2c5314d8d94e12e1b2b690073ec111dac7a272d8f",
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_125547_806511/agent.json": "c49e1024d3637b235b80bbf71ef8b4892c3cbd04a7eac566e759acec8c609c60",
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_125547_806511/policy_interface.json": "70f607d694d155f8318dc74822ed4db24d18232e3164b7b4ed7ce3e233ae54d4",
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab/logs/flash_sac/tita_flash_sac_125547_806511/model_50000/ddt.json": "9ef1de3796173001de1f0e2a0537487d8859e9f7d992581fa2bae762af3d3ee0"
+    },
+    "adapter_sources": {
+      "checkpoint.py": "89c3559e9abfcef8e720f5bda2e9e0388f397753b793a02347d4375ac08255e3",
+      "adapter.py": "a65574c27c299ce3a6273bce1803c9991308933e0099573f10d500af31608b85",
+      "export.py": "b917808c9d33c50416d5fa224951ae84da05948a8034fe199f93b2009732591b"
+    },
+    "onnx_sha256": "284b4166297fafe5606e58d7b66d9e4570980b839ebde433cbd7a85549313a4c"
+  }
+}

@@ -93,3 +93,58 @@ def heading_drift_error(env: ManagerBasedRLEnv, reward_term: str = "zero_command
     if manager is None or reward_term not in manager.active_terms:
         return torch.zeros(env.num_envs, 1, device=env.device)
     return manager.get_term_cfg(reward_term).func.heading_error.unsqueeze(1)
+
+
+class GyroHeadingError(ManagerTermBase):
+    """Latched gyro heading error in rad, shape ``(num_envs, 1)``: the robot-side heading observation.
+
+    Planned robot computation (``docs/exp/2026-10-19/heading_source_review.md``): integrate body gyro z minus the
+    gyro bias estimated while still before RL. IMU quaternion yaw is not used (it under-reports slow turns by
+    0.3-0.6 deg/s); bias-corrected gyro agreed with independent wheel-encoder kinematics within 0.00-0.14 deg/s.
+
+    Inside the zero band (same thresholds as ``WheelPositionError``) and after ``warmup_s`` of continuous hold
+    (same delay as the heading drift reward anchor), ``error += (yaw_rate + bias) * step_dt``; outside the band,
+    during warmup and on reset it is 0. ``bias`` is a per-episode residual after on-robot bias calibration,
+    uniform in ``bias_range`` (rad/s). The output is clipped to +-``clip_rad``; the internal integral is not.
+    """
+
+    def __init__(self, cfg: ObservationTermCfg, env: ManagerBasedRLEnv):
+        super().__init__(cfg, env)
+        params = cfg.params
+        self.asset: Articulation = env.scene[params.get("asset_cfg", SceneEntityCfg("robot")).name]
+        self.zero_band = torch.tensor(params.get("zero_thresholds", (0.02, 0.02, 0.03)), device=env.device)
+        self.warmup_steps = max(1, round(float(params.get("warmup_s", 1.0)) / env.step_dt))
+        self.bias_range = tuple(float(v) for v in params.get("bias_range", (0.0, 0.0)))
+        self.hold_steps = torch.zeros(env.num_envs, device=env.device)
+        self.error = torch.zeros(env.num_envs, device=env.device)
+        self.bias = torch.zeros(env.num_envs, device=env.device)
+        self.reset()
+
+    def reset(self, env_ids: Sequence[int] | None = None) -> None:
+        if env_ids is None:
+            env_ids = slice(None)
+        self.hold_steps[env_ids] = 0.0
+        self.error[env_ids] = 0.0
+        count = self.bias[env_ids].numel()
+        self.bias[env_ids] = torch.empty(count, device=self.bias.device).uniform_(*self.bias_range)
+
+    def _yaw_rate(self) -> torch.Tensor:
+        return self.asset.data.root_ang_vel_b[:, 2]
+
+    def __call__(
+        self,
+        env: ManagerBasedRLEnv,
+        command_name: str,
+        clip_rad: float = 0.5,
+        zero_thresholds: tuple[float, float, float] = (0.02, 0.02, 0.03),
+        warmup_s: float = 1.0,
+        bias_range: tuple[float, float] = (0.0, 0.0),
+        asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"),
+    ) -> torch.Tensor:
+        command = env.command_manager.get_command(command_name)
+        zero = torch.all(torch.abs(command) <= self.zero_band, dim=1)
+        self.hold_steps = torch.where(zero, self.hold_steps + 1.0, torch.zeros_like(self.hold_steps))
+        active = zero & (self.hold_steps > float(self.warmup_steps))
+        self.error = torch.where(active, self.error + (self._yaw_rate() + self.bias) * env.step_dt,
+                                 torch.zeros_like(self.error))
+        return torch.clamp(self.error, -clip_rad, clip_rad).unsqueeze(1)

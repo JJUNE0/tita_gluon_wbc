@@ -33,8 +33,8 @@ class NativeActionPolicy(torch.nn.Module):
 
 
 def load_policy(path, metadata):
-    if metadata['action_dim'] != 8 or metadata['actor_obs_dim'] not in (33, 34):
-        raise ValueError('This export supports 33/34-observation, 8-action TITA actors; the saved layout is validated separately')
+    if metadata['action_dim'] != 8 or metadata['actor_obs_dim'] not in (33, 34, 35):
+        raise ValueError('This export supports 33/34/35-observation, 8-action TITA actors; the saved layout is validated separately')
     cfg = metadata['agent']
     actor = FlashSACActor(cfg['actor_num_blocks'], metadata['actor_obs_dim'], cfg['actor_hidden_dim'], 8)
     state = torch.load(path / 'actor.pt', map_location='cpu', weights_only=True)['network_state_dict']

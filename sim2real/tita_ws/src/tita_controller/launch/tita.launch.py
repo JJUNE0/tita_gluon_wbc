@@ -14,7 +14,8 @@ from launch_ros.actions import Node
 
 NATIVE_JOINTS = [f'joint_{side}_leg_{index}' for side in ('left', 'right') for index in range(1, 5)]
 # Same order as ObsKind in adapter.hpp.
-OBS_KINDS = ['ang_vel', 'gravity', 'commands', 'joint_pos', 'joint_vel', 'last_action', 'zero', 'wheel_position_error']
+OBS_KINDS = ['ang_vel', 'gravity', 'commands', 'joint_pos', 'joint_vel', 'last_action', 'zero', 'wheel_position_error',
+             'heading_error']
 BIG = 1e9  # stands in for "no clip"
 
 
@@ -23,7 +24,7 @@ def policy_parameters(policy_dir):
     cfg = json.loads((policy_dir / 'config.json').read_text())
     interface, robot = cfg['policy_interface'], cfg['robot']
     obs = {key: [] for key in ('obs_kind', 'obs_index', 'obs_scale', 'obs_low', 'obs_high')}
-    position = {}
+    position, heading = {}, {}
     for term in interface['observations']:
         if term['kind'] not in OBS_KINDS:
             raise ValueError(f"observation '{term['kind']}' is not available on the robot")
@@ -32,6 +33,12 @@ def policy_parameters(policy_dir):
                 'wheel_position_radius': float(term['params']['radius']),
                 'wheel_position_clip_m': float(term['params']['clip_m']),
                 'wheel_position_zero_thresholds': [float(v) for v in term['params']['zero_thresholds']],
+            }
+        if term['kind'] == 'heading_error':
+            heading = {
+                'heading_clip_rad': float(term['params']['clip_rad']),
+                'heading_warmup_s': float(term['params']['warmup_s']),
+                'heading_zero_thresholds': [float(v) for v in term['params']['zero_thresholds']],
             }
         scale = term['scale'] if isinstance(term['scale'], list) else [term['scale']] * term['size']
         low, high = term['clip'] or (-BIG, BIG)
@@ -47,6 +54,7 @@ def policy_parameters(policy_dir):
     return {
         **obs,
         **position,
+        **heading,
         'leg_action_filter': interface.get('leg_action_filter', 'none'),
         'policy_path': str(policy_dir / 'policy.onnx'),
         'policy_dt': cfg['control']['sim_timestep'] * cfg['control']['decimation'],

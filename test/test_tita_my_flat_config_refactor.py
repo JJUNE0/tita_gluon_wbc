@@ -2,7 +2,7 @@
 
 Execute the config declarations using Isaac Lab's real configclass decorator,
 with symbolic MDP functions and simulator config leaves. The frozen snapshot
-was generated from the pre-refactor rough -> flat -> my inheritance chain.
+was captured from the working My baseline before promotion of the selected flat task.
 This checks configuration composition and manager term order, not physics.
 """
 
@@ -20,7 +20,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 TITA = ROOT / "lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita"
-BASELINE = ROOT / "test/fixtures/tita_my_flat_config_before_refactor.json"
+BASELINE = ROOT / "test/fixtures/tita_real2sim_base_before_flat_promotion.json"
 
 
 class ConfigLeaf:
@@ -154,9 +154,7 @@ def namespace():
 
 def load_configs(legacy=False, values=None):
     values = namespace() if values is None else values
-    paths = [TITA / "my_flat_env_cfg.py"]
-    if legacy:
-        paths = [TITA / "rough_env_cfg.py", TITA / "flat_env_cfg.py", *paths]
+    paths = [TITA / "real2sim/base_env_cfg.py"]
     module = ModuleType("_my_flat_config_fixture")
     sys.modules[module.__name__] = module
     module.__dict__.update(values)
@@ -196,7 +194,7 @@ class MyFlatConfigRefactorTest(unittest.TestCase):
                 self.assertEqual(snapshot(getattr(self.module, name)()), self.baseline[name])
 
     def test_task_is_independent_of_rough_and_flat_configs(self):
-        tree = ast.parse((TITA / "my_flat_env_cfg.py").read_text())
+        tree = ast.parse((TITA / "real2sim/base_env_cfg.py").read_text())
         self.assertFalse(any(isinstance(node, ast.ImportFrom)
                              and node.module in ("rough_env_cfg", "flat_env_cfg") for node in ast.walk(tree)))
         self.assertEqual(self.module.MyTitaFlatEnvCfg.__bases__, (self.module.ManagerBasedRLEnvCfg,))

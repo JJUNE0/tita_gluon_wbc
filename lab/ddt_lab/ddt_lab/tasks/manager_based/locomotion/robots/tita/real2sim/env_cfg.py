@@ -25,7 +25,7 @@ from isaaclab.managers import SceneEntityCfg
 from isaaclab.utils import configclass
 from isaaclab.utils.noise import AdditiveUniformNoiseCfg as Unoise
 
-from ..my_flat_env_cfg import MyTitaFlatEnvCfg
+from .base_env_cfg import MyTitaFlatEnvCfg
 from . import actions as real2sim_actions
 from . import events as real2sim_events
 from . import observations as real2sim_observations
@@ -432,3 +432,71 @@ class MyTitaFlatPosKneeMA2SphereFastHeadingEnvCfg(MyTitaFlatPosKneeMA2SphereFast
             clip=(-3.2, 3.2),
             scale=2.0,
         )
+
+
+@configclass
+class MyTitaFlatPosKneeMA2SphereFastHeadingObsEnvCfg(MyTitaFlatPosKneeMA2SphereFastHeadingEnvCfg):
+    """Heading run with the heading error also in the actor (2026-10-19, replaces the critic-only run).
+
+    Adds ``heading_error`` (``GyroHeadingError``) as the 35th policy observation: latched bias-corrected gyro
+    integral, 1.0 s warmup, clip +-0.5 rad, scale 2, per-episode bias residual +-0.08 deg/s, noise +-0.003 rad.
+    The critic gets the same term without bias or noise, plus ``heading_drift_error`` (reward anchor) from the
+    parent. Deployment needs the same observation in export, sim2sim and ``tita_node``.
+    """
+
+    def __post_init__(self):
+        super().__post_init__()
+        heading = ObsTerm(
+            func=real2sim_observations.GyroHeadingError,
+            params={
+                "command_name": "base_velocity",
+                "clip_rad": 0.5,
+                "zero_thresholds": (0.02, 0.02, 0.03),
+                "warmup_s": 1.0,
+                "bias_range": (-0.0014, 0.0014),
+            },
+            noise=Unoise(n_min=-0.003, n_max=0.003),
+            clip=(-100.0, 100.0),
+            scale=2.0,
+        )
+        self.observations.policy.heading_error = heading
+        self.observations.critic.heading_error = heading.replace(
+            noise=None, params={**heading.params, "bias_range": (0.0, 0.0)})
+
+
+@configclass
+class MyTitaFlatPosKneeSphereHeadingObsEnvCfg(MyTitaFlatPosKneeSphereEnvCfg):
+    """No-MA2 counterpart of ``MyTitaFlatPosKneeMA2SphereFastHeadingObsEnvCfg`` (2026-10-19).
+
+    Experiment 2 (sphere wheels, no leg MA2, default commands +-1.0 m/s / +-1.5 rad/s with the 0.5 units/s ramp)
+    plus the same heading terms: ``zero_command_heading_drift`` reward, critic ``heading_drift_error`` and
+    actor/critic ``heading_error`` (35 policy observations). Fast commands are not used: no-MA2 with fast
+    commands (experiment 4) failed the 25 Hz proxy in the sim2sim screen.
+    """
+
+    def __post_init__(self):
+        super().__post_init__()
+        reference = MyTitaFlatPosKneeMA2SphereFastHeadingObsEnvCfg()
+        self.rewards.zero_command_heading_drift = reference.rewards.zero_command_heading_drift
+        self.observations.critic.heading_drift_error = reference.observations.critic.heading_drift_error
+        self.observations.policy.heading_error = reference.observations.policy.heading_error
+        self.observations.critic.heading_error = reference.observations.critic.heading_error
+
+
+@configclass
+class MyTitaFlatPosKneeSphereHeadingObsW0EnvCfg(MyTitaFlatPosKneeSphereHeadingObsEnvCfg):
+    """``MyTitaFlatPosKneeSphereHeadingObsEnvCfg`` with no heading warmup (2026-10-19).
+
+    With a 1.0 s warmup both the heading reward anchor and the heading observation started 1 s after the stop, and
+    the MA2 heading run learned a constant clockwise yaw of about -9 deg/s inside that window, cancelled only once
+    the observation switched on (``docs/exp/2026-10-19/heading_obs_experiment.md``). Here the reward anchors on the
+    first zero-command step and the observation integrates from the next step.
+    """
+
+    def __post_init__(self):
+        super().__post_init__()
+        reward = self.rewards.zero_command_heading_drift
+        self.rewards.zero_command_heading_drift = reward.replace(params={**reward.params, "warmup_s": 0.0})
+        for group in (self.observations.policy, self.observations.critic):
+            term = group.heading_error
+            group.heading_error = term.replace(params={**term.params, "warmup_s": 0.0})

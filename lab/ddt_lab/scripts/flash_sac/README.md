@@ -2,17 +2,23 @@
 
 Execution Domain: `TRAINING_SIM` for training; `VALIDATION_SIM` for playback.
 
-This port runs the existing `DDT-Velocity-Flat-Tita-My-v0` task from
-`my_flat_env_cfg.py`. It vendors the PyTorch FlashSAC learner from
+This port defaults to the selected `DDT-Velocity-Flat-Tita-v0` task from
+`flat_env_cfg.py`: 35 policy observations, sphere wheels, no leg MA2 filter,
+and zero heading warmup (the headw0 50k/65k training configuration).
+It vendors the PyTorch FlashSAC learner from
 `wolf-quadruped/rl/FlashSAC`; the Wolf terrain/curriculum adapters are replaced
 with a native TITA adapter. The source fork, local patches, file hashes and MIT
 license are recorded under `vendor/`.
+
+Historical `*-My-*` experiment IDs retain their original settings. The deleted
+`my_flat_env_cfg` module is aliased to `real2sim/base_env_cfg.py` for old saved
+config pickles; it does not select the new flat task.
 
 TITA training defaults live in
 `ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/flash_sac_cfg.py`.
 `TitaFlatFlashSACRunnerCfg` manages rollout/replay/CLI defaults and estimator
 handling; its `agent` (`FlashSACAlgorithmCfg`) manages network sizes, learning
-rates, reward normalization, discount and temperature settings. The My train
+rates, reward normalization, discount and temperature settings. The flat train
 and Play tasks register this class as `flash_sac_cfg_entry_point`. CLI options
 override runner defaults; resume restores the checkpoint's model/schedule and
 action gains.
@@ -31,19 +37,19 @@ cd /home/cocel/Desktop/Research/tita_gluon_wbc/lab/ddt_lab
 
 # Short integration run: 4 envs, 8 vector steps, replay warmup and real updates.
 python scripts/flash_sac/train.py \
-  --task DDT-Velocity-Flat-Tita-My-v0 \
+  --task DDT-Velocity-Flat-Tita-v0 \
   --num_envs 4 --steps 8 --buffer_size 128 --min_buffer 8 \
   --batch_size 8 --save_every 8 --log_every 1 \
   --logger console --headless
 
 # Full training: --steps counts vector steps, not PPO iterations.
 python scripts/flash_sac/train.py \
-  --task DDT-Velocity-Flat-Tita-My-v0 \
+  --task DDT-Velocity-Flat-Tita-v0 \
   --num_envs 1024 --steps 100000 --headless
 
 # W&B logging. Authenticate with `wandb login` if this environment needs it.
 python scripts/flash_sac/train.py \
-  --task DDT-Velocity-Flat-Tita-My-v0 \
+  --task DDT-Velocity-Flat-Tita-v0 \
   --num_envs 4096 --steps 100000 --device cuda:0 --headless \
   --logger wandb --wandb_project tita_flat_flash_sac
 ```
@@ -105,12 +111,12 @@ exact continuation snapshots of simulator, replay or RNG state. Load only
 trusted checkpoint directories: PyTorch and the saved environment config use
 Python serialization.
 
-The actor consumes the existing 33-dimensional `policy` group; the critic
-consumes its own 36-dimensional `critic` group. These are packed as
+The actor consumes the selected 35-dimensional `policy` group; the critic
+consumes its own 39-dimensional `critic` group. These are packed as
 `[policy, critic]`, with an explicit critic offset. `estimator_target` is not
 used: `use_velocity_estimator=False` disables that group on FlashSAC's run config
 before native environment creation, including resume/playback. The shared
-`MyTitaFlatEnvCfg` keeps the group for PPO. Changing the flag to `True` fails
+`TitaFlatEnvCfg` keeps the group for PPO. Changing the flag to `True` fails
 with an explanation because estimator/replay/loss integration is not implemented.
 The PPO-specific learned velocity estimator and its supervised auxiliary
 loss are absent from this FlashSAC baseline. The new actor therefore differs
@@ -138,7 +144,7 @@ The task config, rewards, command ranges and domain randomization are preserved.
 The adapter captures true terminal observations before native auto-reset, so
 n-step replay cuts returns at termination/timeouts and bootstraps timeouts from
 the final state. It requires flat, concatenated `policy`/`critic` groups without
-observation history or stateful modifiers; the current My flat task meets this
+observation history or stateful modifiers; the selected flat task meets this
 contract.
 
 MuJoCo playback uses the shared TITA PPO/FlashSAC checkpoint loader:

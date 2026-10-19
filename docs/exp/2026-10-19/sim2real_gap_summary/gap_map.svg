@@ -169,18 +169,18 @@
 <!-- m1 -->
 <g id="node12" class="node">
 <title>m1</title>
-<polygon fill="#eaeded" stroke="transparent" points="292.5,-71 292.5,-117 595.5,-117 595.5,-71 292.5,-71"/>
-<text text-anchor="start" x="300" y="-102.2" font-family="Noto Sans CJK KR" font-weight="bold" font-size="11.00">M1 heading 측정</text>
-<text text-anchor="start" x="384" y="-102.2" font-family="Noto Sans CJK KR" font-size="11.00"> · IMU quat vs gyro 적분 0.3–0.5 °/s 불일치</text>
-<text text-anchor="start" x="300" y="-80.8" font-family="Noto Sans CJK KR" font-size="9.00">필요: 바닥 기준선/카메라 (60 s 정지)</text>
-<polygon fill="none" stroke="#7f8c8d" points="292.5,-71 292.5,-117 595.5,-117 595.5,-71 292.5,-71"/>
+<polygon fill="#eaeded" stroke="transparent" points="281.5,-71 281.5,-117 606.5,-117 606.5,-71 281.5,-71"/>
+<text text-anchor="start" x="289" y="-102.2" font-family="Noto Sans CJK KR" font-weight="bold" font-size="11.00">M1 heading 측정</text>
+<text text-anchor="start" x="373" y="-102.2" font-family="Noto Sans CJK KR" font-size="11.00"> · IMU quat가 느린 회전 0.3–0.6 °/s 과소보고</text>
+<text text-anchor="start" x="289" y="-80.8" font-family="Noto Sans CJK KR" font-size="9.00">gyro(바이어스 보정) ≈ 엔코더 (독립, 0.00–0.14 °/s 일치) → heading은 gyro_c로</text>
+<polygon fill="none" stroke="#7f8c8d" points="281.5,-71 281.5,-117 606.5,-117 606.5,-71 281.5,-71"/>
 </g>
 <!-- SIM&#45;&gt;m1 -->
 <g id="edge10" class="edge">
 <title>SIM&#45;&gt;m1</title>
-<path fill="none" stroke="#888888" d="M126.63,-272.05C147.34,-221.75 180.5,-162.43 230,-128 244.64,-117.82 261.2,-110.25 278.46,-104.67"/>
+<path fill="none" stroke="#888888" d="M126.63,-272.05C147.34,-221.75 180.5,-162.43 230,-128 241.57,-119.95 254.33,-113.54 267.7,-108.45"/>
 <polygon fill="#888888" stroke="#888888" points="124.6,-271.47 124.29,-277.82 128.49,-273.05 124.6,-271.47"/>
-<polygon fill="#888888" stroke="#888888" points="279.23,-106.63 284.34,-102.85 277.99,-102.62 279.23,-106.63"/>
+<polygon fill="#888888" stroke="#888888" points="268.55,-110.38 273.46,-106.35 267.11,-106.43 268.55,-110.38"/>
 </g>
 <!-- m2 -->
 <g id="node13" class="node">
@@ -276,8 +276,8 @@
 <!-- m1&#45;&gt;REAL -->
 <g id="edge21" class="edge">
 <title>m1&#45;&gt;REAL</title>
-<path fill="none" stroke="#888888" d="M609.6,-104.57C626.85,-110.17 643.39,-117.77 658,-128 707.21,-162.46 739.87,-221.79 760.14,-272.08"/>
-<polygon fill="#888888" stroke="#888888" points="610.08,-102.52 603.73,-102.75 608.83,-106.54 610.08,-102.52"/>
+<path fill="none" stroke="#888888" d="M620.36,-108.37C633.71,-113.48 646.46,-119.92 658,-128 707.21,-162.46 739.87,-221.79 760.14,-272.08"/>
+<polygon fill="#888888" stroke="#888888" points="620.96,-106.35 614.6,-106.26 619.51,-110.29 620.96,-106.35"/>
 <polygon fill="#888888" stroke="#888888" points="758.27,-273.05 762.43,-277.85 762.17,-271.5 758.27,-273.05"/>
 </g>
 <!-- m2&#45;&gt;REAL -->

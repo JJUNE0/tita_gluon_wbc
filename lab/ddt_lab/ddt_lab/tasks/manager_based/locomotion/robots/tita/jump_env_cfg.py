@@ -6,7 +6,7 @@
 """TITA flat env + squat/jump command.
 
 Adds a discrete jump command (-1 squat / 0 flat / +1 jump-trigger) on top of
-``TitaFlatEnvCfg``:
+the rough-derived flat baseline (independent of the promoted flat task):
 
   jump_cmd == 0  -- identical to plain flat locomotion.
   jump_cmd == -1 -- sustained while held; base velocity command forced to
@@ -35,8 +35,7 @@ from isaaclab.utils import configclass
 
 import ddt_lab.tasks.manager_based.locomotion.mdp as mdp
 
-from .flat_env_cfg import TitaFlatEnvCfg
-from .rough_env_cfg import CommandsCfg, ObservationsCfg, RewardsCfg
+from .rough_env_cfg import CommandsCfg, ObservationsCfg, RewardsCfg, TitaRoughEnvCfg
 
 
 @configclass
@@ -94,7 +93,7 @@ class JumpRewardsCfg(RewardsCfg):
 
 
 @configclass
-class TitaJumpEnvCfg(TitaFlatEnvCfg):
+class TitaJumpEnvCfg(TitaRoughEnvCfg):
     """TITA flat env with the squat/jump command layered on top."""
 
     commands: JumpCommandsCfg = JumpCommandsCfg()
@@ -102,8 +101,14 @@ class TitaJumpEnvCfg(TitaFlatEnvCfg):
     rewards: JumpRewardsCfg = JumpRewardsCfg()
 
     def __post_init__(self):
-        # post init of parent (flat overrides: plane terrain, no height scan, ...)
         super().__post_init__()
+        # Preserve the original jump task's flat terrain and observation interface.
+        self.scene.terrain.terrain_type = "plane"
+        self.scene.terrain.terrain_generator = None
+        self.scene.height_scanner = None
+        self.observations.policy.height_scan = None
+        self.observations.scanner = None
+        self.curriculum.terrain_levels = None
 
 
 class TitaJumpEnvCfg_PLAY(TitaJumpEnvCfg):

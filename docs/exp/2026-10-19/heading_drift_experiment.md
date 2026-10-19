@@ -2,7 +2,7 @@
 
 - Execution Domain: TRAINING_SIM
 - Policy Checkpoint SHA256: N/A (학습 예약 단계)
-- Evidence Status: 환경 검사 PASS (13/13, `heading_drift_experiment/heading_task_check.json`). 학습 NOT_TESTED
+- Evidence Status: 환경 검사 PASS (13/13, `heading_drift_experiment/heading_task_check.json`). 학습은 **취소**(2026-10-19 09:55, 시작 전). actor에도 heading을 넣은 `heading_obs_experiment.md`로 대체했다
 - 근거와 베이스 선택: `sphere_hardware_yaw_review.md`
 
 ## 구성

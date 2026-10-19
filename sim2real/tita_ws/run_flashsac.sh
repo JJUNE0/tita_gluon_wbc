@@ -22,6 +22,8 @@ if [[ -v TITA_VELOCITY_BIAS_MAX_TORQUE ]]; then
 fi
 policy_bundle=${TITA_POLICY_BUNDLE:-flashsac_80000}
 case $policy_bundle in
+    flashsac_headw0_65000) policy_checkpoint=ff083cbfc8a8571009a27454e75dc88463e9ebc796fa79e8782ccb4a5bea239d ;;
+    flashsac_headw0_50000) policy_checkpoint=0a6f8ef2bb8a324bf6f6fb7689297f9001bd4b57896daa0cb9ead4953162f4a7 ;;
     flashsac_sphere2_60000) policy_checkpoint=a4c2bfbf6a58240a6623ee8bb8d863774b9336f62df7de3d1993b76725334b2a ;;
     flashsac_sphere1_70000) policy_checkpoint=8e23cf5d1844a6d825482939e5cfc455cd672dd566b2320570080ff606782c77 ;;
     flashsac_sphere1_90000) policy_checkpoint=df2a03faeb6e054310c8cc0c2c11f811c1f6e845dd87a66c40ff3cd29dd8b311 ;;
