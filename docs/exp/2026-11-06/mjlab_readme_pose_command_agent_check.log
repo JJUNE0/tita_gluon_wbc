@@ -1,0 +1,56 @@
+
+==================================================
+Branch
+==================================================
+agent/codex/mjlab-pose-publication
+
+==================================================
+Git status
+==================================================
+M  README.md
+A  docs/exp/2026-11-06/mjlab_readme_pose_command.md
+?? mj_lab/logs
+?? test/_mjlab_publication_local_audit.json
+?? test/_mjlab_publication_selected_evidence.json
+
+==================================================
+Changed files
+==================================================
+M	README.md
+A	docs/exp/2026-11-06/mjlab_readme_pose_command.md
+
+==================================================
+Diff statistics
+==================================================
+ README.md                                        |  1 +
+ docs/exp/2026-11-06/mjlab_readme_pose_command.md | 13 +++++++++++++
+ 2 files changed, 14 insertions(+)
+
+==================================================
+Diff integrity check
+==================================================
+PASS: No whitespace or conflict-marker errors.
+
+==================================================
+Fast tests
+==================================================
+[TEST-FAST] Checking Python syntax across isaac_lab, mj_lab, sim2sim and test...
+[TEST-FAST] Syntax Check Results: 650 passed, 0 failed.
+[TEST-FAST] Checking XML / URDF files...
+[TEST-FAST] XML Parse Check: 8 URDF files OK.
+[TEST-FAST] All fast tests passed.
+
+==================================================
+Experiment Log Directory Check
+==================================================
+PASS: docs/exp/ directory naming convention OK.
+
+==================================================
+Experiment Log Existence Check
+==================================================
+PASS: No core code changes, experiment log check bypassed.
+
+==================================================
+Final result
+==================================================
+PASS

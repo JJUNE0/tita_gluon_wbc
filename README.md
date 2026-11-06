@@ -55,6 +55,7 @@ mjlab에서 같은 FlashSAC로 학습하려면 별도 Python 환경을 사용한
 source ~/venvs/tita_mjlab/bin/activate
 python -m mj_lab.scripts.train --task walk --num_envs 1024 --steps 100000
 # 주행은 --task flat
+python -m mj_lab.scripts.train --task flat_roll_pitch_height --num_envs 1024 --steps 100000 --headless
 ```
 
 Isaac 학습 코드는 `isaac_lab/`을 사용한다. 모델 로그는
