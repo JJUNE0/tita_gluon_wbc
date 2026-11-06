@@ -80,7 +80,7 @@ echo "=================================================="
 echo "Experiment Log Existence Check"
 echo "=================================================="
 # Check if code files were modified
-code_changed=$(git diff HEAD --name-only 2>/dev/null | grep -E "^(lab/|sim2sim/|sdk/|tita_gluon_ws/)" || true)
+code_changed=$(git diff HEAD --name-only 2>/dev/null | grep -E "^(isaac_lab/|mj_lab/|third_party/|sim2sim/|sdk/|tita_gluon_ws/)" || true)
 exp_logged=$(git diff HEAD --name-only 2>/dev/null | grep -E "^docs/exp/.*\.md$" || true)
 untracked_exp=$(git status --porcelain 2>/dev/null | grep -E "^\?\? docs/exp/.*\.md$" || true)
 

@@ -10,7 +10,7 @@ import sys
 from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "lab/ddt_lab/scripts/flash_sac"))
+sys.path.insert(0, str(ROOT / "isaac_lab/ddt_lab/scripts/flash_sac"))
 from runtime import setup_imports, sha256
 
 JOINTS = [f"joint_{side}_leg_{i}" for side in ("left", "right") for i in range(1, 5)]

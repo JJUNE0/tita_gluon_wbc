@@ -19,7 +19,7 @@ class NativePPOParityTest(unittest.TestCase):
         path, _, agent, _ = describe_checkpoint(checkpoint)
         cls = ActorCritic
         if estimator:
-            spec = importlib.util.spec_from_file_location('native_estimator', REPO / 'lab/ddt_lab/ddt_lab/algorithms/estimator/actor_critic_with_estimator.py')
+            spec = importlib.util.spec_from_file_location('native_estimator', REPO / 'isaac_lab/ddt_lab/ddt_lab/algorithms/estimator/actor_critic_with_estimator.py')
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             cls = module.ActorCriticWithEstimator
@@ -42,7 +42,7 @@ class NativePPOParityTest(unittest.TestCase):
         self.verify(REPO / 'docs/exp/2026-10-14/tita_ppo33_flash_comparison_151238/model_1999.pt', False)
 
     def test_estimator_ppo_checkpoint(self):
-        self.verify(REPO / 'lab/ddt_lab/logs/rsl_rl/tita_flat_rslrl_estimator/2026-07-24_19-16-43/model_1800.pt', True)
+        self.verify(REPO / 'isaac_lab/ddt_lab/logs/rsl_rl/tita_flat_rslrl_estimator/2026-07-24_19-16-43/model_1800.pt', True)
 
 
 if __name__ == '__main__':

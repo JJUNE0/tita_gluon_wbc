@@ -18,7 +18,7 @@ from sim2sim_ros2_jazzy.residual_wheel_pd import ResidualWheelPD
 from sim2sim.lqr.estimator import Sensors, WheelOdometry
 from sim2sim.lqr.model import Description
 
-CKPT = REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848/model_50000'
+CKPT = REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848/model_50000'
 OUT = REPO / 'docs/exp/2026-10-15/residual_wheel_pd_integration'
 
 

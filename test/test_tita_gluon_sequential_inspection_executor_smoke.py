@@ -15,7 +15,7 @@ import traceback
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-LAB_ROOT = REPO_ROOT / "lab"
+LAB_ROOT = REPO_ROOT / "isaac_lab"
 for path in (REPO_ROOT, LAB_ROOT):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))

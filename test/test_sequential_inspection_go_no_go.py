@@ -13,12 +13,12 @@ import torch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO_ROOT / "lab" / "ddt_lab"))
-sys.path.insert(0, str(REPO_ROOT / "lab"))
+sys.path.insert(0, str(REPO_ROOT / "isaac_lab" / "ddt_lab"))
+sys.path.insert(0, str(REPO_ROOT / "isaac_lab"))
 
 MODULE_PATH = (
     REPO_ROOT
-    / "lab"
+    / "isaac_lab"
     / "ddt_lab"
     / "ddt_lab"
     / "tasks"
@@ -282,7 +282,7 @@ def test_invalid_trigger_degrades_to_hold_and_is_reported() -> None:
 def test_selected_inspection_hubs_are_present_in_mesh_validated_graph() -> None:
     graph_path = (
         REPO_ROOT
-        / "lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/data"
+        / "isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/data"
         / "tita_gluon_cartesian_work_hub_graph.npz"
     )
     with np.load(graph_path) as graph:

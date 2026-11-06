@@ -13,7 +13,7 @@ os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
 sys.dont_write_bytecode = True
 
 REPO = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO / "lab/ddt_lab/scripts"))
+sys.path.insert(0, str(REPO / "isaac_lab/ddt_lab/scripts"))
 
 from flash_sac.runtime import (
     DEFAULT_TASK,

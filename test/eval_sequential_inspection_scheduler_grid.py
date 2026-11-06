@@ -25,7 +25,7 @@ import sys
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = (
     REPO_ROOT
-    / "lab"
+    / "isaac_lab"
     / "ddt_lab"
     / "ddt_lab"
     / "tasks"

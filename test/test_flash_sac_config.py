@@ -16,7 +16,7 @@ from unittest.mock import patch
 os.environ["TORCHDYNAMO_DISABLE"] = "1"
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPTS = ROOT / "lab/ddt_lab/scripts/flash_sac"
+SCRIPTS = ROOT / "isaac_lab/ddt_lab/scripts/flash_sac"
 sys.path.insert(0, str(SCRIPTS))
 
 from runtime import create_agent_config, load_default_runner_cfg, setup_imports
@@ -35,7 +35,7 @@ class FlashSACConfigTest(unittest.TestCase):
                 sys.modules.pop("scripts", None)
                 self.assertEqual(importlib.util.find_spec("scripts").origin, str(foreign / "__init__.py"))
                 setup_imports(False)
-                local = ROOT / "lab/scripts"
+                local = ROOT / "isaac_lab/scripts"
                 self.assertEqual(list(sys.modules["scripts"].__path__), [str(local)])
                 co_rl = importlib.util.find_spec("scripts.co_rl")
                 self.assertEqual(list(co_rl.submodule_search_locations), [str(local / "co_rl")])
@@ -44,6 +44,8 @@ class FlashSACConfigTest(unittest.TestCase):
         original = json.loads((ROOT / "test/fixtures/tita_flash_sac_before_cfg_extraction.json").read_text())
         # The selected flat task replaces the historical My task as CLI default.
         original["cli_defaults"]["task"] = "DDT-Velocity-Flat-Tita-v0"
+        # Operator preference: future runs upload to W&B by default.
+        original["cli_defaults"]["logger"] = "wandb"
         args = build_parser().parse_args([])
         self.assertEqual({name: getattr(args, name) for name in original["cli_defaults"]}, original["cli_defaults"])
         self.assertEqual(asdict(create_agent_config(args)), original["agent_defaults"])
@@ -115,7 +117,7 @@ class FlashSACConfigTest(unittest.TestCase):
             "rough_env_cfg": ("TitaRoughEnvCfg", "TitaRoughEnvCfg_PLAY"),
         }.items():
             values[name] = SimpleNamespace(**{key: object() for key in classes})
-        path = ROOT / "lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/__init__.py"
+        path = ROOT / "isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/__init__.py"
         tree = ast.parse(path.read_text())
         tree.body = [node for node in tree.body if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call)]
         exec(compile(tree, str(path), "exec"), values)

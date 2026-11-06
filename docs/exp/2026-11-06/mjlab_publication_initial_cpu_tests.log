@@ -1,0 +1,30 @@
+ssssssssssssssssssssssssssss..................s.......................s. [ 51%]
+....sss...s...........ss.....ss....sss..............F [ 89%]
+..............                         [100%]
+=================================== FAILURES ===================================
+_________ WalkAdapterTest.test_saved_gait_ranges_pd_and_model_settings _________
+
+self = <test_sim2sim_walk.WalkAdapterTest testMethod=test_saved_gait_ranges_pd_and_model_settings>
+
+    def test_saved_gait_ranges_pd_and_model_settings(self):
+        env = saved_env()
+        env['commands']['base_velocity']['ranges']['lin_vel_y'] = [-.13, .19]
+        env['commands']['gait']['stance_fraction'] = .67
+        cfg = simulation_config(env, env['scene']['robot']['init_state'], [{'kind': 'gait', 'size': 5}])
+>       self.assertEqual(cfg['sim_command_ranges']['lin_vel_y'], [-.13, .19])
+E       AssertionError: Lists differ: [-0.0, 0.0] != [-0.13, 0.19]
+E
+E       First differing element 0:
+E       -0.0
+E       -0.13
+E
+E       - [-0.0, 0.0]
+E       ?     ^    ^
+E
+E       + [-0.13, 0.19]
+E       ?     ^^    ^^
+
+test/test_sim2sim_walk.py:68: AssertionError
+=========================== short test summary info ============================
+FAILED test/test_sim2sim_walk.py::WalkAdapterTest::test_saved_gait_ranges_pd_and_model_settings
+1 failed, 97 passed, 41 skipped, 4 deselected, 53 subtests passed in 4.94s

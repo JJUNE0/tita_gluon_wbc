@@ -3,7 +3,8 @@ build/
 install/
 log/
 logs/
-lab/ddt_lab/logs/*
+isaac_lab/ddt_lab/logs/*
+mj_lab/logs/
 *.log
 
 # Python & PyTorch Artifacts
@@ -54,7 +55,7 @@ usd_retry*/
 # Agent tool state
 **/.omc/
 # Run outputs
-lab/outputs/
+isaac_lab/outputs/
 # Papers (local reference only)
 docs/paper/
 

@@ -29,7 +29,7 @@ from sim2sim_ros2_jazzy.checkpoint import describe_checkpoint, prepared_config, 
 from sim2sim_ros2_jazzy.mujoco_env import TitaMujocoEnv
 from sim2sim_ros2_jazzy.state_machine import StateMachine, SPLAY_POSE
 
-RUN = REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_180212_290240'
+RUN = REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_180212_290240'
 STEPS = list(range(40000, 85001, 5000))
 SEEDS = [42, 104, 270]
 KNEE_SCALES = [1., .75, .55]

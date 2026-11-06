@@ -23,7 +23,7 @@ from sim2sim_ros2_jazzy.adapter import ObsState, quat_wxyz_to_rotmat
 from sim2sim_ros2_jazzy.checkpoint import prepared_config, read_yaml, sha256
 from sim2sim_ros2_jazzy.state_machine import SPLAY_POSE, StateMachine
 
-CKPT = REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848/model_60000'
+CKPT = REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848/model_60000'
 WHEELS = np.array([3, 7])
 LEGS = np.array([0, 1, 2, 4, 5, 6])
 

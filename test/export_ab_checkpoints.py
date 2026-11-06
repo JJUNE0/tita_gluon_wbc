@@ -1,6 +1,6 @@
 """VALIDATION_SIM: export arm A/B FlashSAC checkpoints for sim2sim evaluation only.
 
-``lab/ddt_lab/scripts/flash_sac/export.py`` accepts only ``DDT-Velocity-Flat-Tita-My-v0``. Changing
+``isaac_lab/ddt_lab/scripts/flash_sac/export.py`` accepts only ``DDT-Velocity-Flat-Tita-My-v0``. Changing
 that deployment-path check needs operator approval, so this test-side wrapper leaves the file
 untouched and, per checkpoint, temporarily treats the run's own task as the export task *only after*
 verifying that the run keeps the deployed interface:
@@ -24,7 +24,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 REPO = Path(__file__).resolve().parents[1]
-REFERENCE_RUN = REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848'
+REFERENCE_RUN = REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848'
 RUNS = {
     'A': ('tita_flash_sac_201940_278440', 'DDT-Velocity-Flat-Tita-My-BaseComShift-v0'),
     'B': ('tita_flash_sac_201942_248862', 'DDT-Velocity-Flat-Tita-My-Real2Sim-BaseComShift-v0'),
@@ -49,13 +49,13 @@ def main() -> None:
                         help="write to the sim2sim launcher's own cache (<model>/sim2sim/actor) instead of --output")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    sys.path[:0] = [str(REPO / 'lab/ddt_lab/scripts/flash_sac'), str(REPO / 'sim2sim/sim2sim_ros2_jazzy')]
+    sys.path[:0] = [str(REPO / 'isaac_lab/ddt_lab/scripts/flash_sac'), str(REPO / 'sim2sim/sim2sim_ros2_jazzy')]
     import export  # the module prepare_checkpoint imports load_policy from
     from sim2sim_ros2_jazzy.checkpoint import prepare_checkpoint
 
     rows = []
     for arm, (run, task) in ((a, RUNS[a]) for a in args.arms):
-        run_dir = REPO / 'lab/ddt_lab/logs/flash_sac' / run
+        run_dir = REPO / 'isaac_lab/ddt_lab/logs/flash_sac' / run
         interface = {name: digest(run_dir / name) == digest(REFERENCE_RUN / name)
                      for name in ('policy_interface.json', 'action_mapping.json')}
         for step in args.steps:

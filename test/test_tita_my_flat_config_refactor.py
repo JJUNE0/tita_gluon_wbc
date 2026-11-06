@@ -19,7 +19,7 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[1]
-TITA = ROOT / "lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita"
+TITA = ROOT / "isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita"
 BASELINE = ROOT / "test/fixtures/tita_real2sim_base_before_flat_promotion.json"
 
 
@@ -142,7 +142,7 @@ def namespace():
         "DelayedPDActuatorCfg": leaf_type("DelayedPDActuatorCfg"),
         "DCMotorCfg": leaf_type("DCMotorCfg"), "ImplicitActuatorCfg": leaf_type("ImplicitActuatorCfg"),
     }
-    asset_path = ROOT / "lab/ddt_lab/ddt_lab/assets/ddt_robot.py"
+    asset_path = ROOT / "isaac_lab/ddt_lab/ddt_lab/assets/ddt_robot.py"
     asset_tree = ast.parse(asset_path.read_text())
     asset_tree.body = [node for node in asset_tree.body if isinstance(node, ast.Assign)
                        and isinstance(node.targets[0], ast.Name)

@@ -104,7 +104,10 @@ class FlashSACWandbTest(unittest.TestCase):
     def test_config_defaults_and_cli_wandb_overrides(self):
         runner = train.load_default_runner_cfg()
         self.assertEqual(runner.wandb_project, "tita_flat_flash_sac")
-        self.assertEqual(runner.logger, "tensorboard")
+        self.assertEqual(runner.logger, "wandb")
+        self.assertEqual(runner.wandb_mode, "online")
+        self.assertEqual(runner.video_interval, 10000)
+        self.assertEqual(runner.video_length, 500)
         runner.wandb_project = "config-project"
         runner.wandb_entity = "config-team"
         runner.run_name = "config-run"
@@ -138,7 +141,10 @@ class FlashSACWandbTest(unittest.TestCase):
                 "zero_command_position_drift": 1.0, "zero_command_wheel_action": -0.05,
             })
             self.assertEqual(call["config"]["actor_obs_dim"], 33)
-            self.assertEqual(run.definitions, [("step", {}), ("*", {"step_metric": "step"})])
+            self.assertEqual(run.definitions, [
+                ("step", {}), ("*", {"step_metric": "step"}),
+                ("video/checkpoint_step", {}), ("video/*", {"step_metric": "video/checkpoint_step"}),
+            ])
             self.assertEqual([row["step"] for row in run.metrics], [1, 2, 3, 4])
             self.assertEqual(run.metrics[-1]["updates"], 6)
             for row in run.metrics[1:]:
@@ -158,7 +164,7 @@ class FlashSACWandbTest(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="flash_sac_wandb_resume_", dir=REPO / "test") as temporary:
             fixture = Path(temporary)
             self.invoke(fixture, sdk, ["--wandb_mode", "online"])
-            checkpoint = next(fixture.glob("lab/ddt_lab/logs/flash_sac/*/model_4"))
+            checkpoint = next(fixture.glob("isaac_lab/ddt_lab/logs/flash_sac/*/model_4"))
             self.invoke(fixture, sdk, [
                 "--resume", str(checkpoint), "--steps", "6",
                 "--wandb_run_id", sdk.runs[0].id, "--wandb_mode", "online",

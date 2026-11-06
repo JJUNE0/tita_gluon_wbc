@@ -9,7 +9,7 @@ from sim2sim_ros2_jazzy.adapter import ActionAdapter, ObservationBuilder, ObsSta
 from sim2sim_ros2_jazzy.checkpoint import prepared_config
 from sim2sim_ros2_jazzy.mujoco_env import TitaMujocoEnv
 
-CHECKPOINT = REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_172127_928297/model_100000'
+CHECKPOINT = REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_172127_928297/model_100000'
 WHEELS = np.array([3, 7])
 LEGS = np.array([0, 1, 2, 4, 5, 6])
 

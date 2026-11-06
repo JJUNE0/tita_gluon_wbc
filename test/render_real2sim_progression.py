@@ -37,7 +37,7 @@ from PIL import Image, ImageDraw, ImageFont
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / 'test'))
 sys.path.insert(0, str(REPO / 'sim2sim/sim2sim_ros2_jazzy'))
-LOGS = REPO / 'lab/ddt_lab/logs/flash_sac'
+LOGS = REPO / 'isaac_lab/ddt_lab/logs/flash_sac'
 ROWS = [dict(tag='flashsac_baseline', step=60000, label='FlashSAC (baseline)',
              config=LOGS / 'tita_flash_sac_115632_883848/model_60000/sim2sim/actor/config.json'),
         dict(tag='flashsac_real2sim', step=50000, label='FlashSAC + Real2Sim',

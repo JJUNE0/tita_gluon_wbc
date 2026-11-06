@@ -114,7 +114,7 @@ class FlashSACActionRangesTest(unittest.TestCase):
                     redirect_stdout(io.StringIO()):
                 with patch.object(sys, 'argv', ['train.py', *common, '--steps', '8']):
                     train.main()
-                path = next(fixture.glob('lab/ddt_lab/logs/flash_sac/*/model_8'))
+                path = next(fixture.glob('isaac_lab/ddt_lab/logs/flash_sac/*/model_8'))
                 _, metadata = train.read_checkpoint(path)
                 self.assertEqual(metadata['action_mapping'], PIECEWISE_ACTION_MAPPING)
                 negative = torch.tensor(metadata['action_gain_negative'])
@@ -149,7 +149,7 @@ class FlashSACActionRangesTest(unittest.TestCase):
                     torch.testing.assert_close(actual, normalized)
                 with patch.object(sys, 'argv', ['train.py', *common, '--steps', '10', '--resume', str(path)]):
                     train.main()
-                resumed_path = next(fixture.glob('lab/ddt_lab/logs/flash_sac/*/model_10'))
+                resumed_path = next(fixture.glob('isaac_lab/ddt_lab/logs/flash_sac/*/model_10'))
                 _, resumed = train.read_checkpoint(resumed_path)
                 self.assertEqual(resumed['action_gain_negative'], [1.] * 8)
                 self.assertEqual(resumed['action_gain_positive'], [1.] * 8)

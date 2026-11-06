@@ -37,7 +37,7 @@ def main() -> None:
     args = parser.parse_args()
     RANGE['x'], RANGE['y'], RANGE['z'] = tuple(args.x_range), tuple(args.y_range), tuple(args.z_range)
     args.output.mkdir(parents=True, exist_ok=True)
-    sys.path.insert(0, str(REPO / 'lab/ddt_lab/scripts/flash_sac'))
+    sys.path.insert(0, str(REPO / 'isaac_lab/ddt_lab/scripts/flash_sac'))
     from runtime import setup_imports
     setup_imports(False)
     from isaaclab.app import AppLauncher

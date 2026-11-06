@@ -4,6 +4,7 @@ import argparse
 from datetime import datetime
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
@@ -32,6 +33,8 @@ def record(result, kind):
 
 def run_runtime(args):
     import rclpy
+    from geometry_msgs.msg import Twist, Vector3
+    from .adapter import quat_wxyz_to_rpy
     from .sim2sim_node import Sim2SimNode
     cfg = json.loads(args._config.read_text())
     result = dict(execution_domain='VALIDATION_SIM', evidence_status='BLOCKED',
@@ -41,15 +44,45 @@ def run_runtime(args):
                   residual_wheel_pd=args.residual_wheel_pd, fixed_residual_lqr=args.fixed_residual_lqr,
                   velocity_bias=args.velocity_bias, leg_action_filter=args.leg_action_filter,
                   leg_notch_hz=args.leg_notch_hz, leg_notch_q=args.leg_notch_q)
+    result['support_mode'] = args.support_mode
     node = None
     try:
-        rclpy.init(args=['--ros-args', '-p', f'config:={args._config}', '-p', f'viewer:={str(not args.headless).lower()}',
+        pose_target = None
+        if args.pose is not None:
+            if 'pose_command' not in cfg:
+                raise ValueError('--pose requires a roll/pitch/height command policy')
+            pose_target = [math.radians(args.pose[0]), math.radians(args.pose[1]), args.pose[2]]
+            for value, name in zip(pose_target, ('roll_range', 'pitch_range', 'height_range')):
+                if not cfg['pose_command'][name][0] <= value <= cfg['pose_command'][name][1]:
+                    raise ValueError(f'--pose {name} is outside the saved training range {cfg["pose_command"][name]}')
+        ros_args = ['--ros-args', '-p', f'config:={args._config}', '-p', f'viewer:={str(not args.headless).lower()}',
                         '-p', f'residual_wheel_pd:={str(args.residual_wheel_pd).lower()}',
                         '-p', f'fixed_residual_lqr:={str(args.fixed_residual_lqr).lower()}',
                         '-p', f'velocity_bias:={str(args.velocity_bias).lower()}',
                         '-p', f'leg_action_filter:={args.leg_action_filter}',
-                        '-p', f'leg_notch_hz:={args.leg_notch_hz}', '-p', f'leg_notch_q:={args.leg_notch_q}'])
+                        '-p', f'leg_notch_hz:={args.leg_notch_hz}', '-p', f'leg_notch_q:={args.leg_notch_q}']
+        if args.support_mode is not None:
+            ros_args += ['-p', f'support_mode:={args.support_mode}']
+        rclpy.init(args=ros_args)
         node = Sim2SimNode()
+        if 'support_command' in cfg:
+            result['support_mode'] = node.support_mode
+        result['command_limits'] = node.command_ranges
+        if node.pose_cfg is not None:
+            result['pose_command_config'] = node.pose_cfg
+        if pose_target is not None:
+            node._cmd_pose_cb(Vector3(x=pose_target[0], y=pose_target[1], z=pose_target[2]))
+        if args.headless:
+            target = args.command or [0., 0., 0.]
+            for value, name in zip(target, ('lin_vel_x', 'lin_vel_y', 'ang_vel_z')):
+                low, high = node.command_ranges.get(name, [0., 0.])
+                if not low <= value <= high:
+                    raise ValueError(f'Command {name}={value} is outside the simulation limits [{low}, {high}] '
+                                     '(tita.yaml capped by the trained range)')
+            message = Twist()
+            message.linear.x, message.linear.y, message.angular.z = target
+            node._cmd_twist_cb(message)
+            result['fixed_command'] = target
         result['leg_action_filter'] = node.leg_filter.mode
         if args.velocity_bias:
             result['velocity_bias_acquisition_s'] = node.residual.ACQUISITION_SECONDS
@@ -77,6 +110,13 @@ def run_runtime(args):
         rclpy.try_shutdown()
         if node:
             result['policy_steps'] = node.steps
+            result['tilt_faults'] = node.tilt_faults
+            result['final_state'] = node.sm.state
+            if node.pose_cfg is not None:
+                result['pose_target_rad_m'] = node.pose_target.tolist()
+                result['pose_command_rad_m'] = node.pose_command.tolist()
+                result['pose_actual_rad_m'] = [*quat_wxyz_to_rpy(node.env.base_quat())[:2].astype(float),
+                                               float(node.env.base_pos()[2])]
             result['final_base_position_m'] = node.env.base_pos().tolist()
             threads = list(node.env._viewer_threads)
             node.env.close()
@@ -103,6 +143,12 @@ def main(argv=None):
     residual.add_argument('--velocity_bias', action='store_true',
                           help='FlashSAC encoder/IMU velocity bias after 2 s zero-command hold, before wheel PD')
     parser.add_argument('--steps', type=int, help='Finite headless control steps; default: 1000')
+    parser.add_argument('--command', type=float, nargs=3, metavar=('VX', 'VY', 'WZ'),
+                        help='Fixed headless velocity target, constrained by tita.yaml and the trained ranges')
+    parser.add_argument('--support-mode', type=int, choices=(0, 1, 2),
+                        help='Support command: 0 left, 1 right, 2 both (support checkpoints only)')
+    parser.add_argument('--pose', type=float, nargs=3, metavar=('ROLL_DEG', 'PITCH_DEG', 'HEIGHT_M'),
+                        help='Pose target in degrees/degrees/metres, ramped using the saved training rates')
     parser.add_argument('--prepare-only', action='store_true', help='Prepare and verify the policy without starting MuJoCo')
     parser.add_argument('--isaac-python', type=Path, default=Path.home() / 'isaac/env_isaaclab/bin/python')
     parser.add_argument('--mujoco-python', type=Path, default=Path.home() / 'venvs/cosim_ros2_jazzy/bin/python')
@@ -112,6 +158,10 @@ def main(argv=None):
     args = parser.parse_args(argv)
     if args.steps is not None and (args.steps < 1 or not args.headless):
         parser.error('--steps must be positive and used with --headless')
+    if args.command is not None and (not args.headless or not all(math.isfinite(v) for v in args.command)):
+        parser.error('--command requires --headless and three finite velocity values')
+    if args.pose is not None and not all(math.isfinite(v) for v in args.pose):
+        parser.error('--pose requires three finite values: roll degrees, pitch degrees, height metres')
     if args._runtime:
         run_runtime(args)
         return
@@ -142,12 +192,18 @@ def main(argv=None):
                '--ckpt', str(path), '--_runtime', '--_config', str(config)]
     if args.headless:
         command += ['--headless', '--steps', str(args.steps or 1000)]
+        if args.command is not None:
+            command += ['--command', *map(str, args.command)]
     if args.residual_wheel_pd:
         command += ['--residual_wheel_pd']
     if args.fixed_residual_lqr:
         command += ['--fixed_residual_lqr']
     if args.velocity_bias:
         command += ['--velocity_bias']
+    if args.support_mode is not None:
+        command += ['--support-mode', str(args.support_mode)]
+    if args.pose is not None:
+        command += ['--pose', *map(str, args.pose)]
     command += ['--leg_action_filter', args.leg_action_filter]
     command += ['--leg_notch_hz', str(args.leg_notch_hz), '--leg_notch_q', str(args.leg_notch_q)]
     environment = os.environ.copy()

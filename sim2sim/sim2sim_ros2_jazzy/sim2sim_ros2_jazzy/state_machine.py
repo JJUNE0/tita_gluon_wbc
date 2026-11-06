@@ -37,7 +37,10 @@ class StateMachine:
         if self.state != 'transform_up':
             return
         self.elapsed += dt
-        splay_time = max(SPLAY_SECONDS_PER_RAD * float(np.max(np.abs(self.start - SPLAY_POSE))), 1e-6)
+        # Wheels have no position target; their unwrapped angles must not
+        # extend the posture transition after driving or passive rolling.
+        position_error = (self.start - SPLAY_POSE)[KP > 0]
+        splay_time = max(SPLAY_SECONDS_PER_RAD * float(np.max(np.abs(position_error))), 1e-6)
         t = self.elapsed
         if t < splay_time:
             self.target = self.start + (SPLAY_POSE - self.start) * (t / splay_time)
@@ -47,5 +50,7 @@ class StateMachine:
             self.state = 'rl' if self.auto_rl else 'sit'
 
     def torque(self, joint_pos, joint_vel):
+        if self.state == 'damp':
+            return np.clip(-KD * joint_vel, -self.limit, self.limit)
         torque = KP * (self.target - joint_pos) - KD * joint_vel + FF
         return np.clip(torque, -self.limit, self.limit)

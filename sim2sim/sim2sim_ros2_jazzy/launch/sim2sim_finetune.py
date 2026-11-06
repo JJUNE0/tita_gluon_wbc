@@ -22,7 +22,7 @@ import numpy as np
 PACKAGE = Path(__file__).resolve().parents[1]
 REPO = PACKAGE.parents[1]
 sys.path.insert(0, str(PACKAGE))
-sys.path.insert(0, str(REPO / 'lab/ddt_lab/scripts/flash_sac'))
+sys.path.insert(0, str(REPO / 'isaac_lab/ddt_lab/scripts/flash_sac'))
 
 from sim2sim_ros2_jazzy.adapter import ActionAdapter, ObservationBuilder, ObsState, quat_wxyz_to_rotmat
 from sim2sim_ros2_jazzy.checkpoint import describe_checkpoint, observation_layout, read_yaml, sha256
@@ -309,7 +309,7 @@ def constrained_actor_update(agent, prior, rl_weight=0.):
 
 def build_parser():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--ckpt', type=Path, default=REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848/model_60000')
+    parser.add_argument('--ckpt', type=Path, default=REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848/model_60000')
     parser.add_argument('--steps', type=int, default=10000, help='New simulator transitions this run')
     parser.add_argument('--min_buffer', type=int, default=256)
     parser.add_argument('--batch_size', type=int, default=64)

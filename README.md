@@ -1,10 +1,12 @@
 # TITA + GLUON Whole-Body Control
 
-Isaac Lab 학습 → MuJoCo sim2sim 검증 → ROS 2 실기 실행.
+Isaac Lab / mjlab 학습 → MuJoCo sim2sim 검증 → ROS 2 실기 실행.
 
 | 경로 | 용도 |
 |---|---|
-| `lab/ddt_lab` | Isaac Lab 학습 환경과 FlashSAC |
+| `isaac_lab/ddt_lab` | Isaac Lab 학습 환경과 FlashSAC |
+| `mj_lab` | mjlab TITA flat/walk 환경, 기존 FlashSAC 연결 |
+| `third_party/mjlab` | 공식 mjlab v1.6.0 Git submodule |
 | `sim2sim` | MuJoCo 검증 및 로봇 모델 |
 | `sim2real/tita_ws` | TITA 실기 controller |
 | `sdk` | 하드웨어 SDK |
@@ -16,7 +18,7 @@ Isaac Lab 학습 → MuJoCo sim2sim 검증 → ROS 2 실기 실행.
 ```bash
 export TITA_REPO="$PWD"
 source ~/isaac/env_isaaclab/bin/activate
-cd "$TITA_REPO/lab/ddt_lab"
+cd "$TITA_REPO/isaac_lab/ddt_lab"
 pip install -e .
 cd "$TITA_REPO"
 ```
@@ -33,18 +35,31 @@ source /opt/ros/jazzy/setup.bash
 
 ## 2. 학습 (`TRAINING_SIM`)
 
-기준: [flat_env_cfg.py](lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/flat_env_cfg.py), FlashSAC, 관측 35개 / action 8개.
+기준: [flat_env_cfg.py](isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/flat_env_cfg.py), FlashSAC, 관측 35개 / action 8개.
 
 ```bash
 cd "$TITA_REPO"
 source ~/isaac/env_isaaclab/bin/activate
-python lab/ddt_lab/scripts/flash_sac/train.py \
+python isaac_lab/ddt_lab/scripts/flash_sac/train.py \
   --task DDT-Velocity-Flat-Tita-v0 \
   --num_envs 1024 --steps 100000 --device cuda:0 --headless
 ```
 
-Checkpoint: `lab/ddt_lab/logs/flash_sac/tita_flash_sac_<run>/model_<step>/`.
-추가 옵션: [FlashSAC README](lab/ddt_lab/scripts/flash_sac/README.md).
+Checkpoint: `isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_<run>/model_<step>/`.
+추가 옵션: [FlashSAC README](isaac_lab/ddt_lab/scripts/flash_sac/README.md).
+
+mjlab에서 같은 FlashSAC로 학습하려면 별도 Python 환경을 사용한다.
+[설치·재생·설정 차이](mj_lab/README.md):
+
+```bash
+source ~/venvs/tita_mjlab/bin/activate
+python -m mj_lab.scripts.train --task walk --num_envs 1024 --steps 100000
+# 주행은 --task flat
+```
+
+Isaac 학습 코드는 `isaac_lab/`을 사용한다. 모델 로그는
+`isaac_lab/ddt_lab/logs/`와 `isaac_lab/logs/`에 있으며, 루트에 있던 과거 W&B
+로그는 `isaac_lab/wandb/from_repo_root/`에 보관한다.
 
 ## 3. sim2sim 검증 (`VALIDATION_SIM`)
 
@@ -52,7 +67,7 @@ Checkpoint: `lab/ddt_lab/logs/flash_sac/tita_flash_sac_<run>/model_<step>/`.
 
 ```bash
 cd "$TITA_REPO"
-export TITA_CKPT="$TITA_REPO/lab/ddt_lab/logs/flash_sac/tita_flash_sac_<run>/model_65000"
+export TITA_CKPT="$TITA_REPO/isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_<run>/model_65000"
 
 # Headless 검증
 python3 sim2sim/sim2sim_ros2_jazzy/launch/sim2sim.launch.py \

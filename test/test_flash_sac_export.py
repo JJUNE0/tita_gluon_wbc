@@ -35,7 +35,7 @@ class FlashSACExportTest(unittest.TestCase):
             torch.testing.assert_close(policy(torch.zeros(1, 33)), torch.tensor([[-3.2, -2., -2.8, -6., 2.4, 2., 2.8, 6.]]))
 
     def test_generated_config_keeps_native_scales_and_last_action_feedback(self):
-        _, cfg, _, _ = describe_checkpoint(REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_172127_928297/model_15000/actor.pt')
+        _, cfg, _, _ = describe_checkpoint(REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_172127_928297/model_15000/actor.pt')
         action = np.array([-3.2, 2., -2.8, 6., 2.4, -2., 2.8, -6.], dtype=np.float32)
         defaults = np.array(cfg['robot']['default_joint_angles'], dtype=np.float32)
         targets = ActionAdapter(cfg).targets(action)

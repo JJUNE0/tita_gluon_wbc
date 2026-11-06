@@ -13,16 +13,30 @@ import numpy as np
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / 'sim2sim/sim2sim_ros2_jazzy'))
 from sim2sim_ros2_jazzy.adapter import ActionAdapter, ObservationBuilder, ObsState, ISAAC_JOINTS, NATIVE_JOINTS
-from sim2sim_ros2_jazzy.checkpoint import describe_checkpoint, read_yaml, prepared_config, sha256, fingerprint, export_directory
+from sim2sim_ros2_jazzy.checkpoint import describe_checkpoint, read_yaml, prepared_config, sha256, fingerprint, export_directory, simulation_config
 from sim2sim_ros2_jazzy.cli import main
 import contextlib
 import io
 
-FLASH = REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_172127_928297/model_15000/actor.pt'
+FLASH = REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_172127_928297/model_15000/actor.pt'
 PPO = REPO / 'docs/exp/2026-10-14/tita_ppo33_flash_comparison_151238/model_1999.pt'
 
 
 class AdapterTest(unittest.TestCase):
+    def test_saved_command_ramp_matches_training_zero_disables_ramping(self):
+        env = read_yaml(PPO.parent / 'env.yaml')
+        defaults = env['scene']['robot']['init_state']
+        command = env['commands']['base_velocity']
+        for ramp, expected in ((0, None), (None, None), (0.5, 0.5), (2.5, 2.5)):
+            with self.subTest(ramp=ramp):
+                command['ramp_rate'] = ramp
+                self.assertEqual(simulation_config(env, defaults, [])['sim_command_ramp'], expected)
+        for ramp in (-0.5, float('nan'), float('inf')):
+            with self.subTest(invalid_ramp=ramp):
+                command['ramp_rate'] = ramp
+                with self.assertRaisesRegex(ValueError, 'Invalid saved command ramp'):
+                    simulation_config(env, defaults, [])
+
     def test_saved_layout_order_scale_and_native_feedback(self):
         _, cfg, _, _ = describe_checkpoint(FLASH)
         state = ObsState(np.array(cfg['robot']['default_joint_angles']) + np.arange(8) * .01,
@@ -101,7 +115,7 @@ class AdapterTest(unittest.TestCase):
         self.assertEqual(error.exception.code, 2)
 
     def test_training_capture_saves_resolved_joint_names_and_scales(self):
-        spec = importlib.util.spec_from_file_location('capture_policy_interface', REPO / 'lab/ddt_lab/ddt_lab/policy_interface.py')
+        spec = importlib.util.spec_from_file_location('capture_policy_interface', REPO / 'isaac_lab/ddt_lab/ddt_lab/policy_interface.py')
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         observation = SimpleNamespace(scale=[1., 2., 3.], clip=(-1., 1.), params={'asset_cfg': SimpleNamespace(name='robot', joint_ids=[2, 0])})

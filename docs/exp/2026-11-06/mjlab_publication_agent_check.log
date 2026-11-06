@@ -1,0 +1,1811 @@
+
+==================================================
+Branch
+==================================================
+agent/codex/mjlab-pose-publication
+
+==================================================
+Git status
+==================================================
+M  .gitignore
+A  .gitmodules
+M  README.md
+A  docs/exp/2026-10-27/flash_sac_wandb_video_defaults.md
+A  docs/exp/2026-10-27/mjlab_flat_preview_summary.md
+A  docs/exp/2026-10-27/mjlab_migration_summary.md
+A  docs/exp/2026-10-27/mjlab_training_queue.md
+A  docs/exp/2026-10-27/tita_mjlab_220720_835290_args.json
+A  docs/exp/2026-10-27/tita_mjlab_220720_835290_summary.md
+A  docs/exp/2026-10-27/tita_mjlab_220754_974805_args.json
+A  docs/exp/2026-10-27/tita_mjlab_220754_974805_summary.md
+A  docs/exp/2026-10-27/tita_mjlab_220755_939683_args.json
+A  docs/exp/2026-10-27/tita_mjlab_220755_939683_summary.md
+A  docs/exp/2026-10-27/tita_mjlab_220844_500229_args.json
+A  docs/exp/2026-10-27/tita_mjlab_220844_500229_summary.md
+A  docs/exp/2026-10-27/tita_mjlab_221710_985132_args.json
+A  docs/exp/2026-10-27/tita_mjlab_221710_985132_summary.md
+A  docs/exp/2026-10-27/tita_mjlab_221712_098926_args.json
+A  docs/exp/2026-10-27/tita_mjlab_221712_098926_summary.md
+A  docs/exp/2026-10-27/tita_mjlab_221928_311507_args.json
+A  docs/exp/2026-10-27/tita_mjlab_221928_311507_summary.md
+A  docs/exp/2026-10-27/tita_mjlab_235721_754659_args.json
+A  docs/exp/2026-10-27/tita_mjlab_235721_754659_summary.md
+A  docs/exp/2026-10-28/flat_roll_pitch_height_summary.md
+A  docs/exp/2026-10-28/hybrid_sim2sim_runtime.md
+A  docs/exp/2026-10-28/hybrid_sim2sim_summary.md
+A  docs/exp/2026-10-28/inline_contactfix_restart_summary.md
+A  docs/exp/2026-10-28/inline_env_runtime.md
+A  docs/exp/2026-10-28/inline_env_training_summary.md
+A  docs/exp/2026-10-28/inline_lift_30000_summary.md
+A  docs/exp/2026-10-28/inline_relaxed_penalties_training_summary.md
+A  docs/exp/2026-10-28/lab_alias_cleanup_summary.md
+A  docs/exp/2026-10-28/mjlab_flat_walk_20261027_224638_comparison.md
+A  docs/exp/2026-10-28/mjlab_hybrid_native_preview_summary.md
+A  docs/exp/2026-10-28/mjlab_hybrid_walk_training.md
+A  docs/exp/2026-10-28/mjlab_isaac_training_speed.md
+A  docs/exp/2026-10-28/one_leg_balance_15000_summary.md
+A  docs/exp/2026-10-28/one_leg_reference_sim2sim_runtime.md
+A  docs/exp/2026-10-28/one_leg_reference_training_summary.md
+A  docs/exp/2026-10-28/one_leg_reference_video_probe_summary.md
+A  docs/exp/2026-10-28/one_leg_standing2s_training_summary.md
+A  docs/exp/2026-10-28/one_leg_standing_runtime_checks.md
+A  docs/exp/2026-10-28/pose_preview_camera_summary.md
+A  docs/exp/2026-10-28/pose_preview_summary.md
+A  docs/exp/2026-10-28/pose_sim2sim_summary.md
+A  docs/exp/2026-10-28/pose_sim2sim_support_regression.md
+A  docs/exp/2026-10-28/rph_expanded_summary.md
+A  docs/exp/2026-10-28/stand_one_leg_env_summary.md
+A  docs/exp/2026-10-28/stand_one_leg_sim2sim_state_machine.md
+A  docs/exp/2026-10-28/stand_one_leg_sim2sim_summary.md
+A  docs/exp/2026-10-28/stand_one_leg_training_summary.md
+A  docs/exp/2026-10-28/stop_latch_runtime.md
+A  docs/exp/2026-10-28/stop_latch_training_summary.md
+A  docs/exp/2026-10-28/support_command_sim2sim_25000_runtime.md
+A  docs/exp/2026-10-28/support_command_sim2sim_25000_summary.md
+A  docs/exp/2026-10-28/support_command_sim2sim_runtime.md
+A  docs/exp/2026-10-28/support_command_training_summary.md
+A  docs/exp/2026-10-28/support_command_video_probe_summary.md
+A  docs/exp/2026-10-28/support_episode_sim2sim_runtime.md
+A  docs/exp/2026-10-28/support_episode_training_summary.md
+A  docs/exp/2026-10-28/support_episode_video_probe_summary.md
+A  docs/exp/2026-10-28/support_velocity_sim2sim_probe.md
+A  docs/exp/2026-10-28/support_velocity_sim2sim_runtime.md
+A  docs/exp/2026-10-28/support_velocity_sim2sim_summary.md
+A  docs/exp/2026-10-28/support_velocity_training_summary.md
+A  docs/exp/2026-10-28/support_velocity_video_probe_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_014010_434558_args.json
+A  docs/exp/2026-10-28/tita_mjlab_014010_434558_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_085024_973761_args.json
+A  docs/exp/2026-10-28/tita_mjlab_085024_973761_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_085110_097268_args.json
+A  docs/exp/2026-10-28/tita_mjlab_085110_097268_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_093841_645817_args.json
+A  docs/exp/2026-10-28/tita_mjlab_093841_645817_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_093903_465777_args.json
+A  docs/exp/2026-10-28/tita_mjlab_093903_465777_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_103029_016421_args.json
+A  docs/exp/2026-10-28/tita_mjlab_103029_016421_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_103154_482969_args.json
+A  docs/exp/2026-10-28/tita_mjlab_103154_482969_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_103305_882054_args.json
+A  docs/exp/2026-10-28/tita_mjlab_103305_882054_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_105042_191683_args.json
+A  docs/exp/2026-10-28/tita_mjlab_105042_191683_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_105509_377182_args.json
+A  docs/exp/2026-10-28/tita_mjlab_105509_377182_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_114239_024280_args.json
+A  docs/exp/2026-10-28/tita_mjlab_114239_024280_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_133533_474303_args.json
+A  docs/exp/2026-10-28/tita_mjlab_133533_474303_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_142712_580757_args.json
+A  docs/exp/2026-10-28/tita_mjlab_142712_580757_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_151340_019495_args.json
+A  docs/exp/2026-10-28/tita_mjlab_151340_019495_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_155344_537072_args.json
+A  docs/exp/2026-10-28/tita_mjlab_155344_537072_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_155513_268911_args.json
+A  docs/exp/2026-10-28/tita_mjlab_155513_268911_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_163323_371256_args.json
+A  docs/exp/2026-10-28/tita_mjlab_163323_371256_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_163835_917365_args.json
+A  docs/exp/2026-10-28/tita_mjlab_163835_917365_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_172855_759993_args.json
+A  docs/exp/2026-10-28/tita_mjlab_172855_759993_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_173314_948748_args.json
+A  docs/exp/2026-10-28/tita_mjlab_173314_948748_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_193912_863243_args.json
+A  docs/exp/2026-10-28/tita_mjlab_193912_863243_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_194029_719452_args.json
+A  docs/exp/2026-10-28/tita_mjlab_194029_719452_summary.md
+A  docs/exp/2026-10-28/tita_mjlab_202755_365015_args.json
+A  docs/exp/2026-10-28/tita_mjlab_202755_365015_summary.md
+A  docs/exp/2026-10-29/pose_policy_selection_summary.md
+A  docs/exp/2026-10-29/pose_standing50_summary.md
+A  docs/exp/2026-10-29/pose_stop_latch_summary.md
+A  docs/exp/2026-10-29/sit_stand_40000_sim2sim_summary.md
+A  docs/exp/2026-10-29/sit_stand_curriculum_summary.md
+A  docs/exp/2026-10-29/sit_stand_stability_40000_summary.md
+A  docs/exp/2026-10-29/sit_stand_summary.md
+A  docs/exp/2026-10-29/sit_stand_video_probe_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_091949_517272_args.json
+A  docs/exp/2026-10-29/tita_mjlab_091949_517272_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_092026_693000_args.json
+A  docs/exp/2026-10-29/tita_mjlab_092026_693000_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_092054_548869_args.json
+A  docs/exp/2026-10-29/tita_mjlab_092054_548869_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_095909_990173_args.json
+A  docs/exp/2026-10-29/tita_mjlab_095909_990173_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_095950_402808_args.json
+A  docs/exp/2026-10-29/tita_mjlab_095950_402808_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_114434_238379_args.json
+A  docs/exp/2026-10-29/tita_mjlab_114434_238379_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_114540_063797_args.json
+A  docs/exp/2026-10-29/tita_mjlab_114540_063797_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_163542_137760_args.json
+A  docs/exp/2026-10-29/tita_mjlab_163542_137760_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_163655_667608_args.json
+A  docs/exp/2026-10-29/tita_mjlab_163655_667608_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_214041_520259_args.json
+A  docs/exp/2026-10-29/tita_mjlab_214041_520259_summary.md
+A  docs/exp/2026-10-29/tita_mjlab_214219_199538_args.json
+A  docs/exp/2026-10-29/tita_mjlab_214219_199538_summary.md
+A  docs/exp/2026-10-31/height_only_training_queue_summary.md
+A  docs/exp/2026-10-31/one_leg_both_training_summary.md
+A  docs/exp/2026-10-31/pose_baseline_latch_summary.md
+A  docs/exp/2026-10-31/pose_latch_checkpoint_selection_summary.md
+A  docs/exp/2026-10-31/tita_mjlab_112428_632381_args.json
+A  docs/exp/2026-10-31/tita_mjlab_112428_632381_summary.md
+A  docs/exp/2026-10-31/tita_mjlab_112630_629104_args.json
+A  docs/exp/2026-10-31/tita_mjlab_112630_629104_summary.md
+A  docs/exp/2026-10-31/tita_mjlab_201327_397785_args.json
+A  docs/exp/2026-10-31/tita_mjlab_201327_397785_summary.md
+A  docs/exp/2026-10-31/tita_mjlab_201327_449283_args.json
+A  docs/exp/2026-10-31/tita_mjlab_201327_449283_summary.md
+A  docs/exp/2026-10-31/tita_mjlab_201526_001807_args.json
+A  docs/exp/2026-10-31/tita_mjlab_201526_001807_summary.md
+A  docs/exp/2026-10-31/tita_mjlab_201526_016988_args.json
+A  docs/exp/2026-10-31/tita_mjlab_201526_016988_summary.md
+A  docs/exp/2026-11-01/support_height_selection_summary.md
+A  docs/exp/2026-11-01/tita_mjlab_013009_483244_args.json
+A  docs/exp/2026-11-01/tita_mjlab_013009_483244_summary.md
+A  docs/exp/2026-11-03/one_leg_anchor_no_cutoff_summary.md
+A  docs/exp/2026-11-03/one_leg_anchor_video_probe_summary.md
+A  docs/exp/2026-11-03/one_leg_lift_first_summary.md
+A  docs/exp/2026-11-03/one_leg_right_zero_velocity_start.md
+A  docs/exp/2026-11-03/tita_mjlab_112424_407632_args.json
+A  docs/exp/2026-11-03/tita_mjlab_112424_407632_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_112424_407636_args.json
+A  docs/exp/2026-11-03/tita_mjlab_112424_407636_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_112752_838301_args.json
+A  docs/exp/2026-11-03/tita_mjlab_112752_838301_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_112752_841972_args.json
+A  docs/exp/2026-11-03/tita_mjlab_112752_841972_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_124022_098545_args.json
+A  docs/exp/2026-11-03/tita_mjlab_124022_098545_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_124022_108989_args.json
+A  docs/exp/2026-11-03/tita_mjlab_124022_108989_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_124132_110309_args.json
+A  docs/exp/2026-11-03/tita_mjlab_124132_110309_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_124132_110350_args.json
+A  docs/exp/2026-11-03/tita_mjlab_124132_110350_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_135717_183987_args.json
+A  docs/exp/2026-11-03/tita_mjlab_135717_183987_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_135717_192178_args.json
+A  docs/exp/2026-11-03/tita_mjlab_135717_192178_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_135938_423332_args.json
+A  docs/exp/2026-11-03/tita_mjlab_135938_423332_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_135938_442647_args.json
+A  docs/exp/2026-11-03/tita_mjlab_135938_442647_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_151122_751872_args.json
+A  docs/exp/2026-11-03/tita_mjlab_151122_751872_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_151200_686172_args.json
+A  docs/exp/2026-11-03/tita_mjlab_151200_686172_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_151401_168130_args.json
+A  docs/exp/2026-11-03/tita_mjlab_151401_168130_summary.md
+A  docs/exp/2026-11-03/tita_mjlab_180916_898387_args.json
+A  docs/exp/2026-11-03/tita_mjlab_180916_898387_summary.md
+AM docs/exp/2026-11-06/mjlab_publication_agent_check.log
+A  docs/exp/2026-11-06/mjlab_publication_cpu_tests.log
+A  docs/exp/2026-11-06/mjlab_publication_initial_cpu_tests.log
+A  docs/exp/2026-11-06/mjlab_publication_node_regression.log
+A  docs/exp/2026-11-06/mjlab_publication_play_help.log
+A  docs/exp/2026-11-06/mjlab_publication_shared_tests.log
+A  docs/exp/2026-11-06/mjlab_publication_sim2sim_final.log
+A  docs/exp/2026-11-06/mjlab_publication_summary.md
+A  docs/exp/2026-11-06/mjlab_publication_train_help.log
+R  lab/README.md -> isaac_lab/README.md
+R  lab/ddt_lab/config/extension.toml -> isaac_lab/ddt_lab/config/extension.toml
+R  lab/ddt_lab/ddt_lab/__init__.py -> isaac_lab/ddt_lab/ddt_lab/__init__.py
+R  lab/ddt_lab/ddt_lab/algorithms/__init__.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/__init__.py
+R  lab/ddt_lab/ddt_lab/algorithms/estimator/__init__.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/estimator/__init__.py
+R  lab/ddt_lab/ddt_lab/algorithms/estimator/actor_critic_with_estimator.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/estimator/actor_critic_with_estimator.py
+R  lab/ddt_lab/ddt_lab/algorithms/estimator/ppo_with_estimator.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/estimator/ppo_with_estimator.py
+R  lab/ddt_lab/ddt_lab/algorithms/np3o/__init__.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/__init__.py
+R  lab/ddt_lab/ddt_lab/algorithms/np3o/actor_critic.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/actor_critic.py
+R  lab/ddt_lab/ddt_lab/algorithms/np3o/common_modules.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/common_modules.py
+R  lab/ddt_lab/ddt_lab/algorithms/np3o/normalizer.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/normalizer.py
+R  lab/ddt_lab/ddt_lab/algorithms/np3o/np3o.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/np3o.py
+R  lab/ddt_lab/ddt_lab/algorithms/np3o/rollout_storage.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/rollout_storage.py
+R  lab/ddt_lab/ddt_lab/algorithms/np3o/runner.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/runner.py
+R  lab/ddt_lab/ddt_lab/algorithms/np3o/wrapper.py -> isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/wrapper.py
+R  lab/ddt_lab/ddt_lab/assets/ddt_robot.py -> isaac_lab/ddt_lab/ddt_lab/assets/ddt_robot.py
+R  lab/ddt_lab/ddt_lab/assets/gluon.py -> isaac_lab/ddt_lab/ddt_lab/assets/gluon.py
+R  lab/ddt_lab/ddt_lab/assets/tita_co_rl.py -> isaac_lab/ddt_lab/ddt_lab/assets/tita_co_rl.py
+R  lab/ddt_lab/ddt_lab/envs/__init__.py -> isaac_lab/ddt_lab/ddt_lab/envs/__init__.py
+R  lab/ddt_lab/ddt_lab/envs/moo_envs/__init__.py -> isaac_lab/ddt_lab/ddt_lab/envs/moo_envs/__init__.py
+R  lab/ddt_lab/ddt_lab/envs/moo_envs/manager_based_moo_rl_env.py -> isaac_lab/ddt_lab/ddt_lab/envs/moo_envs/manager_based_moo_rl_env.py
+R  lab/ddt_lab/ddt_lab/envs/moo_envs/manager_based_moo_rl_env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/envs/moo_envs/manager_based_moo_rl_env_cfg.py
+R  lab/ddt_lab/ddt_lab/gluon_ik.py -> isaac_lab/ddt_lab/ddt_lab/gluon_ik.py
+R  lab/ddt_lab/ddt_lab/managers/__init__.py -> isaac_lab/ddt_lab/ddt_lab/managers/__init__.py
+R  lab/ddt_lab/ddt_lab/managers/cost_manager.py -> isaac_lab/ddt_lab/ddt_lab/managers/cost_manager.py
+R  lab/ddt_lab/ddt_lab/managers/domain_managers/251218.zip -> isaac_lab/ddt_lab/ddt_lab/managers/domain_managers/251218.zip
+R  lab/ddt_lab/ddt_lab/managers/domain_managers/__init__.py -> isaac_lab/ddt_lab/ddt_lab/managers/domain_managers/__init__.py
+R  lab/ddt_lab/ddt_lab/managers/domain_managers/domain_manager.py -> isaac_lab/ddt_lab/ddt_lab/managers/domain_managers/domain_manager.py
+R  lab/ddt_lab/ddt_lab/managers/domain_managers/domain_manager_term_cfg.py -> isaac_lab/ddt_lab/ddt_lab/managers/domain_managers/domain_manager_term_cfg.py
+R  lab/ddt_lab/ddt_lab/managers/moo_managers/__init__.py -> isaac_lab/ddt_lab/ddt_lab/managers/moo_managers/__init__.py
+R  lab/ddt_lab/ddt_lab/managers/moo_managers/moo_reward_manager.py -> isaac_lab/ddt_lab/ddt_lab/managers/moo_managers/moo_reward_manager.py
+R  lab/ddt_lab/ddt_lab/managers/moo_managers/moo_reward_manager_term_cfg.py -> isaac_lab/ddt_lab/ddt_lab/managers/moo_managers/moo_reward_manager_term_cfg.py
+R  lab/ddt_lab/ddt_lab/managers/moo_managers/utils.py -> isaac_lab/ddt_lab/ddt_lab/managers/moo_managers/utils.py
+R  lab/ddt_lab/ddt_lab/policy_interface.py -> isaac_lab/ddt_lab/ddt_lab/policy_interface.py
+R  lab/ddt_lab/ddt_lab/tasks/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/np3o_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/np3o_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/rsl_rl_ppo_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/rsl_rl_ppo_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/locomotion_env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/locomotion_env_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/commands.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/commands.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/costs.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/costs.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/curriculums.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/curriculums.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/events.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/events.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/observations.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/observations.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/rewards.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/rewards.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/agents/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/agents/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/agents/np3o_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/agents/np3o_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/flat_env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/flat_env_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/rough_env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/rough_env_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/flash_sac_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/flash_sac_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/np3o_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/np3o_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/rsl_rl_ppo_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/rsl_rl_ppo_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/flat_env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/flat_env_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/jump_env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/jump_env_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/actions.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/actions.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/base_env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/base_env_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/env_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/events.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/events.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/observations.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/observations.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/rewards.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/rewards.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/rough_env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/rough_env_cfg.py
+A  isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/walk_env_cfg.py
+A  isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/walk_mdp.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/reach/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/reach/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/reach/joint_pos_env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/reach/joint_pos_env_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/agents/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/agents/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/agents/co_rl_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/agents/co_rl_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/data/tita_gluon_cartesian_work_hub_graph.json -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/data/tita_gluon_cartesian_work_hub_graph.json
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/env_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/high_level_env.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/high_level_env.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/actions.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/actions.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/curriculums.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/curriculums.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/sequential_inspection.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/sequential_inspection.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/event_command.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/event_command.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/integral_position_command.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/integral_position_command.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/position_command.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/position_command.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/track_z_command.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/track_z_command.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/velocity_command.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/velocity_command.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/yk_command.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/yk_command.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/curriculums.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/curriculums.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/events.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/events.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/feature_functions_common.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/feature_functions_common.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/moo_functions.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/moo_functions.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/observations.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/observations.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/rewards.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/rewards.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/terminations.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/terminations.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/lift_mask.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/lift_mask.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/lift_mask_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/lift_mask_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/rough_config.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/rough_config.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/stair_config.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/stair_config.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/stair_config_4w4l.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/stair_config_4w4l.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/agents/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/agents/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/agents/co_rl_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/agents/co_rl_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/__init__.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/__init__.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/feature_functions.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/feature_functions.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/flat_env_stand_drive_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/flat_env_stand_drive_cfg.py
+R  lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/velocity_env_cfg.py -> isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/velocity_env_cfg.py
+R  lab/ddt_lab/ddt_lab/ui_extension_example.py -> isaac_lab/ddt_lab/ddt_lab/ui_extension_example.py
+R  lab/ddt_lab/docs/CHANGELOG.rst -> isaac_lab/ddt_lab/docs/CHANGELOG.rst
+R  lab/ddt_lab/pyproject.toml -> isaac_lab/ddt_lab/pyproject.toml
+R  lab/ddt_lab/scripts/flash_sac/README.md -> isaac_lab/ddt_lab/scripts/flash_sac/README.md
+R  lab/ddt_lab/scripts/flash_sac/__init__.py -> isaac_lab/ddt_lab/scripts/flash_sac/__init__.py
+R  lab/ddt_lab/scripts/flash_sac/env_adapter.py -> isaac_lab/ddt_lab/scripts/flash_sac/env_adapter.py
+R  lab/ddt_lab/scripts/flash_sac/export.py -> isaac_lab/ddt_lab/scripts/flash_sac/export.py
+A  isaac_lab/ddt_lab/scripts/flash_sac/play.py
+R  lab/ddt_lab/scripts/flash_sac/runtime.py -> isaac_lab/ddt_lab/scripts/flash_sac/runtime.py
+R  lab/ddt_lab/scripts/flash_sac/train.py -> isaac_lab/ddt_lab/scripts/flash_sac/train.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/LICENSE.FlashSAC -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/LICENSE.FlashSAC
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/__init__.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/__init__.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/__init__.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/__init__.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/base_agent.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/base_agent.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/__init__.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/__init__.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/agent.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/agent.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/layer.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/layer.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/network.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/network.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/update.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/update.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/__init__.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/__init__.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/distribution.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/distribution.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/network.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/network.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/reward_normalization.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/reward_normalization.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/scheduler.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/scheduler.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/__init__.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/__init__.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/base_buffer.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/base_buffer.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/torch_buffer.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/torch_buffer.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/types.py -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/types.py
+R  lab/ddt_lab/scripts/flash_sac/vendor/source_manifest.json -> isaac_lab/ddt_lab/scripts/flash_sac/vendor/source_manifest.json
+A  isaac_lab/ddt_lab/scripts/flash_sac/video_logging.py
+R  lab/ddt_lab/scripts/gluon/convert_gluon_urdf_to_usd.py -> isaac_lab/ddt_lab/scripts/gluon/convert_gluon_urdf_to_usd.py
+R  lab/ddt_lab/scripts/gluon/run_gluon_keyboard_ik.py -> isaac_lab/ddt_lab/scripts/gluon/run_gluon_keyboard_ik.py
+R  lab/ddt_lab/scripts/gluon/smoke_gluon_asset.py -> isaac_lab/ddt_lab/scripts/gluon/smoke_gluon_asset.py
+R  lab/ddt_lab/scripts/gluon/smoke_gluon_reach_env.py -> isaac_lab/ddt_lab/scripts/gluon/smoke_gluon_reach_env.py
+R  lab/ddt_lab/scripts/list_envs.py -> isaac_lab/ddt_lab/scripts/list_envs.py
+R  lab/ddt_lab/scripts/np3o/dump_isaac_tita_physics.py -> isaac_lab/ddt_lab/scripts/np3o/dump_isaac_tita_physics.py
+R  lab/ddt_lab/scripts/np3o/dump_tita_actuator_response.py -> isaac_lab/ddt_lab/scripts/np3o/dump_tita_actuator_response.py
+R  lab/ddt_lab/scripts/np3o/dump_tita_policy_trace.py -> isaac_lab/ddt_lab/scripts/np3o/dump_tita_policy_trace.py
+R  lab/ddt_lab/scripts/np3o/estimate_base_vel_from_wheels.py -> isaac_lab/ddt_lab/scripts/np3o/estimate_base_vel_from_wheels.py
+R  lab/ddt_lab/scripts/np3o/eval_behavior.py -> isaac_lab/ddt_lab/scripts/np3o/eval_behavior.py
+R  lab/ddt_lab/scripts/np3o/inject_mujoco_state_tita.py -> isaac_lab/ddt_lab/scripts/np3o/inject_mujoco_state_tita.py
+R  lab/ddt_lab/scripts/np3o/play.py -> isaac_lab/ddt_lab/scripts/np3o/play.py
+R  lab/ddt_lab/scripts/np3o/rollout_mujoco_injected_tita.py -> isaac_lab/ddt_lab/scripts/np3o/rollout_mujoco_injected_tita.py
+R  lab/ddt_lab/scripts/np3o/run_isaac_tita_response_tests.py -> isaac_lab/ddt_lab/scripts/np3o/run_isaac_tita_response_tests.py
+R  lab/ddt_lab/scripts/np3o/train.py -> isaac_lab/ddt_lab/scripts/np3o/train.py
+R  lab/ddt_lab/scripts/random_agent.py -> isaac_lab/ddt_lab/scripts/random_agent.py
+R  lab/ddt_lab/scripts/rsl_rl/compare_export_samples.py -> isaac_lab/ddt_lab/scripts/rsl_rl/compare_export_samples.py
+R  lab/ddt_lab/scripts/rsl_rl/eval_behavior.py -> isaac_lab/ddt_lab/scripts/rsl_rl/eval_behavior.py
+R  lab/ddt_lab/scripts/rsl_rl/eval_estimator_accuracy.py -> isaac_lab/ddt_lab/scripts/rsl_rl/eval_estimator_accuracy.py
+R  lab/ddt_lab/scripts/rsl_rl/expose_estimator_output.py -> isaac_lab/ddt_lab/scripts/rsl_rl/expose_estimator_output.py
+R  lab/ddt_lab/scripts/rsl_rl/play.py -> isaac_lab/ddt_lab/scripts/rsl_rl/play.py
+R  lab/ddt_lab/scripts/rsl_rl/train.py -> isaac_lab/ddt_lab/scripts/rsl_rl/train.py
+R  lab/ddt_lab/scripts/rsl_rl/validate_export_parity.py -> isaac_lab/ddt_lab/scripts/rsl_rl/validate_export_parity.py
+R  lab/ddt_lab/scripts/rsl_rl/verify_diagnostic_onnx.py -> isaac_lab/ddt_lab/scripts/rsl_rl/verify_diagnostic_onnx.py
+R  lab/ddt_lab/scripts/zero_agent.py -> isaac_lab/ddt_lab/scripts/zero_agent.py
+R  lab/ddt_lab/setup.py -> isaac_lab/ddt_lab/setup.py
+R  lab/scripts/co_rl/cli_args.py -> isaac_lab/scripts/co_rl/cli_args.py
+R  lab/scripts/co_rl/core/__init__.py -> isaac_lab/scripts/co_rl/core/__init__.py
+R  lab/scripts/co_rl/core/algorithms/__init__.py -> isaac_lab/scripts/co_rl/core/algorithms/__init__.py
+R  lab/scripts/co_rl/core/algorithms/demo/acapsppo.py -> isaac_lab/scripts/co_rl/core/algorithms/demo/acapsppo.py
+R  lab/scripts/co_rl/core/algorithms/demo/sac.py -> isaac_lab/scripts/co_rl/core/algorithms/demo/sac.py
+R  lab/scripts/co_rl/core/algorithms/demo/sieppo.py -> isaac_lab/scripts/co_rl/core/algorithms/demo/sieppo.py
+R  lab/scripts/co_rl/core/algorithms/demo/srmppo.py -> isaac_lab/scripts/co_rl/core/algorithms/demo/srmppo.py
+R  lab/scripts/co_rl/core/algorithms/demo/taco.py -> isaac_lab/scripts/co_rl/core/algorithms/demo/taco.py
+R  lab/scripts/co_rl/core/algorithms/demo/tqc.py -> isaac_lab/scripts/co_rl/core/algorithms/demo/tqc.py
+R  lab/scripts/co_rl/core/algorithms/distillation.py -> isaac_lab/scripts/co_rl/core/algorithms/distillation.py
+R  lab/scripts/co_rl/core/algorithms/moo_ppo.py -> isaac_lab/scripts/co_rl/core/algorithms/moo_ppo.py
+R  lab/scripts/co_rl/core/algorithms/networks/sac_network.py -> isaac_lab/scripts/co_rl/core/algorithms/networks/sac_network.py
+R  lab/scripts/co_rl/core/algorithms/networks/taco_network.py -> isaac_lab/scripts/co_rl/core/algorithms/networks/taco_network.py
+R  lab/scripts/co_rl/core/algorithms/networks/tqc_network.py -> isaac_lab/scripts/co_rl/core/algorithms/networks/tqc_network.py
+R  lab/scripts/co_rl/core/algorithms/ppo.py -> isaac_lab/scripts/co_rl/core/algorithms/ppo.py
+R  lab/scripts/co_rl/core/modules/__init__.py -> isaac_lab/scripts/co_rl/core/modules/__init__.py
+R  lab/scripts/co_rl/core/modules/actor_critic.py -> isaac_lab/scripts/co_rl/core/modules/actor_critic.py
+R  lab/scripts/co_rl/core/modules/actor_critic_recurrent.py -> isaac_lab/scripts/co_rl/core/modules/actor_critic_recurrent.py
+R  lab/scripts/co_rl/core/modules/actor_critic_with_estimator.py -> isaac_lab/scripts/co_rl/core/modules/actor_critic_with_estimator.py
+R  lab/scripts/co_rl/core/modules/demo/replay_memory.py -> isaac_lab/scripts/co_rl/core/modules/demo/replay_memory.py
+R  lab/scripts/co_rl/core/modules/demo/sie_actor_critic.py -> isaac_lab/scripts/co_rl/core/modules/demo/sie_actor_critic.py
+R  lab/scripts/co_rl/core/modules/demo/student_teacher.py -> isaac_lab/scripts/co_rl/core/modules/demo/student_teacher.py
+R  lab/scripts/co_rl/core/modules/demo/student_teacher_recurrent.py -> isaac_lab/scripts/co_rl/core/modules/demo/student_teacher_recurrent.py
+R  lab/scripts/co_rl/core/modules/discriminator.py -> isaac_lab/scripts/co_rl/core/modules/discriminator.py
+R  lab/scripts/co_rl/core/modules/hybrid_actor_critic.py -> isaac_lab/scripts/co_rl/core/modules/hybrid_actor_critic.py
+R  lab/scripts/co_rl/core/modules/lagrangian_tuner.py -> isaac_lab/scripts/co_rl/core/modules/lagrangian_tuner.py
+R  lab/scripts/co_rl/core/modules/normalizer.py -> isaac_lab/scripts/co_rl/core/modules/normalizer.py
+R  lab/scripts/co_rl/core/modules/teacher_student.py -> isaac_lab/scripts/co_rl/core/modules/teacher_student.py
+R  lab/scripts/co_rl/core/modules/utils.py -> isaac_lab/scripts/co_rl/core/modules/utils.py
+R  lab/scripts/co_rl/core/networks/memory.py -> isaac_lab/scripts/co_rl/core/networks/memory.py
+R  lab/scripts/co_rl/core/runners/__init__.py -> isaac_lab/scripts/co_rl/core/runners/__init__.py
+R  lab/scripts/co_rl/core/runners/demo/acaps_on_policy_runner.py -> isaac_lab/scripts/co_rl/core/runners/demo/acaps_on_policy_runner.py
+R  lab/scripts/co_rl/core/runners/demo/distillation_on_policy_runner.py -> isaac_lab/scripts/co_rl/core/runners/demo/distillation_on_policy_runner.py
+R  lab/scripts/co_rl/core/runners/demo/sie_on_policy_runner.py -> isaac_lab/scripts/co_rl/core/runners/demo/sie_on_policy_runner.py
+R  lab/scripts/co_rl/core/runners/demo/srm_on_policy_runner.py -> isaac_lab/scripts/co_rl/core/runners/demo/srm_on_policy_runner.py
+R  lab/scripts/co_rl/core/runners/moo_on_policy_runner.py -> isaac_lab/scripts/co_rl/core/runners/moo_on_policy_runner.py
+R  lab/scripts/co_rl/core/runners/off_policy_runner.py -> isaac_lab/scripts/co_rl/core/runners/off_policy_runner.py
+R  lab/scripts/co_rl/core/runners/on_policy_runner.py -> isaac_lab/scripts/co_rl/core/runners/on_policy_runner.py
+R  lab/scripts/co_rl/core/storage/__init__.py -> isaac_lab/scripts/co_rl/core/storage/__init__.py
+R  lab/scripts/co_rl/core/storage/demo/acaps_rollout_storage.py -> isaac_lab/scripts/co_rl/core/storage/demo/acaps_rollout_storage.py
+R  lab/scripts/co_rl/core/storage/demo/offlinedata_storage.py -> isaac_lab/scripts/co_rl/core/storage/demo/offlinedata_storage.py
+R  lab/scripts/co_rl/core/storage/demo/sequencedata_storage.py -> isaac_lab/scripts/co_rl/core/storage/demo/sequencedata_storage.py
+R  lab/scripts/co_rl/core/storage/demo/srm_rollout_storage.py -> isaac_lab/scripts/co_rl/core/storage/demo/srm_rollout_storage.py
+R  lab/scripts/co_rl/core/storage/distillation_rollout_storage.py -> isaac_lab/scripts/co_rl/core/storage/distillation_rollout_storage.py
+R  lab/scripts/co_rl/core/storage/moo_rollout_storage.py -> isaac_lab/scripts/co_rl/core/storage/moo_rollout_storage.py
+R  lab/scripts/co_rl/core/storage/rollout_storage.py -> isaac_lab/scripts/co_rl/core/storage/rollout_storage.py
+R  lab/scripts/co_rl/core/utils/__init__.py -> isaac_lab/scripts/co_rl/core/utils/__init__.py
+R  lab/scripts/co_rl/core/utils/neptune_utils.py -> isaac_lab/scripts/co_rl/core/utils/neptune_utils.py
+R  lab/scripts/co_rl/core/utils/state_handler.py -> isaac_lab/scripts/co_rl/core/utils/state_handler.py
+R  lab/scripts/co_rl/core/utils/str2bool.py -> isaac_lab/scripts/co_rl/core/utils/str2bool.py
+R  lab/scripts/co_rl/core/utils/utils.py -> isaac_lab/scripts/co_rl/core/utils/utils.py
+R  lab/scripts/co_rl/core/utils/wandb_utils.py -> isaac_lab/scripts/co_rl/core/utils/wandb_utils.py
+R  lab/scripts/co_rl/core/wrapper/__init__.py -> isaac_lab/scripts/co_rl/core/wrapper/__init__.py
+R  lab/scripts/co_rl/core/wrapper/exporter.py -> isaac_lab/scripts/co_rl/core/wrapper/exporter.py
+R  lab/scripts/co_rl/core/wrapper/history_wrapper.py -> isaac_lab/scripts/co_rl/core/wrapper/history_wrapper.py
+R  lab/scripts/co_rl/core/wrapper/rl_cfg.py -> isaac_lab/scripts/co_rl/core/wrapper/rl_cfg.py
+R  lab/scripts/co_rl/core/wrapper/vecenv_wrapper.py -> isaac_lab/scripts/co_rl/core/wrapper/vecenv_wrapper.py
+R  lab/scripts/co_rl/core/wrapper/vecenv_wrapper_v2.py -> isaac_lab/scripts/co_rl/core/wrapper/vecenv_wrapper_v2.py
+R  lab/scripts/co_rl/play.py -> isaac_lab/scripts/co_rl/play.py
+R  lab/scripts/co_rl/plot.py -> isaac_lab/scripts/co_rl/plot.py
+R  lab/scripts/co_rl/train.py -> isaac_lab/scripts/co_rl/train.py
+R  lab/scripts/co_rl/train_tita_gluon_high_level.py -> isaac_lab/scripts/co_rl/train_tita_gluon_high_level.py
+R  lab/scripts/gluon/smoke_gluon_asset.py -> isaac_lab/scripts/gluon/smoke_gluon_asset.py
+R  lab/scripts/gluon/smoke_gluon_reach_env.py -> isaac_lab/scripts/gluon/smoke_gluon_reach_env.py
+R  lab/scripts/list_envs.py -> isaac_lab/scripts/list_envs.py
+R  lab/scripts/np3o/dump_isaac_tita_physics.py -> isaac_lab/scripts/np3o/dump_isaac_tita_physics.py
+R  lab/scripts/np3o/dump_tita_actuator_response.py -> isaac_lab/scripts/np3o/dump_tita_actuator_response.py
+R  lab/scripts/np3o/dump_tita_policy_trace.py -> isaac_lab/scripts/np3o/dump_tita_policy_trace.py
+R  lab/scripts/np3o/estimate_base_vel_from_wheels.py -> isaac_lab/scripts/np3o/estimate_base_vel_from_wheels.py
+R  lab/scripts/np3o/eval_behavior.py -> isaac_lab/scripts/np3o/eval_behavior.py
+R  lab/scripts/np3o/inject_mujoco_state_tita.py -> isaac_lab/scripts/np3o/inject_mujoco_state_tita.py
+R  lab/scripts/np3o/play.py -> isaac_lab/scripts/np3o/play.py
+R  lab/scripts/np3o/rollout_mujoco_injected_tita.py -> isaac_lab/scripts/np3o/rollout_mujoco_injected_tita.py
+R  lab/scripts/np3o/run_isaac_tita_response_tests.py -> isaac_lab/scripts/np3o/run_isaac_tita_response_tests.py
+R  lab/scripts/np3o/train.py -> isaac_lab/scripts/np3o/train.py
+R  lab/scripts/random_agent.py -> isaac_lab/scripts/random_agent.py
+R  lab/scripts/rsl_rl/compare_export_samples.py -> isaac_lab/scripts/rsl_rl/compare_export_samples.py
+R  lab/scripts/rsl_rl/eval_behavior.py -> isaac_lab/scripts/rsl_rl/eval_behavior.py
+R  lab/scripts/rsl_rl/eval_estimator_accuracy.py -> isaac_lab/scripts/rsl_rl/eval_estimator_accuracy.py
+R  lab/scripts/rsl_rl/expose_estimator_output.py -> isaac_lab/scripts/rsl_rl/expose_estimator_output.py
+R  lab/scripts/rsl_rl/play.py -> isaac_lab/scripts/rsl_rl/play.py
+R  lab/scripts/rsl_rl/train.py -> isaac_lab/scripts/rsl_rl/train.py
+R  lab/scripts/rsl_rl/validate_export_parity.py -> isaac_lab/scripts/rsl_rl/validate_export_parity.py
+R  lab/scripts/rsl_rl/verify_diagnostic_onnx.py -> isaac_lab/scripts/rsl_rl/verify_diagnostic_onnx.py
+R  lab/scripts/zero_agent.py -> isaac_lab/scripts/zero_agent.py
+D  lab/ddt_lab/scripts/flash_sac/play.py
+A  mj_lab/README.md
+A  mj_lab/__init__.py
+A  mj_lab/checkpoint.py
+A  mj_lab/flash_sac.py
+A  mj_lab/pyproject.toml
+A  mj_lab/robots/__init__.py
+A  mj_lab/robots/tita/__init__.py
+A  mj_lab/robots/tita/flat_env_cfg.py
+A  mj_lab/robots/tita/flat_env_roll_pitch_height_cfg.py
+A  mj_lab/robots/tita/height_only_env_cfg.py
+A  mj_lab/robots/tita/inline_env_cfg.py
+A  mj_lab/robots/tita/mdp.py
+A  mj_lab/robots/tita/robot_cfg.py
+A  mj_lab/robots/tita/sit_stand_env_cfg.py
+A  mj_lab/robots/tita/stand_one_leg_anchor_env_cfg.py
+A  mj_lab/robots/tita/stand_one_leg_env_cfg.py
+A  mj_lab/robots/tita/stand_one_leg_reference_env_cfg.py
+A  mj_lab/robots/tita/support_command_env_cfg.py
+A  mj_lab/robots/tita/walk_env_cfg.py
+A  mj_lab/scripts/__init__.py
+A  mj_lab/scripts/play.py
+A  mj_lab/scripts/train.py
+M  scripts/agent-check.sh
+A  scripts/queue_mjlab_flash_sac.py
+M  scripts/test-fast.sh
+M  sim2sim/README.md
+M  sim2sim/lqr/report.py
+M  sim2sim/lqr/runtime.py
+A  sim2sim/robot/tita/launch/pose_preview.launch.py
+A  sim2sim/robot/tita/mujoco_corrected/robot.xml
+A  sim2sim/robot/tita/mujoco_corrected/scene.xml
+A  sim2sim/robot/tita/rviz/pose_preview.rviz
+M  sim2sim/sim2sim_ros2_jazzy/config/tita.yaml
+M  sim2sim/sim2sim_ros2_jazzy/launch/sim2sim_finetune.py
+M  sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/adapter.py
+M  sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/checkpoint.py
+M  sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/cli.py
+M  sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/mujoco_env.py
+M  sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/sim2sim_node.py
+M  sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/state_machine.py
+A  test/analyze_mjlab_isaac_training.py
+M  test/build_tita_gluon_cartesian_hub_graph.py
+M  test/check_basecom_shift_task.py
+M  test/check_heading_drift_task.py
+M  test/check_heading_obs_task.py
+M  test/check_posknee_ma2_task.py
+M  test/check_real2sim_task_events.py
+A  test/check_roll_pitch_height_feasibility.py
+M  test/check_sphere_wheel_tasks.py
+M  test/check_tita_flat_promotion_runtime.py
+M  test/check_training_position_reference.py
+M  test/diff_flash_env_cfg_vs_checkpoint.py
+M  test/eval_flash_pv_models.py
+M  test/eval_flash_sac_noise_bounds.py
+M  test/eval_sequential_inspection_scheduler_grid.py
+M  test/eval_tita_gluon_high_level_policy.py
+M  test/eval_tita_gluon_sequential_inspection_baselines.py
+M  test/eval_tita_gluon_teacher_checkpoints.py
+M  test/eval_tita_gluon_zero_command_stance.py
+M  test/eval_tita_ppo_flash_comparison.py
+A  test/evaluate_one_leg_anchor.py
+M  test/evaluate_posknee_checkpoints.py
+M  test/export_ab_checkpoints.py
+M  test/isaac_joint_friction_semantics_check.py
+M  test/probe_tita_ppo_action_ranges.py
+M  test/render_real2sim_progression.py
+A  test/run_one_leg_anchor_experiment.py
+M  test/screen_sphere_wheel_runs.py
+M  test/test_checkpoint_auto_position.py
+M  test/test_flash_sac_action_ranges.py
+M  test/test_flash_sac_adapter.py
+M  test/test_flash_sac_compile_checkpoint.py
+M  test/test_flash_sac_config.py
+M  test/test_flash_sac_entrypoints.py
+M  test/test_flash_sac_export.py
+M  test/test_flash_sac_learning.py
+A  test/test_flash_sac_velocity_overlay.py
+A  test/test_flash_sac_video.py
+M  test/test_flash_sac_wandb.py
+A  test/test_flash_sac_warm_start.py
+M  test/test_gluon_asset_runtime.py
+M  test/test_gluon_ik_math.py
+M  test/test_gluon_jacobian_runtime.py
+M  test/test_gluon_urdf_usd_equivalence.py
+A  test/test_height_only_queue.py
+A  test/test_mjlab_height_only.py
+A  test/test_mjlab_inline.py
+A  test/test_mjlab_one_leg_anchor.py
+A  test/test_mjlab_one_leg_reference.py
+A  test/test_mjlab_one_leg_right_reference.py
+A  test/test_mjlab_roll_pitch_height.py
+A  test/test_mjlab_sit_stand.py
+A  test/test_mjlab_stand_one_leg.py
+A  test/test_mjlab_support_command.py
+A  test/test_mjlab_support_velocity.py
+A  test/test_mjlab_tita.py
+A  test/test_mjlab_training_queue.py
+A  test/test_one_leg_sequential_runner.py
+A  test/test_pose_stop_latch.py
+M  test/test_ramped_velocity_command.py
+M  test/test_residual_wheel_pd.py
+M  test/test_sequential_inspection_go_no_go.py
+M  test/test_sim2sim_checkpoint_adapter.py
+A  test/test_sim2sim_command_limits.py
+M  test/test_sim2sim_finetune.py
+M  test/test_sim2sim_heading_error.py
+A  test/test_sim2sim_hybrid.py
+A  test/test_sim2sim_pose.py
+M  test/test_sim2sim_ppo_parity.py
+A  test/test_sim2sim_walk.py
+A  test/test_sim2sim_walk_state_machine.py
+A  test/test_standing_height_only.py
+M  test/test_tita_gluon_curriculum_arm_smoke.py
+M  test/test_tita_gluon_init_height_command.py
+M  test/test_tita_gluon_inspection_curriculum_smoke.py
+M  test/test_tita_gluon_moo_smoke.py
+M  test/test_tita_gluon_random_arm_smoke.py
+M  test/test_tita_gluon_sequential_inspection_executor_smoke.py
+M  test/test_tita_my_flat_config_refactor.py
+M  test/test_tita_training_asset.py
+M  test/train_tita_ppo_comparison.py
+A  third_party/mjlab
+?? mj_lab/logs
+?? test/_mjlab_publication_local_audit.json
+?? test/_mjlab_publication_selected_evidence.json
+
+==================================================
+Changed files
+==================================================
+M	.gitignore
+A	.gitmodules
+M	README.md
+A	docs/exp/2026-10-27/flash_sac_wandb_video_defaults.md
+A	docs/exp/2026-10-27/mjlab_flat_preview_summary.md
+A	docs/exp/2026-10-27/mjlab_migration_summary.md
+A	docs/exp/2026-10-27/mjlab_training_queue.md
+A	docs/exp/2026-10-27/tita_mjlab_220720_835290_args.json
+A	docs/exp/2026-10-27/tita_mjlab_220720_835290_summary.md
+A	docs/exp/2026-10-27/tita_mjlab_220754_974805_args.json
+A	docs/exp/2026-10-27/tita_mjlab_220754_974805_summary.md
+A	docs/exp/2026-10-27/tita_mjlab_220755_939683_args.json
+A	docs/exp/2026-10-27/tita_mjlab_220755_939683_summary.md
+A	docs/exp/2026-10-27/tita_mjlab_220844_500229_args.json
+A	docs/exp/2026-10-27/tita_mjlab_220844_500229_summary.md
+A	docs/exp/2026-10-27/tita_mjlab_221710_985132_args.json
+A	docs/exp/2026-10-27/tita_mjlab_221710_985132_summary.md
+A	docs/exp/2026-10-27/tita_mjlab_221712_098926_args.json
+A	docs/exp/2026-10-27/tita_mjlab_221712_098926_summary.md
+A	docs/exp/2026-10-27/tita_mjlab_221928_311507_args.json
+A	docs/exp/2026-10-27/tita_mjlab_221928_311507_summary.md
+A	docs/exp/2026-10-27/tita_mjlab_235721_754659_args.json
+A	docs/exp/2026-10-27/tita_mjlab_235721_754659_summary.md
+A	docs/exp/2026-10-28/flat_roll_pitch_height_summary.md
+A	docs/exp/2026-10-28/hybrid_sim2sim_runtime.md
+A	docs/exp/2026-10-28/hybrid_sim2sim_summary.md
+A	docs/exp/2026-10-28/inline_contactfix_restart_summary.md
+A	docs/exp/2026-10-28/inline_env_runtime.md
+A	docs/exp/2026-10-28/inline_env_training_summary.md
+A	docs/exp/2026-10-28/inline_lift_30000_summary.md
+A	docs/exp/2026-10-28/inline_relaxed_penalties_training_summary.md
+A	docs/exp/2026-10-28/lab_alias_cleanup_summary.md
+A	docs/exp/2026-10-28/mjlab_flat_walk_20261027_224638_comparison.md
+A	docs/exp/2026-10-28/mjlab_hybrid_native_preview_summary.md
+A	docs/exp/2026-10-28/mjlab_hybrid_walk_training.md
+A	docs/exp/2026-10-28/mjlab_isaac_training_speed.md
+A	docs/exp/2026-10-28/one_leg_balance_15000_summary.md
+A	docs/exp/2026-10-28/one_leg_reference_sim2sim_runtime.md
+A	docs/exp/2026-10-28/one_leg_reference_training_summary.md
+A	docs/exp/2026-10-28/one_leg_reference_video_probe_summary.md
+A	docs/exp/2026-10-28/one_leg_standing2s_training_summary.md
+A	docs/exp/2026-10-28/one_leg_standing_runtime_checks.md
+A	docs/exp/2026-10-28/pose_preview_camera_summary.md
+A	docs/exp/2026-10-28/pose_preview_summary.md
+A	docs/exp/2026-10-28/pose_sim2sim_summary.md
+A	docs/exp/2026-10-28/pose_sim2sim_support_regression.md
+A	docs/exp/2026-10-28/rph_expanded_summary.md
+A	docs/exp/2026-10-28/stand_one_leg_env_summary.md
+A	docs/exp/2026-10-28/stand_one_leg_sim2sim_state_machine.md
+A	docs/exp/2026-10-28/stand_one_leg_sim2sim_summary.md
+A	docs/exp/2026-10-28/stand_one_leg_training_summary.md
+A	docs/exp/2026-10-28/stop_latch_runtime.md
+A	docs/exp/2026-10-28/stop_latch_training_summary.md
+A	docs/exp/2026-10-28/support_command_sim2sim_25000_runtime.md
+A	docs/exp/2026-10-28/support_command_sim2sim_25000_summary.md
+A	docs/exp/2026-10-28/support_command_sim2sim_runtime.md
+A	docs/exp/2026-10-28/support_command_training_summary.md
+A	docs/exp/2026-10-28/support_command_video_probe_summary.md
+A	docs/exp/2026-10-28/support_episode_sim2sim_runtime.md
+A	docs/exp/2026-10-28/support_episode_training_summary.md
+A	docs/exp/2026-10-28/support_episode_video_probe_summary.md
+A	docs/exp/2026-10-28/support_velocity_sim2sim_probe.md
+A	docs/exp/2026-10-28/support_velocity_sim2sim_runtime.md
+A	docs/exp/2026-10-28/support_velocity_sim2sim_summary.md
+A	docs/exp/2026-10-28/support_velocity_training_summary.md
+A	docs/exp/2026-10-28/support_velocity_video_probe_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_014010_434558_args.json
+A	docs/exp/2026-10-28/tita_mjlab_014010_434558_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_085024_973761_args.json
+A	docs/exp/2026-10-28/tita_mjlab_085024_973761_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_085110_097268_args.json
+A	docs/exp/2026-10-28/tita_mjlab_085110_097268_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_093841_645817_args.json
+A	docs/exp/2026-10-28/tita_mjlab_093841_645817_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_093903_465777_args.json
+A	docs/exp/2026-10-28/tita_mjlab_093903_465777_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_103029_016421_args.json
+A	docs/exp/2026-10-28/tita_mjlab_103029_016421_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_103154_482969_args.json
+A	docs/exp/2026-10-28/tita_mjlab_103154_482969_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_103305_882054_args.json
+A	docs/exp/2026-10-28/tita_mjlab_103305_882054_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_105042_191683_args.json
+A	docs/exp/2026-10-28/tita_mjlab_105042_191683_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_105509_377182_args.json
+A	docs/exp/2026-10-28/tita_mjlab_105509_377182_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_114239_024280_args.json
+A	docs/exp/2026-10-28/tita_mjlab_114239_024280_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_133533_474303_args.json
+A	docs/exp/2026-10-28/tita_mjlab_133533_474303_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_142712_580757_args.json
+A	docs/exp/2026-10-28/tita_mjlab_142712_580757_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_151340_019495_args.json
+A	docs/exp/2026-10-28/tita_mjlab_151340_019495_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_155344_537072_args.json
+A	docs/exp/2026-10-28/tita_mjlab_155344_537072_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_155513_268911_args.json
+A	docs/exp/2026-10-28/tita_mjlab_155513_268911_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_163323_371256_args.json
+A	docs/exp/2026-10-28/tita_mjlab_163323_371256_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_163835_917365_args.json
+A	docs/exp/2026-10-28/tita_mjlab_163835_917365_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_172855_759993_args.json
+A	docs/exp/2026-10-28/tita_mjlab_172855_759993_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_173314_948748_args.json
+A	docs/exp/2026-10-28/tita_mjlab_173314_948748_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_193912_863243_args.json
+A	docs/exp/2026-10-28/tita_mjlab_193912_863243_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_194029_719452_args.json
+A	docs/exp/2026-10-28/tita_mjlab_194029_719452_summary.md
+A	docs/exp/2026-10-28/tita_mjlab_202755_365015_args.json
+A	docs/exp/2026-10-28/tita_mjlab_202755_365015_summary.md
+A	docs/exp/2026-10-29/pose_policy_selection_summary.md
+A	docs/exp/2026-10-29/pose_standing50_summary.md
+A	docs/exp/2026-10-29/pose_stop_latch_summary.md
+A	docs/exp/2026-10-29/sit_stand_40000_sim2sim_summary.md
+A	docs/exp/2026-10-29/sit_stand_curriculum_summary.md
+A	docs/exp/2026-10-29/sit_stand_stability_40000_summary.md
+A	docs/exp/2026-10-29/sit_stand_summary.md
+A	docs/exp/2026-10-29/sit_stand_video_probe_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_091949_517272_args.json
+A	docs/exp/2026-10-29/tita_mjlab_091949_517272_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_092026_693000_args.json
+A	docs/exp/2026-10-29/tita_mjlab_092026_693000_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_092054_548869_args.json
+A	docs/exp/2026-10-29/tita_mjlab_092054_548869_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_095909_990173_args.json
+A	docs/exp/2026-10-29/tita_mjlab_095909_990173_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_095950_402808_args.json
+A	docs/exp/2026-10-29/tita_mjlab_095950_402808_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_114434_238379_args.json
+A	docs/exp/2026-10-29/tita_mjlab_114434_238379_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_114540_063797_args.json
+A	docs/exp/2026-10-29/tita_mjlab_114540_063797_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_163542_137760_args.json
+A	docs/exp/2026-10-29/tita_mjlab_163542_137760_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_163655_667608_args.json
+A	docs/exp/2026-10-29/tita_mjlab_163655_667608_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_214041_520259_args.json
+A	docs/exp/2026-10-29/tita_mjlab_214041_520259_summary.md
+A	docs/exp/2026-10-29/tita_mjlab_214219_199538_args.json
+A	docs/exp/2026-10-29/tita_mjlab_214219_199538_summary.md
+A	docs/exp/2026-10-31/height_only_training_queue_summary.md
+A	docs/exp/2026-10-31/one_leg_both_training_summary.md
+A	docs/exp/2026-10-31/pose_baseline_latch_summary.md
+A	docs/exp/2026-10-31/pose_latch_checkpoint_selection_summary.md
+A	docs/exp/2026-10-31/tita_mjlab_112428_632381_args.json
+A	docs/exp/2026-10-31/tita_mjlab_112428_632381_summary.md
+A	docs/exp/2026-10-31/tita_mjlab_112630_629104_args.json
+A	docs/exp/2026-10-31/tita_mjlab_112630_629104_summary.md
+A	docs/exp/2026-10-31/tita_mjlab_201327_397785_args.json
+A	docs/exp/2026-10-31/tita_mjlab_201327_397785_summary.md
+A	docs/exp/2026-10-31/tita_mjlab_201327_449283_args.json
+A	docs/exp/2026-10-31/tita_mjlab_201327_449283_summary.md
+A	docs/exp/2026-10-31/tita_mjlab_201526_001807_args.json
+A	docs/exp/2026-10-31/tita_mjlab_201526_001807_summary.md
+A	docs/exp/2026-10-31/tita_mjlab_201526_016988_args.json
+A	docs/exp/2026-10-31/tita_mjlab_201526_016988_summary.md
+A	docs/exp/2026-11-01/support_height_selection_summary.md
+A	docs/exp/2026-11-01/tita_mjlab_013009_483244_args.json
+A	docs/exp/2026-11-01/tita_mjlab_013009_483244_summary.md
+A	docs/exp/2026-11-03/one_leg_anchor_no_cutoff_summary.md
+A	docs/exp/2026-11-03/one_leg_anchor_video_probe_summary.md
+A	docs/exp/2026-11-03/one_leg_lift_first_summary.md
+A	docs/exp/2026-11-03/one_leg_right_zero_velocity_start.md
+A	docs/exp/2026-11-03/tita_mjlab_112424_407632_args.json
+A	docs/exp/2026-11-03/tita_mjlab_112424_407632_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_112424_407636_args.json
+A	docs/exp/2026-11-03/tita_mjlab_112424_407636_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_112752_838301_args.json
+A	docs/exp/2026-11-03/tita_mjlab_112752_838301_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_112752_841972_args.json
+A	docs/exp/2026-11-03/tita_mjlab_112752_841972_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_124022_098545_args.json
+A	docs/exp/2026-11-03/tita_mjlab_124022_098545_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_124022_108989_args.json
+A	docs/exp/2026-11-03/tita_mjlab_124022_108989_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_124132_110309_args.json
+A	docs/exp/2026-11-03/tita_mjlab_124132_110309_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_124132_110350_args.json
+A	docs/exp/2026-11-03/tita_mjlab_124132_110350_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_135717_183987_args.json
+A	docs/exp/2026-11-03/tita_mjlab_135717_183987_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_135717_192178_args.json
+A	docs/exp/2026-11-03/tita_mjlab_135717_192178_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_135938_423332_args.json
+A	docs/exp/2026-11-03/tita_mjlab_135938_423332_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_135938_442647_args.json
+A	docs/exp/2026-11-03/tita_mjlab_135938_442647_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_151122_751872_args.json
+A	docs/exp/2026-11-03/tita_mjlab_151122_751872_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_151200_686172_args.json
+A	docs/exp/2026-11-03/tita_mjlab_151200_686172_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_151401_168130_args.json
+A	docs/exp/2026-11-03/tita_mjlab_151401_168130_summary.md
+A	docs/exp/2026-11-03/tita_mjlab_180916_898387_args.json
+A	docs/exp/2026-11-03/tita_mjlab_180916_898387_summary.md
+A	docs/exp/2026-11-06/mjlab_publication_agent_check.log
+A	docs/exp/2026-11-06/mjlab_publication_cpu_tests.log
+A	docs/exp/2026-11-06/mjlab_publication_initial_cpu_tests.log
+A	docs/exp/2026-11-06/mjlab_publication_node_regression.log
+A	docs/exp/2026-11-06/mjlab_publication_play_help.log
+A	docs/exp/2026-11-06/mjlab_publication_shared_tests.log
+A	docs/exp/2026-11-06/mjlab_publication_sim2sim_final.log
+A	docs/exp/2026-11-06/mjlab_publication_summary.md
+A	docs/exp/2026-11-06/mjlab_publication_train_help.log
+R095	lab/README.md	isaac_lab/README.md
+R100	lab/ddt_lab/config/extension.toml	isaac_lab/ddt_lab/config/extension.toml
+R100	lab/ddt_lab/ddt_lab/__init__.py	isaac_lab/ddt_lab/ddt_lab/__init__.py
+R100	lab/ddt_lab/ddt_lab/algorithms/__init__.py	isaac_lab/ddt_lab/ddt_lab/algorithms/__init__.py
+R100	lab/ddt_lab/ddt_lab/algorithms/estimator/__init__.py	isaac_lab/ddt_lab/ddt_lab/algorithms/estimator/__init__.py
+R100	lab/ddt_lab/ddt_lab/algorithms/estimator/actor_critic_with_estimator.py	isaac_lab/ddt_lab/ddt_lab/algorithms/estimator/actor_critic_with_estimator.py
+R100	lab/ddt_lab/ddt_lab/algorithms/estimator/ppo_with_estimator.py	isaac_lab/ddt_lab/ddt_lab/algorithms/estimator/ppo_with_estimator.py
+R100	lab/ddt_lab/ddt_lab/algorithms/np3o/__init__.py	isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/__init__.py
+R100	lab/ddt_lab/ddt_lab/algorithms/np3o/actor_critic.py	isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/actor_critic.py
+R100	lab/ddt_lab/ddt_lab/algorithms/np3o/common_modules.py	isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/common_modules.py
+R100	lab/ddt_lab/ddt_lab/algorithms/np3o/normalizer.py	isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/normalizer.py
+R100	lab/ddt_lab/ddt_lab/algorithms/np3o/np3o.py	isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/np3o.py
+R100	lab/ddt_lab/ddt_lab/algorithms/np3o/rollout_storage.py	isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/rollout_storage.py
+R100	lab/ddt_lab/ddt_lab/algorithms/np3o/runner.py	isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/runner.py
+R100	lab/ddt_lab/ddt_lab/algorithms/np3o/wrapper.py	isaac_lab/ddt_lab/ddt_lab/algorithms/np3o/wrapper.py
+R100	lab/ddt_lab/ddt_lab/assets/ddt_robot.py	isaac_lab/ddt_lab/ddt_lab/assets/ddt_robot.py
+R100	lab/ddt_lab/ddt_lab/assets/gluon.py	isaac_lab/ddt_lab/ddt_lab/assets/gluon.py
+R100	lab/ddt_lab/ddt_lab/assets/tita_co_rl.py	isaac_lab/ddt_lab/ddt_lab/assets/tita_co_rl.py
+R100	lab/ddt_lab/ddt_lab/envs/__init__.py	isaac_lab/ddt_lab/ddt_lab/envs/__init__.py
+R100	lab/ddt_lab/ddt_lab/envs/moo_envs/__init__.py	isaac_lab/ddt_lab/ddt_lab/envs/moo_envs/__init__.py
+R100	lab/ddt_lab/ddt_lab/envs/moo_envs/manager_based_moo_rl_env.py	isaac_lab/ddt_lab/ddt_lab/envs/moo_envs/manager_based_moo_rl_env.py
+R100	lab/ddt_lab/ddt_lab/envs/moo_envs/manager_based_moo_rl_env_cfg.py	isaac_lab/ddt_lab/ddt_lab/envs/moo_envs/manager_based_moo_rl_env_cfg.py
+R100	lab/ddt_lab/ddt_lab/gluon_ik.py	isaac_lab/ddt_lab/ddt_lab/gluon_ik.py
+R100	lab/ddt_lab/ddt_lab/managers/__init__.py	isaac_lab/ddt_lab/ddt_lab/managers/__init__.py
+R100	lab/ddt_lab/ddt_lab/managers/cost_manager.py	isaac_lab/ddt_lab/ddt_lab/managers/cost_manager.py
+R100	lab/ddt_lab/ddt_lab/managers/domain_managers/251218.zip	isaac_lab/ddt_lab/ddt_lab/managers/domain_managers/251218.zip
+R100	lab/ddt_lab/ddt_lab/managers/domain_managers/__init__.py	isaac_lab/ddt_lab/ddt_lab/managers/domain_managers/__init__.py
+R100	lab/ddt_lab/ddt_lab/managers/domain_managers/domain_manager.py	isaac_lab/ddt_lab/ddt_lab/managers/domain_managers/domain_manager.py
+R100	lab/ddt_lab/ddt_lab/managers/domain_managers/domain_manager_term_cfg.py	isaac_lab/ddt_lab/ddt_lab/managers/domain_managers/domain_manager_term_cfg.py
+R100	lab/ddt_lab/ddt_lab/managers/moo_managers/__init__.py	isaac_lab/ddt_lab/ddt_lab/managers/moo_managers/__init__.py
+R100	lab/ddt_lab/ddt_lab/managers/moo_managers/moo_reward_manager.py	isaac_lab/ddt_lab/ddt_lab/managers/moo_managers/moo_reward_manager.py
+R100	lab/ddt_lab/ddt_lab/managers/moo_managers/moo_reward_manager_term_cfg.py	isaac_lab/ddt_lab/ddt_lab/managers/moo_managers/moo_reward_manager_term_cfg.py
+R100	lab/ddt_lab/ddt_lab/managers/moo_managers/utils.py	isaac_lab/ddt_lab/ddt_lab/managers/moo_managers/utils.py
+R100	lab/ddt_lab/ddt_lab/policy_interface.py	isaac_lab/ddt_lab/ddt_lab/policy_interface.py
+R100	lab/ddt_lab/ddt_lab/tasks/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/np3o_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/np3o_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/rsl_rl_ppo_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/agents/rsl_rl_ppo_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/locomotion_env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/locomotion_env_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/commands.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/commands.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/costs.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/costs.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/curriculums.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/curriculums.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/events.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/events.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/observations.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/observations.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/rewards.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/mdp/rewards.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/agents/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/agents/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/agents/np3o_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/agents/np3o_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/flat_env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/flat_env_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/rough_env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/d1/rough_env_cfg.py
+R082	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/__init__.py
+R094	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/flash_sac_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/flash_sac_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/np3o_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/np3o_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/rsl_rl_ppo_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/agents/rsl_rl_ppo_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/flat_env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/flat_env_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/jump_env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/jump_env_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/actions.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/actions.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/base_env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/base_env_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/env_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/events.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/events.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/observations.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/observations.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/rewards.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/rewards.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/rough_env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/rough_env_cfg.py
+A	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/walk_env_cfg.py
+A	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/walk_mdp.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/reach/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/reach/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/reach/joint_pos_env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/manipulation/reach/joint_pos_env_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/agents/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/agents/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/agents/co_rl_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/agents/co_rl_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/data/tita_gluon_cartesian_work_hub_graph.json	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/data/tita_gluon_cartesian_work_hub_graph.json
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/env_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/high_level_env.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/high_level_env.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/actions.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/actions.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/curriculums.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/mdp/curriculums.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/sequential_inspection.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomanipulation/velocity/tita_gluon/sequential_inspection.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/event_command.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/event_command.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/integral_position_command.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/integral_position_command.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/position_command.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/position_command.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/track_z_command.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/track_z_command.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/velocity_command.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/velocity_command.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/yk_command.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/commands/yk_command.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/curriculums.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/curriculums.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/events.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/events.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/feature_functions_common.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/feature_functions_common.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/moo_functions.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/moo_functions.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/observations.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/observations.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/rewards.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/rewards.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/terminations.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/mdp/terminations.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/lift_mask.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/lift_mask.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/lift_mask_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/sensors/lift_mask_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/rough_config.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/rough_config.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/stair_config.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/stair_config.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/stair_config_4w4l.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/terrain_config/stair_config_4w4l.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/agents/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/agents/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/agents/co_rl_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/agents/co_rl_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/__init__.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/__init__.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/feature_functions.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/feature_functions.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/flat_env_stand_drive_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/flat_env/stand_drive/flat_env_stand_drive_cfg.py
+R100	lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/velocity_env_cfg.py	isaac_lab/ddt_lab/ddt_lab/tasks/moo_based/locomotion/velocity/tita_env/velocity_env_cfg.py
+R100	lab/ddt_lab/ddt_lab/ui_extension_example.py	isaac_lab/ddt_lab/ddt_lab/ui_extension_example.py
+R100	lab/ddt_lab/docs/CHANGELOG.rst	isaac_lab/ddt_lab/docs/CHANGELOG.rst
+R100	lab/ddt_lab/pyproject.toml	isaac_lab/ddt_lab/pyproject.toml
+R068	lab/ddt_lab/scripts/flash_sac/README.md	isaac_lab/ddt_lab/scripts/flash_sac/README.md
+R100	lab/ddt_lab/scripts/flash_sac/__init__.py	isaac_lab/ddt_lab/scripts/flash_sac/__init__.py
+R100	lab/ddt_lab/scripts/flash_sac/env_adapter.py	isaac_lab/ddt_lab/scripts/flash_sac/env_adapter.py
+R093	lab/ddt_lab/scripts/flash_sac/export.py	isaac_lab/ddt_lab/scripts/flash_sac/export.py
+A	isaac_lab/ddt_lab/scripts/flash_sac/play.py
+R097	lab/ddt_lab/scripts/flash_sac/runtime.py	isaac_lab/ddt_lab/scripts/flash_sac/runtime.py
+R084	lab/ddt_lab/scripts/flash_sac/train.py	isaac_lab/ddt_lab/scripts/flash_sac/train.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/LICENSE.FlashSAC	isaac_lab/ddt_lab/scripts/flash_sac/vendor/LICENSE.FlashSAC
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/__init__.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/__init__.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/__init__.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/__init__.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/base_agent.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/base_agent.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/__init__.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/__init__.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/agent.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/agent.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/layer.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/layer.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/network.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/network.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/update.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/flashSAC/update.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/__init__.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/__init__.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/distribution.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/distribution.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/network.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/network.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/reward_normalization.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/reward_normalization.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/scheduler.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/scheduler.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/__init__.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/__init__.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/base_buffer.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/base_buffer.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/torch_buffer.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/buffers/torch_buffer.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/types.py	isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/types.py
+R100	lab/ddt_lab/scripts/flash_sac/vendor/source_manifest.json	isaac_lab/ddt_lab/scripts/flash_sac/vendor/source_manifest.json
+A	isaac_lab/ddt_lab/scripts/flash_sac/video_logging.py
+R100	lab/ddt_lab/scripts/gluon/convert_gluon_urdf_to_usd.py	isaac_lab/ddt_lab/scripts/gluon/convert_gluon_urdf_to_usd.py
+R099	lab/ddt_lab/scripts/gluon/run_gluon_keyboard_ik.py	isaac_lab/ddt_lab/scripts/gluon/run_gluon_keyboard_ik.py
+R100	lab/ddt_lab/scripts/gluon/smoke_gluon_asset.py	isaac_lab/ddt_lab/scripts/gluon/smoke_gluon_asset.py
+R100	lab/ddt_lab/scripts/gluon/smoke_gluon_reach_env.py	isaac_lab/ddt_lab/scripts/gluon/smoke_gluon_reach_env.py
+R100	lab/ddt_lab/scripts/list_envs.py	isaac_lab/ddt_lab/scripts/list_envs.py
+R100	lab/ddt_lab/scripts/np3o/dump_isaac_tita_physics.py	isaac_lab/ddt_lab/scripts/np3o/dump_isaac_tita_physics.py
+R100	lab/ddt_lab/scripts/np3o/dump_tita_actuator_response.py	isaac_lab/ddt_lab/scripts/np3o/dump_tita_actuator_response.py
+R100	lab/ddt_lab/scripts/np3o/dump_tita_policy_trace.py	isaac_lab/ddt_lab/scripts/np3o/dump_tita_policy_trace.py
+R100	lab/ddt_lab/scripts/np3o/estimate_base_vel_from_wheels.py	isaac_lab/ddt_lab/scripts/np3o/estimate_base_vel_from_wheels.py
+R100	lab/ddt_lab/scripts/np3o/eval_behavior.py	isaac_lab/ddt_lab/scripts/np3o/eval_behavior.py
+R100	lab/ddt_lab/scripts/np3o/inject_mujoco_state_tita.py	isaac_lab/ddt_lab/scripts/np3o/inject_mujoco_state_tita.py
+R100	lab/ddt_lab/scripts/np3o/play.py	isaac_lab/ddt_lab/scripts/np3o/play.py
+R100	lab/ddt_lab/scripts/np3o/rollout_mujoco_injected_tita.py	isaac_lab/ddt_lab/scripts/np3o/rollout_mujoco_injected_tita.py
+R100	lab/ddt_lab/scripts/np3o/run_isaac_tita_response_tests.py	isaac_lab/ddt_lab/scripts/np3o/run_isaac_tita_response_tests.py
+R100	lab/ddt_lab/scripts/np3o/train.py	isaac_lab/ddt_lab/scripts/np3o/train.py
+R100	lab/ddt_lab/scripts/random_agent.py	isaac_lab/ddt_lab/scripts/random_agent.py
+R100	lab/ddt_lab/scripts/rsl_rl/compare_export_samples.py	isaac_lab/ddt_lab/scripts/rsl_rl/compare_export_samples.py
+R100	lab/ddt_lab/scripts/rsl_rl/eval_behavior.py	isaac_lab/ddt_lab/scripts/rsl_rl/eval_behavior.py
+R100	lab/ddt_lab/scripts/rsl_rl/eval_estimator_accuracy.py	isaac_lab/ddt_lab/scripts/rsl_rl/eval_estimator_accuracy.py
+R100	lab/ddt_lab/scripts/rsl_rl/expose_estimator_output.py	isaac_lab/ddt_lab/scripts/rsl_rl/expose_estimator_output.py
+R100	lab/ddt_lab/scripts/rsl_rl/play.py	isaac_lab/ddt_lab/scripts/rsl_rl/play.py
+R100	lab/ddt_lab/scripts/rsl_rl/train.py	isaac_lab/ddt_lab/scripts/rsl_rl/train.py
+R100	lab/ddt_lab/scripts/rsl_rl/validate_export_parity.py	isaac_lab/ddt_lab/scripts/rsl_rl/validate_export_parity.py
+R100	lab/ddt_lab/scripts/rsl_rl/verify_diagnostic_onnx.py	isaac_lab/ddt_lab/scripts/rsl_rl/verify_diagnostic_onnx.py
+R100	lab/ddt_lab/scripts/zero_agent.py	isaac_lab/ddt_lab/scripts/zero_agent.py
+R100	lab/ddt_lab/setup.py	isaac_lab/ddt_lab/setup.py
+R100	lab/scripts/co_rl/cli_args.py	isaac_lab/scripts/co_rl/cli_args.py
+R100	lab/scripts/co_rl/core/__init__.py	isaac_lab/scripts/co_rl/core/__init__.py
+R100	lab/scripts/co_rl/core/algorithms/__init__.py	isaac_lab/scripts/co_rl/core/algorithms/__init__.py
+R100	lab/scripts/co_rl/core/algorithms/demo/acapsppo.py	isaac_lab/scripts/co_rl/core/algorithms/demo/acapsppo.py
+R100	lab/scripts/co_rl/core/algorithms/demo/sac.py	isaac_lab/scripts/co_rl/core/algorithms/demo/sac.py
+R100	lab/scripts/co_rl/core/algorithms/demo/sieppo.py	isaac_lab/scripts/co_rl/core/algorithms/demo/sieppo.py
+R100	lab/scripts/co_rl/core/algorithms/demo/srmppo.py	isaac_lab/scripts/co_rl/core/algorithms/demo/srmppo.py
+R100	lab/scripts/co_rl/core/algorithms/demo/taco.py	isaac_lab/scripts/co_rl/core/algorithms/demo/taco.py
+R100	lab/scripts/co_rl/core/algorithms/demo/tqc.py	isaac_lab/scripts/co_rl/core/algorithms/demo/tqc.py
+R100	lab/scripts/co_rl/core/algorithms/distillation.py	isaac_lab/scripts/co_rl/core/algorithms/distillation.py
+R100	lab/scripts/co_rl/core/algorithms/moo_ppo.py	isaac_lab/scripts/co_rl/core/algorithms/moo_ppo.py
+R100	lab/scripts/co_rl/core/algorithms/networks/sac_network.py	isaac_lab/scripts/co_rl/core/algorithms/networks/sac_network.py
+R100	lab/scripts/co_rl/core/algorithms/networks/taco_network.py	isaac_lab/scripts/co_rl/core/algorithms/networks/taco_network.py
+R100	lab/scripts/co_rl/core/algorithms/networks/tqc_network.py	isaac_lab/scripts/co_rl/core/algorithms/networks/tqc_network.py
+R100	lab/scripts/co_rl/core/algorithms/ppo.py	isaac_lab/scripts/co_rl/core/algorithms/ppo.py
+R100	lab/scripts/co_rl/core/modules/__init__.py	isaac_lab/scripts/co_rl/core/modules/__init__.py
+R100	lab/scripts/co_rl/core/modules/actor_critic.py	isaac_lab/scripts/co_rl/core/modules/actor_critic.py
+R100	lab/scripts/co_rl/core/modules/actor_critic_recurrent.py	isaac_lab/scripts/co_rl/core/modules/actor_critic_recurrent.py
+R100	lab/scripts/co_rl/core/modules/actor_critic_with_estimator.py	isaac_lab/scripts/co_rl/core/modules/actor_critic_with_estimator.py
+R100	lab/scripts/co_rl/core/modules/demo/replay_memory.py	isaac_lab/scripts/co_rl/core/modules/demo/replay_memory.py
+R100	lab/scripts/co_rl/core/modules/demo/sie_actor_critic.py	isaac_lab/scripts/co_rl/core/modules/demo/sie_actor_critic.py
+R100	lab/scripts/co_rl/core/modules/demo/student_teacher.py	isaac_lab/scripts/co_rl/core/modules/demo/student_teacher.py
+R100	lab/scripts/co_rl/core/modules/demo/student_teacher_recurrent.py	isaac_lab/scripts/co_rl/core/modules/demo/student_teacher_recurrent.py
+R100	lab/scripts/co_rl/core/modules/discriminator.py	isaac_lab/scripts/co_rl/core/modules/discriminator.py
+R100	lab/scripts/co_rl/core/modules/hybrid_actor_critic.py	isaac_lab/scripts/co_rl/core/modules/hybrid_actor_critic.py
+R100	lab/scripts/co_rl/core/modules/lagrangian_tuner.py	isaac_lab/scripts/co_rl/core/modules/lagrangian_tuner.py
+R100	lab/scripts/co_rl/core/modules/normalizer.py	isaac_lab/scripts/co_rl/core/modules/normalizer.py
+R100	lab/scripts/co_rl/core/modules/teacher_student.py	isaac_lab/scripts/co_rl/core/modules/teacher_student.py
+R100	lab/scripts/co_rl/core/modules/utils.py	isaac_lab/scripts/co_rl/core/modules/utils.py
+R100	lab/scripts/co_rl/core/networks/memory.py	isaac_lab/scripts/co_rl/core/networks/memory.py
+R100	lab/scripts/co_rl/core/runners/__init__.py	isaac_lab/scripts/co_rl/core/runners/__init__.py
+R100	lab/scripts/co_rl/core/runners/demo/acaps_on_policy_runner.py	isaac_lab/scripts/co_rl/core/runners/demo/acaps_on_policy_runner.py
+R100	lab/scripts/co_rl/core/runners/demo/distillation_on_policy_runner.py	isaac_lab/scripts/co_rl/core/runners/demo/distillation_on_policy_runner.py
+R100	lab/scripts/co_rl/core/runners/demo/sie_on_policy_runner.py	isaac_lab/scripts/co_rl/core/runners/demo/sie_on_policy_runner.py
+R100	lab/scripts/co_rl/core/runners/demo/srm_on_policy_runner.py	isaac_lab/scripts/co_rl/core/runners/demo/srm_on_policy_runner.py
+R100	lab/scripts/co_rl/core/runners/moo_on_policy_runner.py	isaac_lab/scripts/co_rl/core/runners/moo_on_policy_runner.py
+R100	lab/scripts/co_rl/core/runners/off_policy_runner.py	isaac_lab/scripts/co_rl/core/runners/off_policy_runner.py
+R100	lab/scripts/co_rl/core/runners/on_policy_runner.py	isaac_lab/scripts/co_rl/core/runners/on_policy_runner.py
+R100	lab/scripts/co_rl/core/storage/__init__.py	isaac_lab/scripts/co_rl/core/storage/__init__.py
+R100	lab/scripts/co_rl/core/storage/demo/acaps_rollout_storage.py	isaac_lab/scripts/co_rl/core/storage/demo/acaps_rollout_storage.py
+R100	lab/scripts/co_rl/core/storage/demo/offlinedata_storage.py	isaac_lab/scripts/co_rl/core/storage/demo/offlinedata_storage.py
+R100	lab/scripts/co_rl/core/storage/demo/sequencedata_storage.py	isaac_lab/scripts/co_rl/core/storage/demo/sequencedata_storage.py
+R100	lab/scripts/co_rl/core/storage/demo/srm_rollout_storage.py	isaac_lab/scripts/co_rl/core/storage/demo/srm_rollout_storage.py
+R100	lab/scripts/co_rl/core/storage/distillation_rollout_storage.py	isaac_lab/scripts/co_rl/core/storage/distillation_rollout_storage.py
+R100	lab/scripts/co_rl/core/storage/moo_rollout_storage.py	isaac_lab/scripts/co_rl/core/storage/moo_rollout_storage.py
+R100	lab/scripts/co_rl/core/storage/rollout_storage.py	isaac_lab/scripts/co_rl/core/storage/rollout_storage.py
+R100	lab/scripts/co_rl/core/utils/__init__.py	isaac_lab/scripts/co_rl/core/utils/__init__.py
+R100	lab/scripts/co_rl/core/utils/neptune_utils.py	isaac_lab/scripts/co_rl/core/utils/neptune_utils.py
+R100	lab/scripts/co_rl/core/utils/state_handler.py	isaac_lab/scripts/co_rl/core/utils/state_handler.py
+R100	lab/scripts/co_rl/core/utils/str2bool.py	isaac_lab/scripts/co_rl/core/utils/str2bool.py
+R100	lab/scripts/co_rl/core/utils/utils.py	isaac_lab/scripts/co_rl/core/utils/utils.py
+R100	lab/scripts/co_rl/core/utils/wandb_utils.py	isaac_lab/scripts/co_rl/core/utils/wandb_utils.py
+R100	lab/scripts/co_rl/core/wrapper/__init__.py	isaac_lab/scripts/co_rl/core/wrapper/__init__.py
+R100	lab/scripts/co_rl/core/wrapper/exporter.py	isaac_lab/scripts/co_rl/core/wrapper/exporter.py
+R100	lab/scripts/co_rl/core/wrapper/history_wrapper.py	isaac_lab/scripts/co_rl/core/wrapper/history_wrapper.py
+R100	lab/scripts/co_rl/core/wrapper/rl_cfg.py	isaac_lab/scripts/co_rl/core/wrapper/rl_cfg.py
+R100	lab/scripts/co_rl/core/wrapper/vecenv_wrapper.py	isaac_lab/scripts/co_rl/core/wrapper/vecenv_wrapper.py
+R100	lab/scripts/co_rl/core/wrapper/vecenv_wrapper_v2.py	isaac_lab/scripts/co_rl/core/wrapper/vecenv_wrapper_v2.py
+R100	lab/scripts/co_rl/play.py	isaac_lab/scripts/co_rl/play.py
+R100	lab/scripts/co_rl/plot.py	isaac_lab/scripts/co_rl/plot.py
+R100	lab/scripts/co_rl/train.py	isaac_lab/scripts/co_rl/train.py
+R099	lab/scripts/co_rl/train_tita_gluon_high_level.py	isaac_lab/scripts/co_rl/train_tita_gluon_high_level.py
+R100	lab/scripts/gluon/smoke_gluon_asset.py	isaac_lab/scripts/gluon/smoke_gluon_asset.py
+R100	lab/scripts/gluon/smoke_gluon_reach_env.py	isaac_lab/scripts/gluon/smoke_gluon_reach_env.py
+R100	lab/scripts/list_envs.py	isaac_lab/scripts/list_envs.py
+R100	lab/scripts/np3o/dump_isaac_tita_physics.py	isaac_lab/scripts/np3o/dump_isaac_tita_physics.py
+R100	lab/scripts/np3o/dump_tita_actuator_response.py	isaac_lab/scripts/np3o/dump_tita_actuator_response.py
+R100	lab/scripts/np3o/dump_tita_policy_trace.py	isaac_lab/scripts/np3o/dump_tita_policy_trace.py
+R100	lab/scripts/np3o/estimate_base_vel_from_wheels.py	isaac_lab/scripts/np3o/estimate_base_vel_from_wheels.py
+R100	lab/scripts/np3o/eval_behavior.py	isaac_lab/scripts/np3o/eval_behavior.py
+R100	lab/scripts/np3o/inject_mujoco_state_tita.py	isaac_lab/scripts/np3o/inject_mujoco_state_tita.py
+R100	lab/scripts/np3o/play.py	isaac_lab/scripts/np3o/play.py
+R100	lab/scripts/np3o/rollout_mujoco_injected_tita.py	isaac_lab/scripts/np3o/rollout_mujoco_injected_tita.py
+R100	lab/scripts/np3o/run_isaac_tita_response_tests.py	isaac_lab/scripts/np3o/run_isaac_tita_response_tests.py
+R100	lab/scripts/np3o/train.py	isaac_lab/scripts/np3o/train.py
+R100	lab/scripts/random_agent.py	isaac_lab/scripts/random_agent.py
+R100	lab/scripts/rsl_rl/compare_export_samples.py	isaac_lab/scripts/rsl_rl/compare_export_samples.py
+R100	lab/scripts/rsl_rl/eval_behavior.py	isaac_lab/scripts/rsl_rl/eval_behavior.py
+R100	lab/scripts/rsl_rl/eval_estimator_accuracy.py	isaac_lab/scripts/rsl_rl/eval_estimator_accuracy.py
+R100	lab/scripts/rsl_rl/expose_estimator_output.py	isaac_lab/scripts/rsl_rl/expose_estimator_output.py
+R100	lab/scripts/rsl_rl/play.py	isaac_lab/scripts/rsl_rl/play.py
+R100	lab/scripts/rsl_rl/train.py	isaac_lab/scripts/rsl_rl/train.py
+R100	lab/scripts/rsl_rl/validate_export_parity.py	isaac_lab/scripts/rsl_rl/validate_export_parity.py
+R100	lab/scripts/rsl_rl/verify_diagnostic_onnx.py	isaac_lab/scripts/rsl_rl/verify_diagnostic_onnx.py
+R100	lab/scripts/zero_agent.py	isaac_lab/scripts/zero_agent.py
+D	lab/ddt_lab/scripts/flash_sac/play.py
+A	mj_lab/README.md
+A	mj_lab/__init__.py
+A	mj_lab/checkpoint.py
+A	mj_lab/flash_sac.py
+A	mj_lab/pyproject.toml
+A	mj_lab/robots/__init__.py
+A	mj_lab/robots/tita/__init__.py
+A	mj_lab/robots/tita/flat_env_cfg.py
+A	mj_lab/robots/tita/flat_env_roll_pitch_height_cfg.py
+A	mj_lab/robots/tita/height_only_env_cfg.py
+A	mj_lab/robots/tita/inline_env_cfg.py
+A	mj_lab/robots/tita/mdp.py
+A	mj_lab/robots/tita/robot_cfg.py
+A	mj_lab/robots/tita/sit_stand_env_cfg.py
+A	mj_lab/robots/tita/stand_one_leg_anchor_env_cfg.py
+A	mj_lab/robots/tita/stand_one_leg_env_cfg.py
+A	mj_lab/robots/tita/stand_one_leg_reference_env_cfg.py
+A	mj_lab/robots/tita/support_command_env_cfg.py
+A	mj_lab/robots/tita/walk_env_cfg.py
+A	mj_lab/scripts/__init__.py
+A	mj_lab/scripts/play.py
+A	mj_lab/scripts/train.py
+M	scripts/agent-check.sh
+A	scripts/queue_mjlab_flash_sac.py
+M	scripts/test-fast.sh
+M	sim2sim/README.md
+M	sim2sim/lqr/report.py
+M	sim2sim/lqr/runtime.py
+A	sim2sim/robot/tita/launch/pose_preview.launch.py
+A	sim2sim/robot/tita/mujoco_corrected/robot.xml
+A	sim2sim/robot/tita/mujoco_corrected/scene.xml
+A	sim2sim/robot/tita/rviz/pose_preview.rviz
+M	sim2sim/sim2sim_ros2_jazzy/config/tita.yaml
+M	sim2sim/sim2sim_ros2_jazzy/launch/sim2sim_finetune.py
+M	sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/adapter.py
+M	sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/checkpoint.py
+M	sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/cli.py
+M	sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/mujoco_env.py
+M	sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/sim2sim_node.py
+M	sim2sim/sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/state_machine.py
+A	test/analyze_mjlab_isaac_training.py
+M	test/build_tita_gluon_cartesian_hub_graph.py
+M	test/check_basecom_shift_task.py
+M	test/check_heading_drift_task.py
+M	test/check_heading_obs_task.py
+M	test/check_posknee_ma2_task.py
+M	test/check_real2sim_task_events.py
+A	test/check_roll_pitch_height_feasibility.py
+M	test/check_sphere_wheel_tasks.py
+M	test/check_tita_flat_promotion_runtime.py
+M	test/check_training_position_reference.py
+M	test/diff_flash_env_cfg_vs_checkpoint.py
+M	test/eval_flash_pv_models.py
+M	test/eval_flash_sac_noise_bounds.py
+M	test/eval_sequential_inspection_scheduler_grid.py
+M	test/eval_tita_gluon_high_level_policy.py
+M	test/eval_tita_gluon_sequential_inspection_baselines.py
+M	test/eval_tita_gluon_teacher_checkpoints.py
+M	test/eval_tita_gluon_zero_command_stance.py
+M	test/eval_tita_ppo_flash_comparison.py
+A	test/evaluate_one_leg_anchor.py
+M	test/evaluate_posknee_checkpoints.py
+M	test/export_ab_checkpoints.py
+M	test/isaac_joint_friction_semantics_check.py
+M	test/probe_tita_ppo_action_ranges.py
+M	test/render_real2sim_progression.py
+A	test/run_one_leg_anchor_experiment.py
+M	test/screen_sphere_wheel_runs.py
+M	test/test_checkpoint_auto_position.py
+M	test/test_flash_sac_action_ranges.py
+M	test/test_flash_sac_adapter.py
+M	test/test_flash_sac_compile_checkpoint.py
+M	test/test_flash_sac_config.py
+M	test/test_flash_sac_entrypoints.py
+M	test/test_flash_sac_export.py
+M	test/test_flash_sac_learning.py
+A	test/test_flash_sac_velocity_overlay.py
+A	test/test_flash_sac_video.py
+M	test/test_flash_sac_wandb.py
+A	test/test_flash_sac_warm_start.py
+M	test/test_gluon_asset_runtime.py
+M	test/test_gluon_ik_math.py
+M	test/test_gluon_jacobian_runtime.py
+M	test/test_gluon_urdf_usd_equivalence.py
+A	test/test_height_only_queue.py
+A	test/test_mjlab_height_only.py
+A	test/test_mjlab_inline.py
+A	test/test_mjlab_one_leg_anchor.py
+A	test/test_mjlab_one_leg_reference.py
+A	test/test_mjlab_one_leg_right_reference.py
+A	test/test_mjlab_roll_pitch_height.py
+A	test/test_mjlab_sit_stand.py
+A	test/test_mjlab_stand_one_leg.py
+A	test/test_mjlab_support_command.py
+A	test/test_mjlab_support_velocity.py
+A	test/test_mjlab_tita.py
+A	test/test_mjlab_training_queue.py
+A	test/test_one_leg_sequential_runner.py
+A	test/test_pose_stop_latch.py
+M	test/test_ramped_velocity_command.py
+M	test/test_residual_wheel_pd.py
+M	test/test_sequential_inspection_go_no_go.py
+M	test/test_sim2sim_checkpoint_adapter.py
+A	test/test_sim2sim_command_limits.py
+M	test/test_sim2sim_finetune.py
+M	test/test_sim2sim_heading_error.py
+A	test/test_sim2sim_hybrid.py
+A	test/test_sim2sim_pose.py
+M	test/test_sim2sim_ppo_parity.py
+A	test/test_sim2sim_walk.py
+A	test/test_sim2sim_walk_state_machine.py
+A	test/test_standing_height_only.py
+M	test/test_tita_gluon_curriculum_arm_smoke.py
+M	test/test_tita_gluon_init_height_command.py
+M	test/test_tita_gluon_inspection_curriculum_smoke.py
+M	test/test_tita_gluon_moo_smoke.py
+M	test/test_tita_gluon_random_arm_smoke.py
+M	test/test_tita_gluon_sequential_inspection_executor_smoke.py
+M	test/test_tita_my_flat_config_refactor.py
+M	test/test_tita_training_asset.py
+M	test/train_tita_ppo_comparison.py
+A	third_party/mjlab
+
+==================================================
+Diff statistics
+==================================================
+ .gitignore                                         |    5 +-
+ .gitmodules                                        |    3 +
+ README.md                                          |   31 +-
+ .../2026-10-27/flash_sac_wandb_video_defaults.md   |   93 ++
+ docs/exp/2026-10-27/mjlab_flat_preview_summary.md  |   11 +
+ docs/exp/2026-10-27/mjlab_migration_summary.md     |  137 +++
+ docs/exp/2026-10-27/mjlab_training_queue.md        |  113 ++
+ .../2026-10-27/tita_mjlab_220720_835290_args.json  |   28 +
+ .../2026-10-27/tita_mjlab_220720_835290_summary.md |   11 +
+ .../2026-10-27/tita_mjlab_220754_974805_args.json  |   28 +
+ .../2026-10-27/tita_mjlab_220754_974805_summary.md |   11 +
+ .../2026-10-27/tita_mjlab_220755_939683_args.json  |   28 +
+ .../2026-10-27/tita_mjlab_220755_939683_summary.md |   11 +
+ .../2026-10-27/tita_mjlab_220844_500229_args.json  |   28 +
+ .../2026-10-27/tita_mjlab_220844_500229_summary.md |   11 +
+ .../2026-10-27/tita_mjlab_221710_985132_args.json  |   28 +
+ .../2026-10-27/tita_mjlab_221710_985132_summary.md |   11 +
+ .../2026-10-27/tita_mjlab_221712_098926_args.json  |   28 +
+ .../2026-10-27/tita_mjlab_221712_098926_summary.md |   11 +
+ .../2026-10-27/tita_mjlab_221928_311507_args.json  |   28 +
+ .../2026-10-27/tita_mjlab_221928_311507_summary.md |   11 +
+ .../2026-10-27/tita_mjlab_235721_754659_args.json  |   28 +
+ .../2026-10-27/tita_mjlab_235721_754659_summary.md |   11 +
+ .../2026-10-28/flat_roll_pitch_height_summary.md   |   88 ++
+ docs/exp/2026-10-28/hybrid_sim2sim_runtime.md      |   21 +
+ docs/exp/2026-10-28/hybrid_sim2sim_summary.md      |  109 ++
+ .../inline_contactfix_restart_summary.md           |  113 ++
+ docs/exp/2026-10-28/inline_env_runtime.md          |   17 +
+ docs/exp/2026-10-28/inline_env_training_summary.md |  172 +++
+ docs/exp/2026-10-28/inline_lift_30000_summary.md   |  145 +++
+ .../inline_relaxed_penalties_training_summary.md   |   69 ++
+ docs/exp/2026-10-28/lab_alias_cleanup_summary.md   |   86 ++
+ .../mjlab_flat_walk_20261027_224638_comparison.md  |   27 +
+ .../mjlab_hybrid_native_preview_summary.md         |   11 +
+ docs/exp/2026-10-28/mjlab_hybrid_walk_training.md  |  104 ++
+ docs/exp/2026-10-28/mjlab_isaac_training_speed.md  |   41 +
+ .../2026-10-28/one_leg_balance_15000_summary.md    |   82 ++
+ .../one_leg_reference_sim2sim_runtime.md           |   15 +
+ .../one_leg_reference_training_summary.md          |   84 ++
+ .../one_leg_reference_video_probe_summary.md       |   11 +
+ .../one_leg_standing2s_training_summary.md         |   86 ++
+ .../2026-10-28/one_leg_standing_runtime_checks.md  |   15 +
+ docs/exp/2026-10-28/pose_preview_camera_summary.md |   19 +
+ docs/exp/2026-10-28/pose_preview_summary.md        |   54 +
+ docs/exp/2026-10-28/pose_sim2sim_summary.md        |   63 ++
+ .../2026-10-28/pose_sim2sim_support_regression.md  |   15 +
+ docs/exp/2026-10-28/rph_expanded_summary.md        |   93 ++
+ docs/exp/2026-10-28/stand_one_leg_env_summary.md   |   73 ++
+ .../stand_one_leg_sim2sim_state_machine.md         |   15 +
+ .../2026-10-28/stand_one_leg_sim2sim_summary.md    |   50 +
+ .../2026-10-28/stand_one_leg_training_summary.md   |   70 ++
+ docs/exp/2026-10-28/stop_latch_runtime.md          |   17 +
+ docs/exp/2026-10-28/stop_latch_training_summary.md |  169 +++
+ .../support_command_sim2sim_25000_runtime.md       |   15 +
+ .../support_command_sim2sim_25000_summary.md       |   33 +
+ .../2026-10-28/support_command_sim2sim_runtime.md  |   15 +
+ .../2026-10-28/support_command_training_summary.md |   90 ++
+ .../support_command_video_probe_summary.md         |   11 +
+ .../2026-10-28/support_episode_sim2sim_runtime.md  |   15 +
+ .../2026-10-28/support_episode_training_summary.md |   83 ++
+ .../support_episode_video_probe_summary.md         |   11 +
+ .../2026-10-28/support_velocity_sim2sim_probe.md   |   15 +
+ .../2026-10-28/support_velocity_sim2sim_runtime.md |   15 +
+ .../2026-10-28/support_velocity_sim2sim_summary.md |   46 +
+ .../support_velocity_training_summary.md           |   46 +
+ .../support_velocity_video_probe_summary.md        |   11 +
+ .../2026-10-28/tita_mjlab_014010_434558_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_014010_434558_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_085024_973761_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_085024_973761_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_085110_097268_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_085110_097268_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_093841_645817_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_093841_645817_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_093903_465777_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_093903_465777_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_103029_016421_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_103029_016421_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_103154_482969_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_103154_482969_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_103305_882054_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_103305_882054_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_105042_191683_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_105042_191683_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_105509_377182_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_105509_377182_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_114239_024280_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_114239_024280_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_133533_474303_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_133533_474303_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_142712_580757_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_142712_580757_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_151340_019495_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_151340_019495_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_155344_537072_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_155344_537072_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_155513_268911_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_155513_268911_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_163323_371256_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_163323_371256_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_163835_917365_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_163835_917365_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_172855_759993_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_172855_759993_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_173314_948748_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_173314_948748_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_193912_863243_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_193912_863243_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_194029_719452_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_194029_719452_summary.md |   11 +
+ .../2026-10-28/tita_mjlab_202755_365015_args.json  |   28 +
+ .../2026-10-28/tita_mjlab_202755_365015_summary.md |   11 +
+ .../2026-10-29/pose_policy_selection_summary.md    |  114 ++
+ docs/exp/2026-10-29/pose_standing50_summary.md     |   55 +
+ docs/exp/2026-10-29/pose_stop_latch_summary.md     |   59 +
+ .../2026-10-29/sit_stand_40000_sim2sim_summary.md  |   38 +
+ .../exp/2026-10-29/sit_stand_curriculum_summary.md |   54 +
+ .../sit_stand_stability_40000_summary.md           |   54 +
+ docs/exp/2026-10-29/sit_stand_summary.md           |   65 ++
+ .../2026-10-29/sit_stand_video_probe_summary.md    |   11 +
+ .../2026-10-29/tita_mjlab_091949_517272_args.json  |   28 +
+ .../2026-10-29/tita_mjlab_091949_517272_summary.md |   11 +
+ .../2026-10-29/tita_mjlab_092026_693000_args.json  |   28 +
+ .../2026-10-29/tita_mjlab_092026_693000_summary.md |   11 +
+ .../2026-10-29/tita_mjlab_092054_548869_args.json  |   28 +
+ .../2026-10-29/tita_mjlab_092054_548869_summary.md |   11 +
+ .../2026-10-29/tita_mjlab_095909_990173_args.json  |   28 +
+ .../2026-10-29/tita_mjlab_095909_990173_summary.md |   11 +
+ .../2026-10-29/tita_mjlab_095950_402808_args.json  |   28 +
+ .../2026-10-29/tita_mjlab_095950_402808_summary.md |   11 +
+ .../2026-10-29/tita_mjlab_114434_238379_args.json  |   28 +
+ .../2026-10-29/tita_mjlab_114434_238379_summary.md |   11 +
+ .../2026-10-29/tita_mjlab_114540_063797_args.json  |   28 +
+ .../2026-10-29/tita_mjlab_114540_063797_summary.md |   11 +
+ .../2026-10-29/tita_mjlab_163542_137760_args.json  |   28 +
+ .../2026-10-29/tita_mjlab_163542_137760_summary.md |   11 +
+ .../2026-10-29/tita_mjlab_163655_667608_args.json  |   28 +
+ .../2026-10-29/tita_mjlab_163655_667608_summary.md |   11 +
+ .../2026-10-29/tita_mjlab_214041_520259_args.json  |   29 +
+ .../2026-10-29/tita_mjlab_214041_520259_summary.md |   11 +
+ .../2026-10-29/tita_mjlab_214219_199538_args.json  |   29 +
+ .../2026-10-29/tita_mjlab_214219_199538_summary.md |   11 +
+ .../height_only_training_queue_summary.md          |   61 +
+ .../2026-10-31/one_leg_both_training_summary.md    |   63 ++
+ docs/exp/2026-10-31/pose_baseline_latch_summary.md |   78 ++
+ .../pose_latch_checkpoint_selection_summary.md     |   79 ++
+ .../2026-10-31/tita_mjlab_112428_632381_args.json  |   29 +
+ .../2026-10-31/tita_mjlab_112428_632381_summary.md |   11 +
+ .../2026-10-31/tita_mjlab_112630_629104_args.json  |   29 +
+ .../2026-10-31/tita_mjlab_112630_629104_summary.md |   11 +
+ .../2026-10-31/tita_mjlab_201327_397785_args.json  |   29 +
+ .../2026-10-31/tita_mjlab_201327_397785_summary.md |   11 +
+ .../2026-10-31/tita_mjlab_201327_449283_args.json  |   29 +
+ .../2026-10-31/tita_mjlab_201327_449283_summary.md |   11 +
+ .../2026-10-31/tita_mjlab_201526_001807_args.json  |   29 +
+ .../2026-10-31/tita_mjlab_201526_001807_summary.md |   11 +
+ .../2026-10-31/tita_mjlab_201526_016988_args.json  |   29 +
+ .../2026-10-31/tita_mjlab_201526_016988_summary.md |   11 +
+ .../2026-11-01/support_height_selection_summary.md |  102 ++
+ .../2026-11-01/tita_mjlab_013009_483244_args.json  |   29 +
+ .../2026-11-01/tita_mjlab_013009_483244_summary.md |   11 +
+ .../2026-11-03/one_leg_anchor_no_cutoff_summary.md |  133 +++
+ .../one_leg_anchor_video_probe_summary.md          |   11 +
+ docs/exp/2026-11-03/one_leg_lift_first_summary.md  |  172 +++
+ .../one_leg_right_zero_velocity_start.md           |   60 +
+ .../2026-11-03/tita_mjlab_112424_407632_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_112424_407632_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_112424_407636_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_112424_407636_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_112752_838301_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_112752_838301_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_112752_841972_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_112752_841972_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_124022_098545_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_124022_098545_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_124022_108989_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_124022_108989_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_124132_110309_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_124132_110309_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_124132_110350_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_124132_110350_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_135717_183987_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_135717_183987_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_135717_192178_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_135717_192178_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_135938_423332_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_135938_423332_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_135938_442647_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_135938_442647_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_151122_751872_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_151122_751872_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_151200_686172_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_151200_686172_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_151401_168130_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_151401_168130_summary.md |   11 +
+ .../2026-11-03/tita_mjlab_180916_898387_args.json  |   29 +
+ .../2026-11-03/tita_mjlab_180916_898387_summary.md |   11 +
+ .../2026-11-06/mjlab_publication_agent_check.log   | 1194 ++++++++++++++++++++
+ .../exp/2026-11-06/mjlab_publication_cpu_tests.log |    4 +
+ .../mjlab_publication_initial_cpu_tests.log        |   30 +
+ .../mjlab_publication_node_regression.log          |    2 +
+ .../exp/2026-11-06/mjlab_publication_play_help.log |   22 +
+ .../2026-11-06/mjlab_publication_shared_tests.log  |    2 +
+ .../2026-11-06/mjlab_publication_sim2sim_final.log |    2 +
+ docs/exp/2026-11-06/mjlab_publication_summary.md   |   88 ++
+ .../2026-11-06/mjlab_publication_train_help.log    |   60 +
+ {lab => isaac_lab}/README.md                       |    8 +-
+ {lab => isaac_lab}/ddt_lab/config/extension.toml   |    0
+ {lab => isaac_lab}/ddt_lab/ddt_lab/__init__.py     |    0
+ .../ddt_lab/ddt_lab/algorithms/__init__.py         |    0
+ .../ddt_lab/algorithms/estimator/__init__.py       |    0
+ .../estimator/actor_critic_with_estimator.py       |    0
+ .../algorithms/estimator/ppo_with_estimator.py     |    0
+ .../ddt_lab/ddt_lab/algorithms/np3o/__init__.py    |    0
+ .../ddt_lab/algorithms/np3o/actor_critic.py        |    0
+ .../ddt_lab/algorithms/np3o/common_modules.py      |    0
+ .../ddt_lab/ddt_lab/algorithms/np3o/normalizer.py  |    0
+ .../ddt_lab/ddt_lab/algorithms/np3o/np3o.py        |    0
+ .../ddt_lab/algorithms/np3o/rollout_storage.py     |    0
+ .../ddt_lab/ddt_lab/algorithms/np3o/runner.py      |    0
+ .../ddt_lab/ddt_lab/algorithms/np3o/wrapper.py     |    0
+ .../ddt_lab/ddt_lab/assets/ddt_robot.py            |    0
+ {lab => isaac_lab}/ddt_lab/ddt_lab/assets/gluon.py |    0
+ .../ddt_lab/ddt_lab/assets/tita_co_rl.py           |    0
+ .../ddt_lab/ddt_lab/envs/__init__.py               |    0
+ .../ddt_lab/ddt_lab/envs/moo_envs/__init__.py      |    0
+ .../envs/moo_envs/manager_based_moo_rl_env.py      |    0
+ .../envs/moo_envs/manager_based_moo_rl_env_cfg.py  |    0
+ {lab => isaac_lab}/ddt_lab/ddt_lab/gluon_ik.py     |    0
+ .../ddt_lab/ddt_lab/managers/__init__.py           |    0
+ .../ddt_lab/ddt_lab/managers/cost_manager.py       |    0
+ .../ddt_lab/managers/domain_managers/251218.zip    |  Bin
+ .../ddt_lab/managers/domain_managers/__init__.py   |    0
+ .../managers/domain_managers/domain_manager.py     |    0
+ .../domain_managers/domain_manager_term_cfg.py     |    0
+ .../ddt_lab/managers/moo_managers/__init__.py      |    0
+ .../managers/moo_managers/moo_reward_manager.py    |    0
+ .../moo_managers/moo_reward_manager_term_cfg.py    |    0
+ .../ddt_lab/ddt_lab/managers/moo_managers/utils.py |    0
+ .../ddt_lab/ddt_lab/policy_interface.py            |    0
+ .../ddt_lab/ddt_lab/tasks/__init__.py              |    0
+ .../ddt_lab/tasks/manager_based/__init__.py        |    0
+ .../tasks/manager_based/locomotion/__init__.py     |    0
+ .../manager_based/locomotion/agents/__init__.py    |    0
+ .../manager_based/locomotion/agents/np3o_cfg.py    |    0
+ .../locomotion/agents/rsl_rl_ppo_cfg.py            |    0
+ .../manager_based/locomotion/locomotion_env_cfg.py |    0
+ .../tasks/manager_based/locomotion/mdp/__init__.py |    0
+ .../tasks/manager_based/locomotion/mdp/commands.py |    0
+ .../tasks/manager_based/locomotion/mdp/costs.py    |    0
+ .../manager_based/locomotion/mdp/curriculums.py    |    0
+ .../tasks/manager_based/locomotion/mdp/events.py   |    0
+ .../manager_based/locomotion/mdp/observations.py   |    0
+ .../tasks/manager_based/locomotion/mdp/rewards.py  |    0
+ .../manager_based/locomotion/robots/__init__.py    |    0
+ .../manager_based/locomotion/robots/d1/__init__.py |    0
+ .../locomotion/robots/d1/agents/__init__.py        |    0
+ .../locomotion/robots/d1/agents/np3o_cfg.py        |    0
+ .../locomotion/robots/d1/flat_env_cfg.py           |    0
+ .../locomotion/robots/d1/rough_env_cfg.py          |    0
+ .../locomotion/robots/tita/__init__.py             |   18 +-
+ .../locomotion/robots/tita/agents/__init__.py      |    0
+ .../locomotion/robots/tita/agents/flash_sac_cfg.py |    8 +-
+ .../locomotion/robots/tita/agents/np3o_cfg.py      |    0
+ .../robots/tita/agents/rsl_rl_ppo_cfg.py           |    0
+ .../locomotion/robots/tita/flat_env_cfg.py         |    0
+ .../locomotion/robots/tita/jump_env_cfg.py         |    0
+ .../locomotion/robots/tita/real2sim/__init__.py    |    0
+ .../locomotion/robots/tita/real2sim/actions.py     |    0
+ .../robots/tita/real2sim/base_env_cfg.py           |    0
+ .../locomotion/robots/tita/real2sim/env_cfg.py     |    0
+ .../locomotion/robots/tita/real2sim/events.py      |    0
+ .../robots/tita/real2sim/observations.py           |    0
+ .../locomotion/robots/tita/real2sim/rewards.py     |    0
+ .../locomotion/robots/tita/rough_env_cfg.py        |    0
+ .../locomotion/robots/tita/walk_env_cfg.py         |  139 +++
+ .../locomotion/robots/tita/walk_mdp.py             |  144 +++
+ .../tasks/manager_based/manipulation/__init__.py   |    0
+ .../manager_based/manipulation/reach/__init__.py   |    0
+ .../manipulation/reach/joint_pos_env_cfg.py        |    0
+ .../ddt_lab/ddt_lab/tasks/moo_based/__init__.py    |    0
+ .../tasks/moo_based/locomanipulation/__init__.py   |    0
+ .../locomanipulation/velocity/__init__.py          |    0
+ .../velocity/tita_gluon/__init__.py                |    0
+ .../velocity/tita_gluon/agents/__init__.py         |    0
+ .../velocity/tita_gluon/agents/co_rl_cfg.py        |    0
+ .../data/tita_gluon_cartesian_work_hub_graph.json  |    0
+ .../velocity/tita_gluon/env_cfg.py                 |    0
+ .../velocity/tita_gluon/high_level_env.py          |    0
+ .../velocity/tita_gluon/mdp/__init__.py            |    0
+ .../velocity/tita_gluon/mdp/actions.py             |    0
+ .../velocity/tita_gluon/mdp/curriculums.py         |    0
+ .../velocity/tita_gluon/sequential_inspection.py   |    0
+ .../ddt_lab/tasks/moo_based/locomotion/__init__.py |    0
+ .../moo_based/locomotion/velocity/__init__.py      |    0
+ .../moo_based/locomotion/velocity/mdp/__init__.py  |    0
+ .../velocity/mdp/commands/event_command.py         |    0
+ .../mdp/commands/integral_position_command.py      |    0
+ .../velocity/mdp/commands/position_command.py      |    0
+ .../velocity/mdp/commands/track_z_command.py       |    0
+ .../velocity/mdp/commands/velocity_command.py      |    0
+ .../locomotion/velocity/mdp/commands/yk_command.py |    0
+ .../locomotion/velocity/mdp/curriculums.py         |    0
+ .../moo_based/locomotion/velocity/mdp/events.py    |    0
+ .../velocity/mdp/feature_functions_common.py       |    0
+ .../locomotion/velocity/mdp/moo_functions.py       |    0
+ .../locomotion/velocity/mdp/observations.py        |    0
+ .../moo_based/locomotion/velocity/mdp/rewards.py   |    0
+ .../locomotion/velocity/mdp/terminations.py        |    0
+ .../locomotion/velocity/sensors/__init__.py        |    0
+ .../locomotion/velocity/sensors/lift_mask.py       |    0
+ .../locomotion/velocity/sensors/lift_mask_cfg.py   |    0
+ .../velocity/terrain_config/rough_config.py        |    0
+ .../velocity/terrain_config/stair_config.py        |    0
+ .../velocity/terrain_config/stair_config_4w4l.py   |    0
+ .../locomotion/velocity/tita_env/__init__.py       |    0
+ .../velocity/tita_env/agents/__init__.py           |    0
+ .../velocity/tita_env/agents/co_rl_cfg.py          |    0
+ .../velocity/tita_env/flat_env/__init__.py         |    0
+ .../tita_env/flat_env/stand_drive/__init__.py      |    0
+ .../flat_env/stand_drive/feature_functions.py      |    0
+ .../stand_drive/flat_env_stand_drive_cfg.py        |    0
+ .../velocity/tita_env/velocity_env_cfg.py          |    0
+ .../ddt_lab/ddt_lab/ui_extension_example.py        |    0
+ {lab => isaac_lab}/ddt_lab/docs/CHANGELOG.rst      |    0
+ {lab => isaac_lab}/ddt_lab/pyproject.toml          |    0
+ .../ddt_lab/scripts/flash_sac/README.md            |   82 +-
+ .../ddt_lab/scripts/flash_sac/__init__.py          |    0
+ .../ddt_lab/scripts/flash_sac/env_adapter.py       |    0
+ .../ddt_lab/scripts/flash_sac/export.py            |    4 +-
+ isaac_lab/ddt_lab/scripts/flash_sac/play.py        |  196 ++++
+ .../ddt_lab/scripts/flash_sac/runtime.py           |    4 +-
+ .../ddt_lab/scripts/flash_sac/train.py             |   51 +-
+ .../scripts/flash_sac/vendor/LICENSE.FlashSAC      |    0
+ .../scripts/flash_sac/vendor/flash_rl/__init__.py  |    0
+ .../flash_sac/vendor/flash_rl/agents/__init__.py   |    0
+ .../flash_sac/vendor/flash_rl/agents/base_agent.py |    0
+ .../vendor/flash_rl/agents/flashSAC/__init__.py    |    0
+ .../vendor/flash_rl/agents/flashSAC/agent.py       |    0
+ .../vendor/flash_rl/agents/flashSAC/layer.py       |    0
+ .../vendor/flash_rl/agents/flashSAC/network.py     |    0
+ .../vendor/flash_rl/agents/flashSAC/update.py      |    0
+ .../vendor/flash_rl/agents/utils/__init__.py       |    0
+ .../vendor/flash_rl/agents/utils/distribution.py   |    0
+ .../vendor/flash_rl/agents/utils/network.py        |    0
+ .../flash_rl/agents/utils/reward_normalization.py  |    0
+ .../vendor/flash_rl/agents/utils/scheduler.py      |    0
+ .../flash_sac/vendor/flash_rl/buffers/__init__.py  |    0
+ .../vendor/flash_rl/buffers/base_buffer.py         |    0
+ .../vendor/flash_rl/buffers/torch_buffer.py        |    0
+ .../scripts/flash_sac/vendor/flash_rl/types.py     |    0
+ .../scripts/flash_sac/vendor/source_manifest.json  |    0
+ .../ddt_lab/scripts/flash_sac/video_logging.py     |   92 ++
+ .../scripts/gluon/convert_gluon_urdf_to_usd.py     |    0
+ .../ddt_lab/scripts/gluon/run_gluon_keyboard_ik.py |    2 +-
+ .../ddt_lab/scripts/gluon/smoke_gluon_asset.py     |    0
+ .../ddt_lab/scripts/gluon/smoke_gluon_reach_env.py |    0
+ {lab => isaac_lab}/ddt_lab/scripts/list_envs.py    |    0
+ .../scripts/np3o/dump_isaac_tita_physics.py        |    0
+ .../scripts/np3o/dump_tita_actuator_response.py    |    0
+ .../ddt_lab/scripts/np3o/dump_tita_policy_trace.py |    0
+ .../scripts/np3o/estimate_base_vel_from_wheels.py  |    0
+ .../ddt_lab/scripts/np3o/eval_behavior.py          |    0
+ .../scripts/np3o/inject_mujoco_state_tita.py       |    0
+ {lab => isaac_lab}/ddt_lab/scripts/np3o/play.py    |    0
+ .../scripts/np3o/rollout_mujoco_injected_tita.py   |    0
+ .../scripts/np3o/run_isaac_tita_response_tests.py  |    0
+ {lab => isaac_lab}/ddt_lab/scripts/np3o/train.py   |    0
+ {lab => isaac_lab}/ddt_lab/scripts/random_agent.py |    0
+ .../scripts/rsl_rl/compare_export_samples.py       |    0
+ .../ddt_lab/scripts/rsl_rl/eval_behavior.py        |    0
+ .../scripts/rsl_rl/eval_estimator_accuracy.py      |    0
+ .../scripts/rsl_rl/expose_estimator_output.py      |    0
+ {lab => isaac_lab}/ddt_lab/scripts/rsl_rl/play.py  |    0
+ {lab => isaac_lab}/ddt_lab/scripts/rsl_rl/train.py |    0
+ .../scripts/rsl_rl/validate_export_parity.py       |    0
+ .../scripts/rsl_rl/verify_diagnostic_onnx.py       |    0
+ {lab => isaac_lab}/ddt_lab/scripts/zero_agent.py   |    0
+ {lab => isaac_lab}/ddt_lab/setup.py                |    0
+ {lab => isaac_lab}/scripts/co_rl/cli_args.py       |    0
+ {lab => isaac_lab}/scripts/co_rl/core/__init__.py  |    0
+ .../scripts/co_rl/core/algorithms/__init__.py      |    0
+ .../scripts/co_rl/core/algorithms/demo/acapsppo.py |    0
+ .../scripts/co_rl/core/algorithms/demo/sac.py      |    0
+ .../scripts/co_rl/core/algorithms/demo/sieppo.py   |    0
+ .../scripts/co_rl/core/algorithms/demo/srmppo.py   |    0
+ .../scripts/co_rl/core/algorithms/demo/taco.py     |    0
+ .../scripts/co_rl/core/algorithms/demo/tqc.py      |    0
+ .../scripts/co_rl/core/algorithms/distillation.py  |    0
+ .../scripts/co_rl/core/algorithms/moo_ppo.py       |    0
+ .../co_rl/core/algorithms/networks/sac_network.py  |    0
+ .../co_rl/core/algorithms/networks/taco_network.py |    0
+ .../co_rl/core/algorithms/networks/tqc_network.py  |    0
+ .../scripts/co_rl/core/algorithms/ppo.py           |    0
+ .../scripts/co_rl/core/modules/__init__.py         |    0
+ .../scripts/co_rl/core/modules/actor_critic.py     |    0
+ .../co_rl/core/modules/actor_critic_recurrent.py   |    0
+ .../core/modules/actor_critic_with_estimator.py    |    0
+ .../co_rl/core/modules/demo/replay_memory.py       |    0
+ .../co_rl/core/modules/demo/sie_actor_critic.py    |    0
+ .../co_rl/core/modules/demo/student_teacher.py     |    0
+ .../core/modules/demo/student_teacher_recurrent.py |    0
+ .../scripts/co_rl/core/modules/discriminator.py    |    0
+ .../co_rl/core/modules/hybrid_actor_critic.py      |    0
+ .../scripts/co_rl/core/modules/lagrangian_tuner.py |    0
+ .../scripts/co_rl/core/modules/normalizer.py       |    0
+ .../scripts/co_rl/core/modules/teacher_student.py  |    0
+ .../scripts/co_rl/core/modules/utils.py            |    0
+ .../scripts/co_rl/core/networks/memory.py          |    0
+ .../scripts/co_rl/core/runners/__init__.py         |    0
+ .../core/runners/demo/acaps_on_policy_runner.py    |    0
+ .../runners/demo/distillation_on_policy_runner.py  |    0
+ .../core/runners/demo/sie_on_policy_runner.py      |    0
+ .../core/runners/demo/srm_on_policy_runner.py      |    0
+ .../co_rl/core/runners/moo_on_policy_runner.py     |    0
+ .../co_rl/core/runners/off_policy_runner.py        |    0
+ .../scripts/co_rl/core/runners/on_policy_runner.py |    0
+ .../scripts/co_rl/core/storage/__init__.py         |    0
+ .../core/storage/demo/acaps_rollout_storage.py     |    0
+ .../co_rl/core/storage/demo/offlinedata_storage.py |    0
+ .../core/storage/demo/sequencedata_storage.py      |    0
+ .../co_rl/core/storage/demo/srm_rollout_storage.py |    0
+ .../core/storage/distillation_rollout_storage.py   |    0
+ .../co_rl/core/storage/moo_rollout_storage.py      |    0
+ .../scripts/co_rl/core/storage/rollout_storage.py  |    0
+ .../scripts/co_rl/core/utils/__init__.py           |    0
+ .../scripts/co_rl/core/utils/neptune_utils.py      |    0
+ .../scripts/co_rl/core/utils/state_handler.py      |    0
+ .../scripts/co_rl/core/utils/str2bool.py           |    0
+ .../scripts/co_rl/core/utils/utils.py              |    0
+ .../scripts/co_rl/core/utils/wandb_utils.py        |    0
+ .../scripts/co_rl/core/wrapper/__init__.py         |    0
+ .../scripts/co_rl/core/wrapper/exporter.py         |    0
+ .../scripts/co_rl/core/wrapper/history_wrapper.py  |    0
+ .../scripts/co_rl/core/wrapper/rl_cfg.py           |    0
+ .../scripts/co_rl/core/wrapper/vecenv_wrapper.py   |    0
+ .../co_rl/core/wrapper/vecenv_wrapper_v2.py        |    0
+ {lab => isaac_lab}/scripts/co_rl/play.py           |    0
+ {lab => isaac_lab}/scripts/co_rl/plot.py           |    0
+ {lab => isaac_lab}/scripts/co_rl/train.py          |    0
+ .../scripts/co_rl/train_tita_gluon_high_level.py   |    2 +-
+ .../scripts/gluon/smoke_gluon_asset.py             |    0
+ .../scripts/gluon/smoke_gluon_reach_env.py         |    0
+ {lab => isaac_lab}/scripts/list_envs.py            |    0
+ .../scripts/np3o/dump_isaac_tita_physics.py        |    0
+ .../scripts/np3o/dump_tita_actuator_response.py    |    0
+ .../scripts/np3o/dump_tita_policy_trace.py         |    0
+ .../scripts/np3o/estimate_base_vel_from_wheels.py  |    0
+ {lab => isaac_lab}/scripts/np3o/eval_behavior.py   |    0
+ .../scripts/np3o/inject_mujoco_state_tita.py       |    0
+ {lab => isaac_lab}/scripts/np3o/play.py            |    0
+ .../scripts/np3o/rollout_mujoco_injected_tita.py   |    0
+ .../scripts/np3o/run_isaac_tita_response_tests.py  |    0
+ {lab => isaac_lab}/scripts/np3o/train.py           |    0
+ {lab => isaac_lab}/scripts/random_agent.py         |    0
+ .../scripts/rsl_rl/compare_export_samples.py       |    0
+ {lab => isaac_lab}/scripts/rsl_rl/eval_behavior.py |    0
+ .../scripts/rsl_rl/eval_estimator_accuracy.py      |    0
+ .../scripts/rsl_rl/expose_estimator_output.py      |    0
+ {lab => isaac_lab}/scripts/rsl_rl/play.py          |    0
+ {lab => isaac_lab}/scripts/rsl_rl/train.py         |    0
+ .../scripts/rsl_rl/validate_export_parity.py       |    0
+ .../scripts/rsl_rl/verify_diagnostic_onnx.py       |    0
+ {lab => isaac_lab}/scripts/zero_agent.py           |    0
+ lab/ddt_lab/scripts/flash_sac/play.py              |  104 --
+ mj_lab/README.md                                   |  314 +++++
+ mj_lab/__init__.py                                 |    0
+ mj_lab/checkpoint.py                               |  135 +++
+ mj_lab/flash_sac.py                                |   65 ++
+ mj_lab/pyproject.toml                              |   14 +
+ mj_lab/robots/__init__.py                          |    0
+ mj_lab/robots/tita/__init__.py                     |    0
+ mj_lab/robots/tita/flat_env_cfg.py                 |  119 ++
+ .../robots/tita/flat_env_roll_pitch_height_cfg.py  |  182 +++
+ mj_lab/robots/tita/height_only_env_cfg.py          |  111 ++
+ mj_lab/robots/tita/inline_env_cfg.py               |   46 +
+ mj_lab/robots/tita/mdp.py                          |  470 ++++++++
+ mj_lab/robots/tita/robot_cfg.py                    |   55 +
+ mj_lab/robots/tita/sit_stand_env_cfg.py            |   87 ++
+ mj_lab/robots/tita/stand_one_leg_anchor_env_cfg.py |  212 ++++
+ mj_lab/robots/tita/stand_one_leg_env_cfg.py        |   78 ++
+ .../robots/tita/stand_one_leg_reference_env_cfg.py |  125 ++
+ mj_lab/robots/tita/support_command_env_cfg.py      |  200 ++++
+ mj_lab/robots/tita/walk_env_cfg.py                 |   59 +
+ mj_lab/scripts/__init__.py                         |    0
+ mj_lab/scripts/play.py                             |  204 ++++
+ mj_lab/scripts/train.py                            |  247 ++++
+ scripts/agent-check.sh                             |    2 +-
+ scripts/queue_mjlab_flash_sac.py                   |  163 +++
+ scripts/test-fast.sh                               |    4 +-
+ sim2sim/README.md                                  |  181 ++-
+ sim2sim/lqr/report.py                              |    2 +-
+ sim2sim/lqr/runtime.py                             |    2 +-
+ sim2sim/robot/tita/launch/pose_preview.launch.py   |   70 ++
+ sim2sim/robot/tita/mujoco_corrected/robot.xml      |  247 ++++
+ sim2sim/robot/tita/mujoco_corrected/scene.xml      |   39 +
+ sim2sim/robot/tita/rviz/pose_preview.rviz          |   44 +
+ sim2sim/sim2sim_ros2_jazzy/config/tita.yaml        |   14 +-
+ .../sim2sim_ros2_jazzy/launch/sim2sim_finetune.py  |    4 +-
+ .../sim2sim_ros2_jazzy/adapter.py                  |   91 +-
+ .../sim2sim_ros2_jazzy/checkpoint.py               |  153 ++-
+ .../sim2sim_ros2_jazzy/sim2sim_ros2_jazzy/cli.py   |   60 +-
+ .../sim2sim_ros2_jazzy/mujoco_env.py               |   34 +
+ .../sim2sim_ros2_jazzy/sim2sim_node.py             |  174 ++-
+ .../sim2sim_ros2_jazzy/state_machine.py            |    7 +-
+ test/analyze_mjlab_isaac_training.py               |  153 +++
+ test/build_tita_gluon_cartesian_hub_graph.py       |    2 +-
+ test/check_basecom_shift_task.py                   |    2 +-
+ test/check_heading_drift_task.py                   |    2 +-
+ test/check_heading_obs_task.py                     |    2 +-
+ test/check_posknee_ma2_task.py                     |    2 +-
+ test/check_real2sim_task_events.py                 |    2 +-
+ test/check_roll_pitch_height_feasibility.py        |  151 +++
+ test/check_sphere_wheel_tasks.py                   |    2 +-
+ test/check_tita_flat_promotion_runtime.py          |    2 +-
+ test/check_training_position_reference.py          |    4 +-
+ test/diff_flash_env_cfg_vs_checkpoint.py           |    4 +-
+ test/eval_flash_pv_models.py                       |    2 +-
+ test/eval_flash_sac_noise_bounds.py                |    2 +-
+ test/eval_sequential_inspection_scheduler_grid.py  |    2 +-
+ test/eval_tita_gluon_high_level_policy.py          |    2 +-
+ ...l_tita_gluon_sequential_inspection_baselines.py |    4 +-
+ test/eval_tita_gluon_teacher_checkpoints.py        |    2 +-
+ test/eval_tita_gluon_zero_command_stance.py        |    4 +-
+ test/eval_tita_ppo_flash_comparison.py             |    2 +-
+ test/evaluate_one_leg_anchor.py                    |  169 +++
+ test/evaluate_posknee_checkpoints.py               |    2 +-
+ test/export_ab_checkpoints.py                      |    8 +-
+ test/isaac_joint_friction_semantics_check.py       |    2 +-
+ test/probe_tita_ppo_action_ranges.py               |    2 +-
+ test/render_real2sim_progression.py                |    2 +-
+ test/run_one_leg_anchor_experiment.py              |  190 ++++
+ test/screen_sphere_wheel_runs.py                   |    2 +-
+ test/test_checkpoint_auto_position.py              |    4 +-
+ test/test_flash_sac_action_ranges.py               |    4 +-
+ test/test_flash_sac_adapter.py                     |    2 +-
+ test/test_flash_sac_compile_checkpoint.py          |    2 +-
+ test/test_flash_sac_config.py                      |    8 +-
+ test/test_flash_sac_entrypoints.py                 |    6 +-
+ test/test_flash_sac_export.py                      |    2 +-
+ test/test_flash_sac_learning.py                    |    2 +-
+ test/test_flash_sac_velocity_overlay.py            |  110 ++
+ test/test_flash_sac_video.py                       |  143 +++
+ test/test_flash_sac_wandb.py                       |   12 +-
+ test/test_flash_sac_warm_start.py                  |  106 ++
+ test/test_gluon_asset_runtime.py                   |    2 +-
+ test/test_gluon_ik_math.py                         |    2 +-
+ test/test_gluon_jacobian_runtime.py                |    2 +-
+ test/test_gluon_urdf_usd_equivalence.py            |    2 +-
+ test/test_height_only_queue.py                     |  105 ++
+ test/test_mjlab_height_only.py                     |  157 +++
+ test/test_mjlab_inline.py                          |  211 ++++
+ test/test_mjlab_one_leg_anchor.py                  |  207 ++++
+ test/test_mjlab_one_leg_reference.py               |  140 +++
+ test/test_mjlab_one_leg_right_reference.py         |   85 ++
+ test/test_mjlab_roll_pitch_height.py               |  177 +++
+ test/test_mjlab_sit_stand.py                       |  232 ++++
+ test/test_mjlab_stand_one_leg.py                   |  209 ++++
+ test/test_mjlab_support_command.py                 |  217 ++++
+ test/test_mjlab_support_velocity.py                |  124 ++
+ test/test_mjlab_tita.py                            |  509 +++++++++
+ test/test_mjlab_training_queue.py                  |  133 +++
+ test/test_one_leg_sequential_runner.py             |   64 ++
+ test/test_pose_stop_latch.py                       |  103 ++
+ test/test_ramped_velocity_command.py               |    2 +-
+ test/test_residual_wheel_pd.py                     |    2 +-
+ test/test_sequential_inspection_go_no_go.py        |    8 +-
+ test/test_sim2sim_checkpoint_adapter.py            |   20 +-
+ test/test_sim2sim_command_limits.py                |   70 ++
+ test/test_sim2sim_finetune.py                      |    2 +-
+ test/test_sim2sim_heading_error.py                 |    2 +-
+ test/test_sim2sim_hybrid.py                        |  128 +++
+ test/test_sim2sim_pose.py                          |   97 ++
+ test/test_sim2sim_ppo_parity.py                    |    4 +-
+ test/test_sim2sim_walk.py                          |  186 +++
+ test/test_sim2sim_walk_state_machine.py            |   55 +
+ test/test_standing_height_only.py                  |   58 +
+ test/test_tita_gluon_curriculum_arm_smoke.py       |    2 +-
+ test/test_tita_gluon_init_height_command.py        |    2 +-
+ .../test_tita_gluon_inspection_curriculum_smoke.py |    2 +-
+ test/test_tita_gluon_moo_smoke.py                  |    2 +-
+ test/test_tita_gluon_random_arm_smoke.py           |    2 +-
+ ...a_gluon_sequential_inspection_executor_smoke.py |    2 +-
+ test/test_tita_my_flat_config_refactor.py          |    4 +-
+ test/test_tita_training_asset.py                   |    4 +-
+ test/train_tita_ppo_comparison.py                  |    2 +-
+ third_party/mjlab                                  |    1 +
+ 587 files changed, 16973 insertions(+), 265 deletions(-)
+
+==================================================
+Diff integrity check
+==================================================
+PASS: No whitespace or conflict-marker errors.
+
+==================================================
+Fast tests
+==================================================
+[TEST-FAST] Checking Python syntax across isaac_lab, mj_lab, sim2sim and test...
+[TEST-FAST] Syntax Check Results: 647 passed, 0 failed.
+[TEST-FAST] Checking XML / URDF files...
+[TEST-FAST] XML Parse Check: 8 URDF files OK.
+[TEST-FAST] All fast tests passed.
+
+==================================================
+Experiment Log Directory Check
+==================================================
+PASS: docs/exp/ directory naming convention OK.
+
+==================================================
+Experiment Log Existence Check
+==================================================
+PASS: Code changes accompanied by experiment log entry in docs/exp/.
+
+==================================================
+Final result
+==================================================
+PASS

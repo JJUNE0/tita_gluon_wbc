@@ -17,9 +17,9 @@ sys.path.insert(0, str(REPO / 'sim2sim/sim2sim_ros2_jazzy'))
 from sim2sim_ros2_jazzy.adapter import ActionAdapter, LegActionFilter, ObservationBuilder, ObsState, NATIVE_JOINTS
 from sim2sim_ros2_jazzy.checkpoint import describe_checkpoint, read_yaml, observation_layout, action_layout
 
-RUN = REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_180212_290240'
+RUN = REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_180212_290240'
 NEW = RUN / 'model_75000'
-OLD = REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_201940_278440/model_80000'
+OLD = REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_201940_278440/model_80000'
 PPO = REPO / 'docs/exp/2026-10-14/tita_ppo33_flash_comparison_151238/model_1999.pt'
 
 

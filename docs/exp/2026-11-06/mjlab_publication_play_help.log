@@ -1,0 +1,22 @@
+usage: play.py [-h] --checkpoint CHECKPOINT [--num_envs NUM_ENVS]
+               [--steps STEPS] [--device DEVICE] [--headless] [--video VIDEO]
+               [--video_result VIDEO_RESULT] [--command VX VY WZ]
+               [--pose-command ROLL PITCH HEIGHT] [--support-mode {0,1,2}]
+
+VALIDATION_SIM: deterministic mjlab checkpoint playback and vx/vy video.
+
+options:
+  -h, --help            show this help message and exit
+  --checkpoint CHECKPOINT
+  --num_envs NUM_ENVS
+  --steps STEPS
+  --device DEVICE
+  --headless
+  --video VIDEO
+  --video_result VIDEO_RESULT
+  --command VX VY WZ
+  --pose-command ROLL PITCH HEIGHT
+                        Fixed roll/pitch targets in radians and base_link
+                        height in meters
+  --support-mode {0,1,2}
+                        Fixed support goal: 0 left, 1 right, 2 both

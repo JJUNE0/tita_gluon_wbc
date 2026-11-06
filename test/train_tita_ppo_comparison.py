@@ -12,7 +12,7 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "lab/ddt_lab/scripts/flash_sac"))
+sys.path.insert(0, str(ROOT / "isaac_lab/ddt_lab/scripts/flash_sac"))
 from runtime import read_checkpoint, setup_imports, sha256
 
 

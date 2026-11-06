@@ -9,11 +9,11 @@ ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || {
 
 cd "$ROOT"
 
-echo "[TEST-FAST] Checking Python Syntax across lab and sim2sim..."
+echo "[TEST-FAST] Checking Python syntax across isaac_lab, mj_lab, sim2sim and test..."
 python3 -c "
 import py_compile, glob
 
-files = glob.glob('lab/**/*.py', recursive=True) + glob.glob('sim2sim/**/*.py', recursive=True) + glob.glob('test/**/*.py', recursive=True)
+files = glob.glob('isaac_lab/**/*.py', recursive=True) + glob.glob('mj_lab/**/*.py', recursive=True) + glob.glob('sim2sim/**/*.py', recursive=True) + glob.glob('test/**/*.py', recursive=True)
 passed = 0
 failed = 0
 for f in files:

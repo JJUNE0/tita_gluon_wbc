@@ -1,12 +1,20 @@
 # Shared MuJoCo model and read-only mirror pose. Policy/PD settings come from the checkpoint.
 model:
-  scene_xml: tita_gluon_ws/src/ddt_ros2_control/urdfs/tita_description/mujoco_corrected/scene.xml
+  scene_xml: sim2sim/robot/tita/mujoco_corrected/scene.xml
+  # Effective sliding friction for terrain contacts, including the wheels.
+  # Dimensionless; restart sim2sim after editing. Training DR range: 0.2–1.6.
+  ground_friction: 0.8
 control:
   sim_timestep: 0.005
   decimation: 4
+  # Total body tilt from vertical; support-policy RL only. Restart after editing.
+  support_fall_tilt_deg: 55.0
 command:
-  max_lin_x: 0.2
-  max_ang_z: 0.3
+  # Simulation command caps; intersected with the checkpoint's trained ranges.
+  # Restart sim2sim after editing. Linear units: m/s; angular units: rad/s.
+  max_lin_x: 1.5
+  max_lin_y: 0.0
+  max_ang_z: 3.0
 robot:
   default_joint_angles: [0.1, 0.8, -1.5, 0.0, 0.1, 0.8, -1.5, 0.0]
   reset_base_pos: [0.0, 0.0, 0.4]

@@ -13,7 +13,7 @@ from torch._dynamo.eval_frame import DisableContext, OptimizedModule
 
 
 REPO = Path(__file__).resolve().parents[1]
-NETWORK_PATH = REPO / "lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/network.py"
+NETWORK_PATH = REPO / "isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl/agents/utils/network.py"
 SPEC = importlib.util.spec_from_file_location("flash_sac_checkpoint_network", NETWORK_PATH)
 MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)

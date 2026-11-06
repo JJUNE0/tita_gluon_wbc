@@ -9,7 +9,7 @@ import torch
 
 
 ROOT = Path(__file__).resolve().parents[1]
-LOCOMOTION = ROOT / "lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion"
+LOCOMOTION = ROOT / "isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion"
 
 
 class UniformVelocityCommandStub:

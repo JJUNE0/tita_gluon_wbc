@@ -35,6 +35,8 @@ class ObsState:
     command: np.ndarray
     last_action: np.ndarray
     base_lin_vel_b: np.ndarray | None = None
+    support_mode: int | None = None
+    pose_command: np.ndarray | None = None
 
 
 class ObservationBuilder:
@@ -45,8 +47,11 @@ class ObservationBuilder:
         self.vel_defaults = np.asarray(cfg['robot']['default_joint_velocities'], dtype=np.float32)
         self.position_term = next((term for term in self.layout if term['kind'] == 'wheel_position_error'), None)
         self.heading_term = next((term for term in self.layout if term['kind'] == 'heading_error'), None)
+        self.gait_cfg = cfg.get('gait_command')
+        self.support_cfg = cfg.get('support_command')
+        self.pose_cfg = cfg.get('pose_command')
+        self.dt = cfg['control']['sim_timestep'] * cfg['control']['decimation']
         if self.heading_term is not None:
-            self.dt = cfg['control']['sim_timestep'] * cfg['control']['decimation']
             self.heading_warmup = max(1, round(self.heading_term['params']['warmup_s'] / self.dt))
         # Gyro z bias [rad/s] subtracted before integration; the robot uses its pre-RL stationary estimate.
         self.gyro_bias = 0.
@@ -56,8 +61,44 @@ class ObservationBuilder:
         self.previous_wheels = None
         self.unwrapped_wheels = None
         self.reference = None
+        self.previous_wheel_gait = False
+        self.position_latched = False
         self.heading_hold = 0
         self.heading = 0.
+        self.gait_phase = np.float32(0.)
+        self.gait_elapsed = np.float32(0.)
+        self.gait_steps = 0
+        self.gait_enabled = False
+
+    @property
+    def next_gait_elapsed(self):
+        if self.gait_cfg is not None and self.gait_cfg.get('clock') == 'episode_steps':
+            return np.float32(self.gait_steps + 1) * np.float32(self.dt)
+        return np.float32(self.gait_elapsed + np.float32(self.dt))
+
+    def advance_gait(self, command):
+        """Advance once after an RL physics step, as the training command manager does."""
+        if self.gait_cfg is None:
+            return
+        cfg = self.gait_cfg
+        self.gait_elapsed = self.next_gait_elapsed
+        self.gait_steps += 1
+        moving = np.linalg.norm(command[:2]) > cfg['linear_threshold'] or abs(command[2]) > cfg['yaw_threshold']
+        if cfg.get('straight_only', False):
+            moving = (abs(command[0]) > cfg['linear_threshold']
+                      and abs(command[1]) <= cfg['linear_threshold']
+                      and abs(command[2]) <= cfg['yaw_threshold'])
+        self.gait_enabled = (moving or cfg['step_in_place']) and self.gait_elapsed > cfg['settle_time_s']
+        if self.gait_enabled:
+            frequency = np.float32(sum(cfg['frequency_range_hz']) / 2)
+            self.gait_phase = (self.gait_phase + frequency * np.float32(self.dt)) % np.float32(1.)
+
+    def gait_command(self):
+        cfg = self.gait_cfg
+        phase = 2 * np.pi * self.gait_phase
+        return np.array([float(self.gait_enabled), np.sin(phase) * self.gait_enabled,
+                         np.cos(phase) * self.gait_enabled,
+                         sum(cfg['frequency_range_hz']) / 2, cfg['stance_fraction']], dtype=np.float32)
 
     def wheel_position_error(self, state):
         params = self.position_term['params']
@@ -78,6 +119,26 @@ class ObservationBuilder:
                 <= np.asarray(params['zero_thresholds'], dtype=np.float32)).all()
         if self.reference is None or not zero:
             self.reference = distance
+        if params.get('gait_name') is not None:
+            # Discard walking motion, including the interval immediately
+            # before the first standing observation; anchor at this stop.
+            if self.gait_enabled or self.previous_wheel_gait:
+                self.reference = distance
+            self.previous_wheel_gait = self.gait_enabled
+            zero = zero and not self.gait_enabled
+        if params.get('velocity_thresholds') is not None:
+            linear_velocity = np.asarray(state.base_lin_vel_b, dtype=np.float32)
+            angular_velocity = np.asarray(state.base_ang_vel, dtype=np.float32)
+            if linear_velocity.shape != (3,) or angular_velocity.shape != (3,) or not all(np.isfinite(v).all() for v in (linear_velocity, angular_velocity)):
+                raise ValueError('Velocity-gated wheel position error requires finite body linear/angular velocity')
+            linear, angular = params['velocity_thresholds']
+            active = zero and np.linalg.norm(linear_velocity[:2]) < linear and abs(angular_velocity[2]) < angular
+            if not active or not self.position_latched:
+                self.reference = distance
+            self.position_latched = active
+            zero = active
+        if params.get('moving_anchor', False):
+            self.reference = np.clip(self.reference, distance - params['clip_m'], distance + params['clip_m'])
         error = distance - self.reference if zero else 0.
         return np.array([np.clip(error, -params['clip_m'], params['clip_m'])], dtype=np.float32)
 
@@ -110,6 +171,21 @@ class ObservationBuilder:
             values['wheel_position_error'] = self.wheel_position_error(state)
         if self.heading_term is not None:
             values['heading_error'] = self.heading_error(state)
+        if self.gait_cfg is not None:
+            values['gait'] = self.gait_command()
+        if self.support_cfg is not None:
+            mode = self.support_cfg['default_mode'] if state.support_mode is None else state.support_mode
+            if isinstance(mode, bool) or not isinstance(mode, (int, np.integer)) or mode not in (0, 1, 2):
+                raise ValueError('Support mode must be integer 0, 1 or 2')
+            values['support_mode'] = np.eye(3, dtype=np.float32)[mode]
+        if self.pose_cfg is not None:
+            pose = np.asarray([0., 0., self.pose_cfg['nominal_height']]
+                              if state.pose_command is None else state.pose_command, dtype=np.float32)
+            bounds = np.asarray([self.pose_cfg[key] for key in ('roll_range', 'pitch_range', 'height_range')], dtype=np.float32)
+            if (pose.shape != (3,) or not np.isfinite(pose).all()
+                    or np.any(pose < bounds[:, 0]) or np.any(pose > bounds[:, 1])):
+                raise ValueError('Pose command must be finite [roll rad, pitch rad, height m] within trained ranges')
+            values['pose_commands'] = pose
         parts = []
         for term in self.layout:
             value = np.asarray(values[term['kind']], dtype=np.float32).copy()
@@ -183,6 +259,7 @@ class ActionAdapter:
         self.order = [NATIVE_JOINTS.index(term['joint']) for term in terms]
         self.scale = np.asarray([term['scale'] for term in terms], dtype=np.float32)
         self.offset = np.asarray([term['offset'] for term in terms], dtype=np.float32)
+        self.gait_gate = np.asarray([term.get('gate') == 'gait_disabled' for term in terms])
         self.clip = np.asarray([term['clip'] or [-np.inf, np.inf] for term in terms])
         self.velocity = np.zeros(8, dtype=bool)
         self.velocity[self.order] = [term['kind'] == 'velocity' for term in terms]
@@ -190,17 +267,23 @@ class ActionAdapter:
         self.kd = np.asarray(cfg['robot']['joint_kd'], dtype=np.float32)
         self.limit = np.asarray(cfg['robot']['torque_limit'], dtype=np.float32)
 
-    def targets(self, action):
+    def targets(self, action, gait_enabled=None):
         action = np.asarray(action, dtype=np.float32)
         if action.shape != (8,) or not np.isfinite(action).all():
             raise ValueError('Invalid or non-finite policy action')
         processed = np.clip(action * self.scale + self.offset, self.clip[:, 0], self.clip[:, 1])
+        if self.gait_gate.any():
+            if gait_enabled is None or float(gait_enabled) not in (0., 1.):
+                raise ValueError('Gated wheel actions require the current gait-enabled flag (0 or 1)')
+            # Native mjlab gates after scale/offset/clipping, before joint PD.
+            # Do not mask raw policy actions: last_action must retain them.
+            processed[self.gait_gate] *= 1. - float(gait_enabled)
         targets = np.empty(8, dtype=np.float32)
         targets[self.order] = processed
         return targets
 
-    def compute(self, action, joint_pos, joint_vel):
-        targets = self.targets(action)
+    def compute(self, action, joint_pos, joint_vel, gait_enabled=None):
+        targets = self.targets(action, gait_enabled=gait_enabled)
         position_error = np.where(self.velocity, 0., targets - joint_pos)
         velocity_target = np.where(self.velocity, targets, 0.)
         torque = self.kp * position_error + self.kd * (velocity_target - joint_vel)

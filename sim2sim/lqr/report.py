@@ -337,7 +337,7 @@ def main():
               '계수, covariance, singular values, gain, prediction error, gain 거부 사유. 초기 중단된 trace도 보존한다.', '',
               '저장소 루트에서 다음을 실행한다. Output은 비어 있는 새 경로여야 한다.', '',
               '```bash',
-              'python3 sim2sim/sim2sim_ros2_jazzy/launch/sim2sim.launch.py --ckpt lab/ddt_lab/logs/flash_sac/tita_flash_sac_172127_928297/model_100000 --headless --steps 250',
+              'python3 sim2sim/sim2sim_ros2_jazzy/launch/sim2sim.launch.py --ckpt isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_172127_928297/model_100000 --headless --steps 250',
               'source /opt/ros/jazzy/setup.bash',
               'ROS_DOMAIN_ID=87 ROS_LOCALHOST_ONLY=1 ROS_LOG_DIR=/tmp/lqr_ros_logs /home/cocel/venvs/cosim_ros2_jazzy/bin/python test/test_lqr_baseline_gate.py',
               '/home/cocel/venvs/cosim_ros2_jazzy/bin/python test/test_lqr_adaptive.py',

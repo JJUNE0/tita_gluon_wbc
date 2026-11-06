@@ -16,7 +16,7 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / 'sim2sim/sim2sim_ros2_jazzy'))
 from sim2sim_ros2_jazzy.adapter import ObservationBuilder, ObsState  # noqa: E402
 
-CONFIG = REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_102630_755853/model_100000/sim2sim/actor/config.json'
+CONFIG = REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_102630_755853/model_100000/sim2sim/actor/config.json'
 
 
 def main() -> None:

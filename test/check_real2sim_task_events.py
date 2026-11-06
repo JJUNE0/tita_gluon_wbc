@@ -29,7 +29,7 @@ def main() -> None:
                         help='check the fraction of envs whose shared leg factor is exactly 1.0 (+-0.08)')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    sys.path.insert(0, str(REPO / 'lab/ddt_lab/scripts/flash_sac'))
+    sys.path.insert(0, str(REPO / 'isaac_lab/ddt_lab/scripts/flash_sac'))
     from runtime import setup_imports
     setup_imports(False)
     from isaaclab.app import AppLauncher

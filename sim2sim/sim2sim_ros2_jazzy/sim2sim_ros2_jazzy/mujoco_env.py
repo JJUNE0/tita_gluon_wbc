@@ -16,6 +16,35 @@ class TitaMujocoEnv:
         scene = Path(cfg['model']['scene_xml'])
         scene = scene if scene.is_absolute() else REPO / scene
         self.model = mujoco.MjModel.from_xml_path(str(scene))
+        friction = cfg['model'].get('ground_friction')
+        if friction is not None:
+            if isinstance(friction, bool) or not isinstance(friction, (int, float)) or not np.isfinite(friction) or friction < 0:
+                raise ValueError('model.ground_friction must be finite and non-negative')
+            ground = (self.model.geom_bodyid == 0) & ((self.model.geom_contype != 0) | (self.model.geom_conaffinity != 0))
+            # Higher priority makes this the effective contact coefficient, even below the wheel's own friction.
+            self.model.geom_priority[ground] = int(self.model.geom_priority.max()) + 1
+            self.model.geom_friction[ground, 0] = friction
+            self.model.geom_condim[ground] = np.maximum(self.model.geom_condim[ground], 3)
+        if cfg['model'].get('flat_ground'):
+            floor = self.model.geom('floor').id
+            obstacles = (self.model.geom_bodyid == 0) & (np.arange(self.model.ngeom) != floor)
+            self.model.geom_contype[obstacles] = self.model.geom_conaffinity[obstacles] = 0
+            self.model.geom_rgba[obstacles, 3] = 0.
+        if cfg['model'].get('wheel_collision') == 'sphere':
+            for side in ('left', 'right'):
+                body = self.model.body(f'{side}_leg_4').id
+                geoms = [g for g in range(self.model.ngeom) if self.model.geom_bodyid[g] == body
+                         and (self.model.geom_contype[g] or self.model.geom_conaffinity[g])]
+                if len(geoms) != 1:
+                    raise ValueError(f'Expected one wheel collision for {side}')
+                geom = geoms[0]
+                if self.model.geom_type[geom] not in (mujoco.mjtGeom.mjGEOM_CYLINDER, mujoco.mjtGeom.mjGEOM_SPHERE):
+                    raise ValueError(f'Unsupported wheel collision for {side}')
+                radius = float(self.model.geom_size[geom, 0])
+                self.model.geom_type[geom] = mujoco.mjtGeom.mjGEOM_SPHERE
+                self.model.geom_size[geom] = [radius, 0., 0.]
+                self.model.geom_rbound[geom] = radius
+                self.model.geom_aabb[geom] = [0., 0., 0., radius, radius, radius]
         self.data = mujoco.MjData(self.model)
         self.model.opt.timestep = float(cfg['control']['sim_timestep'])
         self.decimation = int(cfg['control']['decimation'])
@@ -33,6 +62,11 @@ class TitaMujocoEnv:
         if viewer_enabled:
             import mujoco.viewer
             self.viewer = mujoco.viewer.launch_passive(self.model, self.data, show_left_ui=False, show_right_ui=False)
+            if cfg.get('gait_command'):
+                self.viewer.cam.type = mujoco.mjtCamera.mjCAMERA_TRACKING
+                self.viewer.cam.trackbodyid = self.model.body('base_link').id
+                self.viewer.cam.distance = 1.5
+                self.viewer.cam.elevation = -20.
             self._viewer_threads = [thread for thread in threading.enumerate()
                                     if getattr(getattr(thread, '_target', None), '__module__', None) == 'mujoco.viewer']
 

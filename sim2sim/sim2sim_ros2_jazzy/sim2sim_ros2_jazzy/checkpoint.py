@@ -98,11 +98,30 @@ def observation_layout(group, captured, asset_joints):
             'name': name, 'kind': functions[function],
             'scale': resolved.get('scale', scale), 'clip': resolved.get('clip', term.get('clip')),
         }
-        if item['kind'] == 'wheel_position_error':
+        if item['kind'] == 'commands':
+            command = term.get('params', {}).get('command_name')
+            if command not in ('base_velocity', 'gait', 'support', 'base_pose'):
+                raise ValueError(f'Unsupported generated command: {command}')
+            item['kind'] = {'gait': 'gait', 'support': 'support_mode', 'base_pose': 'pose_commands'}.get(command, 'commands')
+            item['size'] = 5 if command == 'gait' else 3
+        elif item['kind'] == 'wheel_position_error':
             params = term['params']
             if params['command_name'] != 'base_velocity' or params.get('asset_cfg', {}).get('name', 'robot') != 'robot':
                 raise ValueError('WheelPositionError requires robot encoders and base_velocity commands')
             item['params'] = {key: params[key] for key in ('radius', 'clip_m', 'zero_thresholds')}
+            if params.get('gait_name') is not None:
+                if params['gait_name'] != 'gait':
+                    raise ValueError('WheelPositionError only supports the saved gait command')
+                item['params']['gait_name'] = params['gait_name']
+            if params.get('velocity_thresholds') is not None:
+                thresholds = params['velocity_thresholds']
+                if len(thresholds) != 2 or not all(math.isfinite(v) and v > 0 for v in thresholds):
+                    raise ValueError('Invalid WheelPositionError velocity thresholds')
+                item['params']['velocity_thresholds'] = thresholds
+            if 'moving_anchor' in params:
+                if not isinstance(params['moving_anchor'], bool):
+                    raise ValueError('WheelPositionError moving_anchor must be boolean')
+                item['params']['moving_anchor'] = params['moving_anchor']
             numbers = [params['radius'], params['clip_m'], *params['zero_thresholds']]
             if (len(params['zero_thresholds']) != 3 or not all(math.isfinite(v) for v in numbers)
                     or params['radius'] <= 0 or params['clip_m'] <= 0 or min(params['zero_thresholds']) < 0):
@@ -138,18 +157,29 @@ def action_layout(action_cfg, captured, asset_joints, defaults):
         if term is None:
             continue
         kind = term['class_type'].replace(':', '.').split('.')[-1]
-        if kind not in ('JointPositionAction', 'JointVelocityAction', 'MA2JointPositionAction'):
+        if kind not in ('JointPositionAction', 'JointVelocityAction', 'MA2JointPositionAction', 'GaitGatedWheelVelocityAction'):
             raise ValueError(f'Unsupported action term: {name} / {kind}')
+        gated = kind == 'GaitGatedWheelVelocityAction'
+        if gated and (term.get('gait_name') != 'gait' or term.get('wheel_enable') != 'gait_disabled'):
+            raise ValueError('Gated wheel action requires the saved gait-disabled mask')
         names = captured_actions.get(name, {}).get('joints') or _matches(
             term['joint_names'], asset_joints, term.get('preserve_order', False))
         for joint in names:
-            velocity = kind == 'JointVelocityAction'
+            velocity = kind in ('JointVelocityAction', 'GaitGatedWheelVelocityAction')
             offset = _joint_value(defaults['joint_vel'], joint, 0.) if velocity else defaults['joint_pos'][joint]
             if not term.get('use_default_offset', True):
                 offset = _joint_value(term.get('offset'), joint, 0.)
             actions.append({'joint': joint, 'kind': 'velocity' if velocity else 'position',
                             'scale': float(_joint_value(term['scale'], joint)), 'offset': float(offset),
                             'clip': _joint_value(term.get('clip'), joint)})
+            if gated:
+                if joint not in (NATIVE_JOINTS[3], NATIVE_JOINTS[7]):
+                    raise ValueError('Gait-gated velocity actions are supported only for wheel joints')
+                actions[-1]['gate'] = 'gait_disabled'
+            elif term.get('wheel_enable') is not None:
+                if kind != 'JointVelocityAction' or term['wheel_enable'] != 'always' or joint not in (NATIVE_JOINTS[3], NATIVE_JOINTS[7]):
+                    raise ValueError('Always-enabled wheel metadata requires plain wheel velocity actions')
+                actions[-1]['gate'] = 'always'
             if kind == 'MA2JointPositionAction':
                 actions[-1]['filter'] = 'ma2'
     if len(actions) != 8 or {term['joint'] for term in actions} != set(NATIVE_JOINTS):
@@ -162,6 +192,10 @@ def action_layout(action_cfg, captured, asset_joints, defaults):
 
 def simulation_config(env, defaults, observations):
     cfg = read_yaml(PACKAGE / 'config/tita.yaml')
+    friction = cfg['model'].get('ground_friction')
+    if friction is not None and (isinstance(friction, bool) or not isinstance(friction, (int, float))
+                                 or not math.isfinite(friction) or friction < 0):
+        raise ValueError(f'Invalid tita.yaml model.ground_friction: {friction}')
     robot = cfg['robot']
     robot['default_joint_angles'] = [defaults['joint_pos'][name] for name in NATIVE_JOINTS]
     robot['default_joint_velocities'] = [_joint_value(defaults['joint_vel'], name, 0.) for name in NATIVE_JOINTS]
@@ -178,16 +212,100 @@ def simulation_config(env, defaults, observations):
         effort = act.get('effort_limit_sim')
         robot['torque_limit'].append(_joint_value(act.get('effort_limit') if effort is None else effort, joint))
     cfg['control'].update(sim_timestep=env['sim']['dt'], decimation=env['decimation'])
+    if 'sim_reset_on_policy_entry' in env:
+        if not isinstance(env['sim_reset_on_policy_entry'], bool):
+            raise ValueError('sim_reset_on_policy_entry must be boolean')
+        cfg['sim_reset_on_policy_entry'] = env['sim_reset_on_policy_entry']
     ranges = env['commands']['base_velocity']['ranges']
-    cfg['sim_command_ranges'] = {name: ranges[name] for name in ('lin_vel_x', 'ang_vel_z')}
+    cfg['sim_command_ranges'] = {name: ranges.get(name, [0., 0.]) for name in ('lin_vel_x', 'lin_vel_y', 'ang_vel_z')}
+    # Runtime limits are configured in tita.yaml and cannot expand the trained range.
+    cap_names = {'lin_vel_x': 'max_lin_x', 'lin_vel_y': 'max_lin_y', 'ang_vel_z': 'max_ang_z'}
     for name, bounds in cfg['sim_command_ranges'].items():
         if len(bounds) != 2 or not all(math.isfinite(value) for value in bounds) or not bounds[0] <= 0 <= bounds[1]:
             raise ValueError(f'Invalid saved simulation command range: {name} / {bounds}')
+        cap_name = cap_names[name]
+        cap = cfg['command'][cap_name]
+        if isinstance(cap, bool) or not isinstance(cap, (int, float)) or not math.isfinite(cap) or cap < 0:
+            raise ValueError(f'Invalid tita.yaml command limit: {cap_name} / {cap}')
+        cfg['sim_command_ranges'][name] = [max(bounds[0], -cap), min(bounds[1], cap)]
     # Viewer keyboard ramp follows the training command ramp (RampedVelocityCommand.ramp_rate, units/s); None = step.
     ramp = env['commands']['base_velocity'].get('ramp_rate')
-    if ramp is not None and not (math.isfinite(ramp) and ramp > 0):
+    if ramp is not None and not (math.isfinite(ramp) and ramp >= 0):
         raise ValueError(f'Invalid saved command ramp: {ramp}')
-    cfg['sim_command_ramp'] = None if ramp is None else float(ramp)
+    # RampedVelocityCommand uses zero to disable ramping and emit the target immediately.
+    cfg['sim_command_ramp'] = None if ramp is None or ramp == 0 else float(ramp)
+    if any(term['kind'] == 'pose_commands' for term in observations):
+        pose = env['commands'].get('base_pose', {})
+        if (pose.get('class_type') != 'RollPitchHeightCommand' or pose.get('order') != ['roll', 'pitch', 'height']
+                or pose.get('units') != ['rad', 'rad', 'm']):
+            raise ValueError('Invalid saved roll/pitch/height command contract')
+        for name in ('roll_range', 'pitch_range', 'height_range'):
+            bounds = pose.get(name)
+            if (not isinstance(bounds, (list, tuple)) or len(bounds) != 2
+                    or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in bounds)
+                    or bounds[0] > bounds[1]):
+                raise ValueError(f'Invalid saved pose {name}')
+        for name in ('roll_range', 'pitch_range'):
+            if not -math.pi/2 < pose[name][0] <= 0 <= pose[name][1] < math.pi/2:
+                raise ValueError(f'Invalid saved pose {name}: nominal angle must be allowed')
+        nominal = pose.get('nominal_height')
+        if (isinstance(nominal, bool) or not isinstance(nominal, (int, float)) or not math.isfinite(nominal)
+                or not 0 < pose['height_range'][0] <= nominal <= pose['height_range'][1]):
+            raise ValueError('Invalid saved pose nominal height')
+        rates = pose.get('ramp_rates')
+        if (not isinstance(rates, (list, tuple)) or len(rates) != 3
+                or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v <= 0 for v in rates)):
+            raise ValueError('Invalid saved pose ramp rates')
+        cfg['pose_command'] = {key: pose[key] for key in (
+            'roll_range', 'pitch_range', 'height_range', 'nominal_height', 'ramp_rates')}
+        motion = pose.get('height_motion_range')
+        if motion is not None:
+            if (not isinstance(motion, (list, tuple)) or len(motion) != 2
+                    or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in motion)
+                    or not pose['height_range'][0] <= motion[0] < motion[1] <= pose['height_range'][1]):
+                raise ValueError('Invalid saved pose height motion range')
+            cfg['pose_command']['height_motion_range'] = motion
+    if any(term['kind'] == 'support_mode' for term in observations):
+        support = env['commands']['support']
+        if (support.get('class_type') != 'SupportModeCommand' or support.get('encoding') != 'one_hot'
+                or support.get('mode_names') != ['left', 'right', 'both']
+                or type(support.get('default_mode')) is not int or support['default_mode'] not in (0, 1, 2)):
+            raise ValueError('Invalid saved support-mode command')
+        cfg['support_command'] = dict(support)
+    if any(term['kind'] == 'gait' for term in observations):
+        gait = env['commands']['gait']
+        if (gait['class_type'].replace(':', '.').split('.')[-1] != 'WalkGaitCommand'
+                or gait['velocity_command_name'] != 'base_velocity'):
+            raise ValueError('Only the saved WalkGaitCommand driven by base_velocity is supported')
+        cfg['gait_command'] = {name: gait[name] for name in (
+            'frequency_range_hz', 'stance_fraction', 'settle_time_s',
+            'linear_threshold', 'yaw_threshold', 'step_in_place')}
+        if 'straight_only' in gait:
+            if not isinstance(gait['straight_only'], bool):
+                raise ValueError('Gait straight_only must be boolean')
+            cfg['gait_command']['straight_only'] = gait['straight_only']
+        if env.get('backend') == 'mjlab':
+            cfg['gait_command']['clock'] = 'episode_steps'
+        low, high = gait['frequency_range_hz']
+        numbers = [low, high, gait['stance_fraction'], gait['settle_time_s'], gait['linear_threshold'], gait['yaw_threshold']]
+        if (not all(math.isfinite(value) for value in numbers) or not 0 < low <= high
+                or not 0.5 <= gait['stance_fraction'] < 1 or min(numbers[3:]) < 0
+                or not isinstance(gait['step_in_place'], bool)):
+            raise ValueError('Invalid saved walking gait parameters')
+        settle = env['commands']['base_velocity'].get('initial_phase_time', 0.)
+        if not math.isfinite(settle) or settle < 0:
+            raise ValueError('Invalid saved velocity settle time')
+        cfg['sim_command_initial_phase_time'] = settle
+        # The training converter preserves radii while replacing wheel cylinders.
+        asset = Path(env['scene']['robot'].get('spawn', {}).get('asset_path', '')).name
+        cfg['model']['wheel_collision'] = env['scene']['robot'].get('wheel_collision',
+            'sphere' if asset.startswith('tita_sphere_wheels_') else 'cylinder')
+        cfg['model']['flat_ground'] = env['scene']['terrain']['terrain_type'] == 'plane'
+    if env.get('backend') == 'mjlab':
+        cfg['model']['wheel_collision'] = env['scene']['robot']['wheel_collision']
+        cfg['model']['flat_ground'] = env['scene']['terrain']['terrain_type'] == 'plane'
+    if any(term.get('params', {}).get('gait_name') for term in observations) and 'gait_command' not in cfg:
+        raise ValueError('Gated wheel position error requires a gait observation')
     cfg['policy'] = {'obs_dim': sum(item['size'] for item in observations)}
     return cfg
 
@@ -212,11 +330,30 @@ def describe_checkpoint(path):
     observations = observation_layout(env['observations']['policy'], captured, asset_joints)
     actions = action_layout(env['actions'], captured, asset_joints, defaults)
     cfg = simulation_config(env, defaults, observations)
+    gated = {action['joint'] for action in actions if action.get('gate') == 'gait_disabled'}
+    if gated and ('gait_command' not in cfg or gated != {NATIVE_JOINTS[3], NATIVE_JOINTS[7]}):
+        raise ValueError('Hybrid wheel control requires a gait observation and gates on both wheels')
+    always = {action['joint'] for action in actions if action.get('gate') == 'always'}
+    if always and ('gait_command' not in cfg or always != {NATIVE_JOINTS[3], NATIVE_JOINTS[7]}):
+        raise ValueError('Inline wheel drive requires a gait observation and always-enabled metadata on both wheels')
+    if 'gait_command' in cfg:
+        for action in actions:
+            if action['joint'].endswith('_leg_4'):
+                clip = action['clip']
+                if action.get('gate') in ('gait_disabled', 'always'):
+                    if not math.isfinite(action['scale']) or not math.isfinite(action['offset']):
+                        raise ValueError('Hybrid wheel scale and offset must be finite')
+                    continue
+                if (action['kind'] != 'velocity' or action['scale'] != 0. or action['offset'] != 0.
+                        or (clip is not None and not clip[0] <= 0. <= clip[1])):
+                    raise ValueError('Walking checkpoints require zero wheel velocity targets (scale=0, offset=0)')
     sources = [env_path, agent_path] + ([captured_path] if captured_path else [])
     if flash:
         metadata = json.loads((path.parent / 'ddt.json').read_text())
         if sha256(path) != metadata['actor_sha256']:
             raise ValueError('FlashSAC actor hash mismatch')
+        if metadata.get('backend') == 'mjlab' and sha256(env_path) != metadata.get('playback_config_sha256'):
+            raise ValueError('mjlab playback config hash mismatch')
         sources.append(path.parent / 'ddt.json')
         if metadata['actor_obs_dim'] != cfg['policy']['obs_dim']:
             raise ValueError('Saved environment observation layout does not match FlashSAC actor')
@@ -225,7 +362,7 @@ def describe_checkpoint(path):
         if agent.get('policy', {}).get('class_name') not in ('ActorCritic', 'ActorCriticWithEstimator'):
             raise ValueError('Supported PPO classes: ActorCritic and ActorCriticWithEstimator')
     adapter_sources = (Path(__file__), Path(__file__).with_name('adapter.py'),
-                       REPO / 'lab/ddt_lab/scripts/flash_sac/export.py')
+                       REPO / 'isaac_lab/ddt_lab/scripts/flash_sac/export.py')
     cfg['policy_interface'] = {
         'schema_version': 1, 'observations': observations, 'actions': actions,
         'leg_action_filter': 'ma2_legs' if any(term.get('filter') == 'ma2' for term in actions) else 'none',
@@ -311,7 +448,7 @@ def prepare_checkpoint(checkpoint, validation_python):
     output.mkdir(parents=True, exist_ok=True)
     torch.set_num_threads(2)
     if cfg['policy_interface']['algorithm'] == 'FlashSAC':
-        sys.path.insert(0, str(REPO / 'lab/ddt_lab/scripts/flash_sac'))
+        sys.path.insert(0, str(REPO / 'isaac_lab/ddt_lab/scripts/flash_sac'))
         from export import load_policy
         policy = load_policy(path.parent, metadata)
         input_dim = metadata['actor_obs_dim']

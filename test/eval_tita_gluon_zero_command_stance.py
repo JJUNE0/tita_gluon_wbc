@@ -17,7 +17,7 @@ import traceback
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-LAB_ROOT = REPO_ROOT / "lab"
+LAB_ROOT = REPO_ROOT / "isaac_lab"
 for path in (REPO_ROOT, LAB_ROOT):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
@@ -31,7 +31,7 @@ DEFAULT_PARENT_CHECKPOINT = Path(
 )
 DEFAULT_GLUON_CHECKPOINT = (
     REPO_ROOT
-    / "lab"
+    / "isaac_lab"
     / "logs"
     / "co_rl"
     / "Tita_Gluon_CurriculumArm_RMATeacher-v0-mooppo"

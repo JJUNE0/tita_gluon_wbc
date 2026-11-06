@@ -10,7 +10,7 @@ import torch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO_ROOT / "lab" / "ddt_lab"))
+sys.path.insert(0, str(REPO_ROOT / "isaac_lab" / "ddt_lab"))
 
 from ddt_lab.gluon_ik import (  # noqa: E402
     DEFAULT_CORNER_TRAJECTORY_SPEED_M_S,

@@ -33,11 +33,11 @@ def main():
     modules['isaaclab.managers'].SceneEntityCfg = lambda name: SimpleNamespace(name=name)
     modules['isaaclab.utils.math'].sample_uniform = lambda low, high, shape, device: torch.full(shape, low, device=device)
     spec = importlib.util.spec_from_file_location('training_wheel_position_reference', REPO /
-        'lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/observations.py')
+        'isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/observations.py')
     module = importlib.util.module_from_spec(spec)
     with patch.dict(sys.modules, modules):
         spec.loader.exec_module(module)
-    _, cfg, _, _ = describe_checkpoint(REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_180212_290240/model_75000')
+    _, cfg, _, _ = describe_checkpoint(REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_180212_290240/model_75000')
     params = cfg['policy_interface']['observations'][-1]['params']
     data = SimpleNamespace(joint_pos=torch.zeros(1, 8), root_quat_w=torch.tensor([[1., 0., 0., 0.]]))
     command = torch.zeros(1, 3)

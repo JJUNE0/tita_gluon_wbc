@@ -7,7 +7,7 @@ reports the FlashSAC runner fields that define the deployed action mapping.
 
 Usage (Isaac Lab Python):
     /home/cocel/isaac/env_isaaclab/bin/python test/diff_flash_env_cfg_vs_checkpoint.py \
-        --run lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848 --output <dir>
+        --run isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848 --output <dir>
 """
 
 from __future__ import annotations
@@ -53,7 +53,7 @@ def main() -> None:
     args.output.mkdir(parents=True, exist_ok=True)
 
     import sys
-    sys.path.insert(0, str(REPO / 'lab/ddt_lab/scripts/flash_sac'))
+    sys.path.insert(0, str(REPO / 'isaac_lab/ddt_lab/scripts/flash_sac'))
     from runtime import setup_imports  # same import path setup as scripts/flash_sac/train.py
 
     setup_imports(False)

@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-LAB_ROOT = REPO_ROOT / "lab"
+LAB_ROOT = REPO_ROOT / "isaac_lab"
 TEST_ROOT = REPO_ROOT / "test"
 for search_path in (LAB_ROOT, TEST_ROOT):
     if str(search_path) not in sys.path:

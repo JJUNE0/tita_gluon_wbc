@@ -10,7 +10,7 @@ import unittest
 import torch
 
 
-_MODULE_PATH = Path(__file__).resolve().parents[1] / "lab/ddt_lab/scripts/flash_sac/env_adapter.py"
+_MODULE_PATH = Path(__file__).resolve().parents[1] / "isaac_lab/ddt_lab/scripts/flash_sac/env_adapter.py"
 _SPEC = importlib.util.spec_from_file_location("tita_flash_sac_env_adapter", _MODULE_PATH)
 adapter_module = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(adapter_module)

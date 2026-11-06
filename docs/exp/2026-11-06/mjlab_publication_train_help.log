@@ -1,0 +1,60 @@
+usage: train.py [-h] [--task TASK] [--num_envs NUM_ENVS] [--steps STEPS]
+                [--seed SEED] [--device DEVICE] [--headless] [--gui]
+                [--buffer_size BUFFER_SIZE] [--min_buffer MIN_BUFFER]
+                [--batch_size BATCH_SIZE] [--buffer_device BUFFER_DEVICE]
+                [--updates_per_step UPDATES_PER_STEP] [--n_step N_STEP]
+                [--compile | --no-compile] [--amp | --no-amp]
+                [--save_every SAVE_EVERY] [--log_every LOG_EVERY]
+                [--logger {console,tensorboard,wandb}]
+                [--wandb_project WANDB_PROJECT] [--wandb_entity WANDB_ENTITY]
+                [--run_name RUN_NAME] [--wandb_mode {online,offline,disabled}]
+                [--wandb_run_id WANDB_RUN_ID]
+                [--video_interval VIDEO_INTERVAL]
+                [--video_length VIDEO_LENGTH]
+                [--resume RESUME | --warm_start WARM_START]
+                [--standing-height-only]
+
+TRAINING_SIM: train TITA with mjlab physics and the existing FlashSAC learner.
+
+options:
+  -h, --help            show this help message and exit
+  --task TASK
+  --num_envs NUM_ENVS
+  --steps STEPS         Total vector steps, including saved steps on resume
+  --seed SEED
+  --device DEVICE
+  --headless
+  --gui
+  --buffer_size BUFFER_SIZE
+  --min_buffer MIN_BUFFER
+  --batch_size BATCH_SIZE
+  --buffer_device BUFFER_DEVICE
+                        Replay device; automatically falls back to CPU if VRAM
+                        is insufficient
+  --updates_per_step UPDATES_PER_STEP
+  --n_step N_STEP
+  --compile, --no-compile
+  --amp, --no-amp       Enable CUDA mixed precision
+  --save_every SAVE_EVERY
+  --log_every LOG_EVERY
+  --logger {console,tensorboard,wandb}
+  --wandb_project WANDB_PROJECT
+  --wandb_entity WANDB_ENTITY
+  --run_name RUN_NAME
+  --wandb_mode {online,offline,disabled}
+  --wandb_run_id WANDB_RUN_ID
+                        Continue this W&B run ID; use with --resume to
+                        continue model training
+  --video_interval VIDEO_INTERVAL
+                        W&B evaluation video cadence in vector steps; 0
+                        disables
+  --video_length VIDEO_LENGTH
+                        Control steps per evaluation video (500 = 10 seconds
+                        at 50 Hz)
+  --resume RESUME       Restore saved environment and full learner state
+  --warm_start WARM_START
+                        Load network weights into the selected task; reset
+                        optimizers, replay, normalization and step counters
+  --standing-height-only
+                        Fresh sit_stand run: keep 0.25–0.5 m goals and
+                        base/knee contact termination throughout

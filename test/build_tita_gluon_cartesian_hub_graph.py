@@ -48,7 +48,7 @@ DEFAULT_COMBINED_URDF = (
 )
 DEFAULT_OUTPUT = (
     REPO_ROOT
-    / "lab"
+    / "isaac_lab"
     / "ddt_lab"
     / "ddt_lab"
     / "tasks"

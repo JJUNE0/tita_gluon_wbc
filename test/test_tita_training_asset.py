@@ -16,9 +16,9 @@ ROOT = Path(__file__).resolve().parents[1]
 OLD_COMMIT = "c8c159d37a6760916ed22a4d029961762bbde7a9"
 OLD_PACKAGE = "tita_gluon_ws/src/ddt_ros2_control/urdfs/tita_description"
 SOURCE = ROOT / "sim2sim/robot/tita/urdf/tita.urdf"
-ASSET_CONFIG = ROOT / "lab/ddt_lab/ddt_lab/assets/ddt_robot.py"
+ASSET_CONFIG = ROOT / "isaac_lab/ddt_lab/ddt_lab/assets/ddt_robot.py"
 SPHERE_CONFIG = ROOT / (
-    "lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/env_cfg.py"
+    "isaac_lab/ddt_lab/ddt_lab/tasks/manager_based/locomotion/robots/tita/real2sim/env_cfg.py"
 )
 FIXED_RENAMES = {name: name + "_joint" for name in ("spad", "spad1", "left_camera", "ch201")}
 

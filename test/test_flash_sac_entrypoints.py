@@ -17,7 +17,7 @@ os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
 sys.dont_write_bytecode = True
 
 REPO = Path(__file__).resolve().parents[1]
-ENTRYPOINTS = REPO / "lab/ddt_lab/scripts/flash_sac"
+ENTRYPOINTS = REPO / "isaac_lab/ddt_lab/scripts/flash_sac"
 sys.path.insert(0, str(ENTRYPOINTS))
 
 
@@ -202,7 +202,7 @@ class FlashSACEntrypointTest(unittest.TestCase):
                 ]
                 with patch.object(sys, "argv", ["train.py", *common, "--num_envs", "4", "--steps", "8", "--min_buffer", "8"]):
                     train.main()
-                checkpoints = list(fixture_root.glob("lab/ddt_lab/logs/flash_sac/*/model_8"))
+                checkpoints = list(fixture_root.glob("isaac_lab/ddt_lab/logs/flash_sac/*/model_8"))
                 self.assertEqual(len(checkpoints), 1)
                 original_path = checkpoints[0]
                 _, original_metadata = train.read_checkpoint(original_path, train.DEFAULT_TASK)
@@ -215,7 +215,7 @@ class FlashSACEntrypointTest(unittest.TestCase):
                     "--resume", str(original_path),
                 ]):
                     train.main()
-                resumed_paths = list(fixture_root.glob("lab/ddt_lab/logs/flash_sac/*/model_10"))
+                resumed_paths = list(fixture_root.glob("isaac_lab/ddt_lab/logs/flash_sac/*/model_10"))
                 self.assertEqual(len(resumed_paths), 1)
                 resumed_path = resumed_paths[0]
                 _, resumed_metadata = train.read_checkpoint(resumed_path, train.DEFAULT_TASK)

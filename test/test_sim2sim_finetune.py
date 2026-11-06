@@ -14,7 +14,7 @@ ENTRY = REPO / 'sim2sim/sim2sim_ros2_jazzy/launch/sim2sim_finetune.py'
 spec = importlib.util.spec_from_file_location('sim2sim_finetune', ENTRY)
 ft = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ft)
-CHECKPOINT = REPO / 'lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848/model_60000'
+CHECKPOINT = REPO / 'isaac_lab/ddt_lab/logs/flash_sac/tita_flash_sac_115632_883848/model_60000'
 
 
 class SensorRewardTest(unittest.TestCase):

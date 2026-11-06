@@ -27,7 +27,7 @@ import numpy as np
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / 'sim2sim/sim2sim_ros2_jazzy'))
-LOGS = REPO / 'lab/ddt_lab/logs/flash_sac'
+LOGS = REPO / 'isaac_lab/ddt_lab/logs/flash_sac'
 RUNS = {
     'exp1_sphere_ma2': ('tita_flash_sac_220437_190135', [50000, 60000, 70000, 80000, 90000, 100000]),
     'exp2_sphere_noma2': ('tita_flash_sac_220437_199621', [50000, 60000, 70000, 80000, 90000, 100000]),
