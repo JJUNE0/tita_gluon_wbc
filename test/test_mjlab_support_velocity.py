@@ -13,7 +13,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / 'test'), str(ROOT / 'sim2sim/sim2sim_ros2_
 from mjlab.envs import ManagerBasedRlEnv
 from mj_lab.checkpoint import plain, playback_contract
 from mj_lab.flash_sac import TitaFlashSACEnv
-from mj_lab.robots.tita.support_command_env_cfg import (
+from mj_lab.robots.tita.stand_one_leg.support_command_env_cfg import (
     TitaSupportCommandEnvCfg, TitaSupportVelocityEnvCfg, reward_by_mode,
 )
 from sim2sim_ros2_jazzy.checkpoint import observation_layout, simulation_config
@@ -95,7 +95,7 @@ def test_stationary_and_tracking_rewards_do_not_conflict():
 def test_velocity_ranges_survive_export_and_runtime_caps():
     cfg = TitaSupportVelocityEnvCfg(4)
     saved = playback_contract(cfg)
-    from mj_lab.robots.tita.robot_cfg import JOINTS
+    from mj_lab.robots.tita.common.robot_cfg import JOINTS
     layout = observation_layout(saved['observations']['policy'], {}, list(JOINTS))
     runtime = simulation_config(saved, saved['scene']['robot']['init_state'], layout)
     assert runtime['policy']['obs_dim'] == 38

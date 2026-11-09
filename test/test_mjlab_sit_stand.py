@@ -14,9 +14,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "sim2sim/sim2sim_ros2_jazzy")]
 from mj_lab.checkpoint import plain, playback_contract
 from mj_lab.robots.tita import mdp
-from mj_lab.robots.tita.flat_env_roll_pitch_height_cfg import TitaFlatRollPitchHeightEnvCfg
-from mj_lab.robots.tita.sit_stand_env_cfg import TitaSitStandEnvCfg, curriculum_contact, height_scaled_penalty
-from mj_lab.robots.tita.robot_cfg import INITIAL_Q
+from mj_lab.robots.tita.roll_pitch_height.flat_env_roll_pitch_height_cfg import TitaFlatRollPitchHeightEnvCfg
+from mj_lab.robots.tita.sit_stand.sit_stand_env_cfg import TitaSitStandEnvCfg, curriculum_contact, height_scaled_penalty
+from mj_lab.robots.tita.common.robot_cfg import INITIAL_Q
 from sim2sim_ros2_jazzy import checkpoint
 from sim2sim_ros2_jazzy.state_machine import SPLAY_POSE
 

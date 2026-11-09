@@ -282,9 +282,11 @@ class ActionAdapter:
         targets[self.order] = processed
         return targets
 
-    def compute(self, action, joint_pos, joint_vel, gait_enabled=None):
+    def compute(self, action, joint_pos, joint_vel, gait_enabled=None, residual=None):
         targets = self.targets(action, gait_enabled=gait_enabled)
         position_error = np.where(self.velocity, 0., targets - joint_pos)
         velocity_target = np.where(self.velocity, targets, 0.)
         torque = self.kp * position_error + self.kd * (velocity_target - joint_vel)
+        if residual is not None:
+            torque = torque + residual
         return np.clip(torque, -self.limit, self.limit)

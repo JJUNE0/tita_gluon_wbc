@@ -1,11 +1,8 @@
-# sim2sim_ros2_jazzy
+# TITA MuJoCo validation
 
-TITA PPO/FlashSAC MuJoCo playback and a read-only ROS state mirror.
+Execution Domain: `VALIDATION_SIM`.
 
-From the repository root (`VALIDATION_SIM`):
-
-```bash
-python3 sim2sim/sim2sim_ros2_jazzy/launch/sim2sim.launch.py --ckpt /path/to/trained.pt
-```
-
-See [sim2sim README](../README.md) for metadata, controls, ROS launch and real2sim.
+Public launchers: `launch/sim2sim.launch.py` (Teacher) and
+`launch/sim2sim.residual.torque.launch.py` (Teacher + torque residual).
+See [sim2sim instructions](../README.md) for commands, controls, checkpoint
+contracts and the archive location.

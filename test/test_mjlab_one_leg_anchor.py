@@ -13,12 +13,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from mj_lab.checkpoint import plain, playback_contract
 from mj_lab.flash_sac import TitaFlashSACEnv
-from mj_lab.robots.tita.stand_one_leg_anchor_env_cfg import (
+from mj_lab.robots.tita.stand_one_leg.stand_one_leg_anchor_env_cfg import (
     TitaStandOneLegAnchorEnvCfg, TitaStandOneLegRightAnchorEnvCfg,
     anchor_metric, support_drift_failure, support_hold, support_motion_cost, support_speed_soft_l1,
     lift_first_support, swing_height_excess, swing_near_com, wheel_overlap_cost, yaw_excess,
 )
-from mj_lab.robots.tita.stand_one_leg_reference_env_cfg import TitaStandOneLegReferenceEnvCfg
+from mj_lab.robots.tita.stand_one_leg.stand_one_leg_reference_env_cfg import TitaStandOneLegReferenceEnvCfg
 
 
 def example(side='left'):

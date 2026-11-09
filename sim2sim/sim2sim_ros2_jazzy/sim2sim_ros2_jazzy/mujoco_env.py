@@ -1,6 +1,7 @@
 """VALIDATION_SIM: TITA model state and MuJoCo stepping; no policy conventions."""
 
 from pathlib import Path
+from collections import deque
 import threading
 import numpy as np
 
@@ -15,16 +16,26 @@ class TitaMujocoEnv:
         self.mujoco, self.cfg = mujoco, cfg
         scene = Path(cfg['model']['scene_xml'])
         scene = scene if scene.is_absolute() else REPO / scene
-        self.model = mujoco.MjModel.from_xml_path(str(scene))
+        if cfg.get('learned_residual'):
+            spec = mujoco.MjSpec.from_file(str(scene))
+            for index, body in enumerate(list(spec.bodies)):
+                if not body.name or body.name == 'world':
+                    continue
+                child = body.add_body(name=f'residual_payload_{index}')
+                child.add_geom(name=f'residual_payload_icon_{index}', type=mujoco.mjtGeom.mjGEOM_BOX,
+                               size=[.035, .035, .035], mass=1e-6, contype=0, conaffinity=0,
+                               rgba=[1., .4, .06, 0.])
+            self.model = spec.compile()
+            for body in range(self.model.nbody):
+                if self.model.body(body).name.startswith('residual_payload_'):
+                    self.model.body_mass[body] = 0.
+                    self.model.body_inertia[body] = 0.
+        else:
+            self.model = mujoco.MjModel.from_xml_path(str(scene))
+        self.ground = (self.model.geom_bodyid == 0) & ((self.model.geom_contype != 0) | (self.model.geom_conaffinity != 0))
         friction = cfg['model'].get('ground_friction')
         if friction is not None:
-            if isinstance(friction, bool) or not isinstance(friction, (int, float)) or not np.isfinite(friction) or friction < 0:
-                raise ValueError('model.ground_friction must be finite and non-negative')
-            ground = (self.model.geom_bodyid == 0) & ((self.model.geom_contype != 0) | (self.model.geom_conaffinity != 0))
-            # Higher priority makes this the effective contact coefficient, even below the wheel's own friction.
-            self.model.geom_priority[ground] = int(self.model.geom_priority.max()) + 1
-            self.model.geom_friction[ground, 0] = friction
-            self.model.geom_condim[ground] = np.maximum(self.model.geom_condim[ground], 3)
+            self.set_ground_friction(friction)
         if cfg['model'].get('flat_ground'):
             floor = self.model.geom('floor').id
             obstacles = (self.model.geom_bodyid == 0) & (np.arange(self.model.ngeom) != floor)
@@ -57,6 +68,13 @@ class TitaMujocoEnv:
             raise ValueError('The MuJoCo scene does not contain the configured TITA joints/actuators')
         self.qpos_addr = np.asarray([self.model.jnt_qposadr[index] for index in joint_ids])
         self.qvel_addr = np.asarray([self.model.jnt_dofadr[index] for index in joint_ids])
+        self.sensor_rng = np.random.default_rng(42)
+        self.delay_rng = np.random.default_rng(43)
+        self.sensor_noise = dict(joint_position=0., joint_velocity=0., gyro=0., orientation_deg=0.)
+        self.noise_time = None
+        self.delay_steps = (0, 0)
+        self.last_delay_ms = 0.
+        self.torque_history = deque(maxlen=1)
         self.viewer, self._viewer_threads = None, []
         self.reset()
         if viewer_enabled:
@@ -76,13 +94,83 @@ class TitaMujocoEnv:
         self.data.qpos[:3] = robot['reset_base_pos']
         self.data.qpos[3:7] = robot['reset_base_quat']
         self.data.qpos[self.qpos_addr] = robot['default_joint_angles'] if joint_angles is None else joint_angles
+        self.noise_time = None
+        self._reset_delay()
         self.mujoco.mj_forward(self.model, self.data)
 
+    def set_ground_friction(self, value):
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not np.isfinite(value) or value < 0:
+            raise ValueError('model.ground_friction must be finite and non-negative')
+        # Keep a stable priority when the slider is moved repeatedly.
+        priority = int(np.max(self.model.geom_priority[~self.ground], initial=0)) + 1
+        self.model.geom_priority[self.ground] = priority
+        self.model.geom_friction[self.ground, 0] = value
+        self.model.geom_condim[self.ground] = np.maximum(self.model.geom_condim[self.ground], 3)
+        self.cfg['model']['ground_friction'] = float(value)
+
+    def set_sensor_noise(self, joint_position=0., joint_velocity=0., gyro=0., orientation_deg=0.):
+        values = dict(joint_position=joint_position, joint_velocity=joint_velocity,
+                      gyro=gyro, orientation_deg=orientation_deg)
+        if any(not np.isfinite(x) or x < 0 for x in values.values()):
+            raise ValueError('Sensor standard deviations must be finite and non-negative')
+        self.sensor_noise = {key: float(value) for key, value in values.items()}
+        self.noise_time = None
+
+    def _sensor_offsets(self):
+        # All consumers share the same noisy sensor sample at one physics time.
+        if self.noise_time != self.data.time:
+            self.noise_offsets = {}
+            for key, size in (('joint_position', 8), ('joint_velocity', 8), ('gyro', 3), ('orientation_deg', 3)):
+                sigma = self.sensor_noise[key]
+                if key == 'orientation_deg':
+                    sigma = np.radians(sigma)
+                self.noise_offsets[key] = self.sensor_rng.normal(0., sigma, size) if sigma else np.zeros(size)
+            self.noise_time = float(self.data.time)
+        return self.noise_offsets
+
+    def set_torque_delay(self, minimum_ms, maximum_ms):
+        if (not np.isfinite([minimum_ms, maximum_ms]).all()
+                or not 0 <= minimum_ms <= maximum_ms <= 100):
+            raise ValueError('Torque delay requires 0 <= minimum <= maximum <= 100 ms')
+        tick_ms = self.model.opt.timestep * 1000.
+        self.delay_steps = tuple(int(np.ceil(value / tick_ms - 1e-9)) for value in (minimum_ms, maximum_ms))
+        self._reset_delay()
+
+    def _reset_delay(self):
+        # Start a changed delay with the currently applied command, without a
+        # synthetic zero-torque impulse. Reset physics starts with zero ctrl.
+        maximum = self.delay_steps[1]
+        held = self.data.ctrl[self.actuator_ids].copy()
+        self.torque_history = deque((held.copy() for _ in range(maximum)), maxlen=maximum+1)
+        self.last_delay_ms = 0.
+
+    def delayed_torque(self, torque):
+        low, high = self.delay_steps
+        if high == 0:
+            return torque
+        self.torque_history.append(np.asarray(torque).copy())
+        lag = low if low == high else int(self.delay_rng.integers(low, high+1))
+        self.last_delay_ms = lag * self.model.opt.timestep * 1000.
+        return self.torque_history[-1-lag].copy()
+
+    def perturbation_settings(self):
+        return dict(ground_friction=self.cfg['model'].get('ground_friction'),
+                    sensor_noise_std=self.sensor_noise.copy(), sensor_seed=42, delay_seed=43,
+                    torque_delay_range_ms=[step*self.model.opt.timestep*1000. for step in self.delay_steps],
+                    last_torque_delay_ms=self.last_delay_ms,
+                    delay_model='Common eight-joint command-history lag, uniformly resampled each physics tick')
+
     def joint_pos(self):
-        return self.data.qpos[self.qpos_addr].astype(np.float32).copy()
+        value = self.data.qpos[self.qpos_addr].copy()
+        if self.sensor_noise['joint_position']:
+            value += self._sensor_offsets()['joint_position']
+        return value.astype(np.float32)
 
     def joint_vel(self):
-        return self.data.qvel[self.qvel_addr].astype(np.float32).copy()
+        value = self.data.qvel[self.qvel_addr].copy()
+        if self.sensor_noise['joint_velocity']:
+            value += self._sensor_offsets()['joint_velocity']
+        return value.astype(np.float32)
 
     def base_pos(self):
         return self.data.qpos[:3].astype(np.float32).copy()
@@ -94,18 +182,31 @@ class TitaMujocoEnv:
         return self.data.qvel[:3].astype(np.float32).copy()
 
     def base_quat_sensor(self):
-        return self.data.sensor('trunk_quat').data.astype(np.float32).copy()
+        value = self.data.sensor('trunk_quat').data.copy()
+        if self.sensor_noise['orientation_deg']:
+            rotation = self._sensor_offsets()['orientation_deg']
+            angle = np.linalg.norm(rotation)
+            delta = np.r_[np.cos(angle/2), rotation*np.sinc(angle/(2*np.pi))*.5]
+            product = np.empty(4)
+            self.mujoco.mju_mulQuat(product, value, delta)
+            value = product / np.linalg.norm(product)
+        return value.astype(np.float32)
 
     def base_ang_vel(self):
-        return self.data.sensor('trunk_gyro').data.astype(np.float32).copy()
+        value = self.data.sensor('trunk_gyro').data.copy()
+        if self.sensor_noise['gyro']:
+            value += self._sensor_offsets()['gyro']
+        return value.astype(np.float32)
 
     def step_with_torque_callback(self, callback):
         for _ in range(self.decimation):
             torque = callback(self.joint_pos(), self.joint_vel())
             if not np.isfinite(torque).all():
                 raise ValueError('Non-finite torque')
-            self.data.ctrl[self.actuator_ids] = torque
+            self.data.ctrl[self.actuator_ids] = self.delayed_torque(torque)
             self.mujoco.mj_step(self.model, self.data)
+        if self.cfg.get('learned_residual'):
+            self.mujoco.mj_forward(self.model, self.data)
         if self.viewer is not None:
             self.viewer.sync()
 

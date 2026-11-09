@@ -68,7 +68,14 @@ def main():
     if args.video_result and not args.video:
         parser.error("--video_result requires --video")
     setup_imports(False)
-    path, metadata = read_checkpoint(args.checkpoint)
+    selected = Path(args.checkpoint).expanduser().resolve()
+    path, metadata = read_checkpoint(selected.parent if selected.is_file() else selected)
+    import sys
+    if str(REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(REPO_ROOT))
+    from sim2sim.checkpoint_store import register_checkpoint
+    registered = register_checkpoint(path, metadata)
+    print(f"[DESKTOP_DRY_RUN] Checkpoint registered: {registered['sim2sim']}")
     app = env = video_writer = None
     frames, fps = 0, 0.0
     velocity_samples = []

@@ -1,0 +1,4 @@
+TITA robot SDK
+Copyright (c) 2023 Direct Drive Technology Co., Ltd.
+Provided under the Apache License, Version 2.0; see LICENSE.
+Prebuilt amd64 and arm64 libraries are retained unchanged from the existing workspace.

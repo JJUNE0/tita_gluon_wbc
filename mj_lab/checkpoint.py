@@ -15,7 +15,7 @@ import torch
 import yaml
 
 from .flash_sac import runtime
-from .robots.tita.robot_cfg import JOINTS, OBS_JOINTS, REPO_ROOT
+from .robots.tita.common.robot_cfg import JOINTS, OBS_JOINTS, REPO_ROOT
 
 
 def plain(value):

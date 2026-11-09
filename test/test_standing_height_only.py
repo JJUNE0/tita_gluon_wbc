@@ -11,7 +11,7 @@ import torch
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from mj_lab.checkpoint import plain, playback_contract
-from mj_lab.robots.tita.sit_stand_env_cfg import TitaSitStandEnvCfg, curriculum_contact
+from mj_lab.robots.tita.sit_stand.sit_stand_env_cfg import TitaSitStandEnvCfg, curriculum_contact
 
 
 def test_fixed_height_sampling_and_contacts_survive_old_curriculum_boundary():

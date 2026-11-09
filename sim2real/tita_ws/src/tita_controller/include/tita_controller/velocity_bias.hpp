@@ -55,18 +55,14 @@ private:
   double limit_, slew_, sign_;
 };
 
-class WheelVelocityBias
+// Shared URDF kinematics; the velocity estimate assumes the requested support wheel(s)
+// are grounded without slip. It is used for latch detection, never added motor torque.
+class WheelKinematics
 {
 public:
-  static constexpr double kMaxTorque = .8;  // N*m per wheel, additional to baseline PD.
-  static constexpr double kIgnore = 1.;
-  static constexpr double kApply = 3.;
-  static constexpr double kPitchDeviation = .08726646259971647;  // 5 degrees from acquisition mean.
-
-  WheelVelocityBias(const std::vector<double> & xyz, const std::vector<double> & rpy,
-    const std::vector<double> & axes, double radius, double response_sign,
-    const std::array<double, 2> & wheel_kd = {.5, .5})
-  : radius_(radius), law_(bias_limit(radius, wheel_kd), bias_limit(radius, wheel_kd), response_sign)
+  WheelKinematics(const std::vector<double> & xyz, const std::vector<double> & rpy,
+    const std::vector<double> & axes, double radius)
+  : radius_(radius)
   {
     if (xyz.size() != 24 || rpy.size() != 24 || axes.size() != 24 ||
       !std::isfinite(radius) || radius <= 0.)
@@ -87,6 +83,68 @@ public:
         throw std::runtime_error("non-finite velocity bias geometry or non-unit joint axis");
       }
     }
+  }
+
+  const Eigen::Isometry3d & origin(std::size_t j) const {return origin_[j];}
+  const Eigen::Vector3d & axis(std::size_t j) const {return axes_[j];}
+
+  std::array<double, 3> linear_velocity(const RobotState & s) const
+  {
+    const Eigen::Quaterniond rotation(s.quat_wxyz[0], s.quat_wxyz[1], s.quat_wxyz[2], s.quat_wxyz[3]);
+    const Eigen::Vector3d omega(s.ang_vel[0], s.ang_vel[1], s.ang_vel[2]);
+    if (!rotation.coeffs().allFinite() || std::abs(rotation.norm() - 1.) > .01 ||
+      !omega.allFinite() || s.support_mode < 0 || s.support_mode > 2)
+    {
+      throw std::runtime_error("invalid wheel odometry orientation/gyro/support mode");
+    }
+    Eigen::Vector3d velocity = Eigen::Vector3d::Zero();
+    for (std::size_t side = 0; side < 2; ++side) {
+      if (s.support_mode != 2 && static_cast<int>(side) != s.support_mode) continue;
+      Eigen::Isometry3d frame = Eigen::Isometry3d::Identity();
+      std::array<Eigen::Vector3d, 4> centers, axes;
+      for (std::size_t k = 0; k < 4; ++k) {
+        const auto j = side * 4 + k;
+        if (!std::isfinite(s.joint_pos[j]) || !std::isfinite(s.joint_vel[j])) {
+          throw std::runtime_error("non-finite wheel odometry encoder");
+        }
+        frame = frame * origin_[j];
+        centers[k] = frame.translation();
+        axes[k] = frame.linear() * axes_[j];
+        frame.rotate(Eigen::AngleAxisd(s.joint_pos[j], axes_[j]));
+      }
+      // Sphere's bottom point in the base frame, including body roll/pitch.
+      const Eigen::Vector3d contact = frame.translation() - radius_ * (rotation.conjugate() * Eigen::Vector3d::UnitZ());
+      Eigen::Vector3d relative = Eigen::Vector3d::Zero();
+      for (std::size_t k = 0; k < 4; ++k) {
+        relative += axes[k].cross(contact - centers[k]) * s.joint_vel[side * 4 + k];
+      }
+      velocity -= omega.cross(contact) + relative;
+    }
+    if (s.support_mode == 2) velocity /= 2.;
+    if (!velocity.allFinite()) throw std::runtime_error("non-finite wheel odometry velocity");
+    return {velocity.x(), velocity.y(), velocity.z()};
+  }
+
+private:
+  double radius_;
+  std::array<Eigen::Isometry3d, 8> origin_;
+  std::array<Eigen::Vector3d, 8> axes_;
+};
+
+class WheelVelocityBias
+{
+public:
+  static constexpr double kMaxTorque = .8;  // N*m per wheel, additional to baseline PD.
+  static constexpr double kIgnore = 1.;
+  static constexpr double kApply = 3.;
+  static constexpr double kPitchDeviation = .08726646259971647;  // 5 degrees from acquisition mean.
+
+  WheelVelocityBias(const std::vector<double> & xyz, const std::vector<double> & rpy,
+    const std::vector<double> & axes, double radius, double response_sign,
+    const std::array<double, 2> & wheel_kd = {.5, .5})
+  : radius_(radius), law_(bias_limit(radius, wheel_kd), bias_limit(radius, wheel_kd), response_sign),
+    kinematics_(xyz, rpy, axes, radius)
+  {
   }
 
   void reset()
@@ -133,11 +191,11 @@ public:
           if (!std::isfinite(s.joint_pos[j]) || !std::isfinite(s.joint_vel[j])) {
             throw std::runtime_error("non-finite velocity observer encoder");
           }
-          frame = frame * origin_[j];
-          const double projection = lateral.dot(frame.linear() * axes_[j]);
+          frame = frame * kinematics_.origin(j);
+          const double projection = lateral.dot(frame.linear() * kinematics_.axis(j));
           sum_rates += projection * s.joint_vel[j];
           if (j % 4 == 3) signs_[side] = projection >= 0. ? 1. : -1.;
-          frame.rotate(Eigen::AngleAxisd(s.joint_pos[j], axes_[j]));
+          frame.rotate(Eigen::AngleAxisd(s.joint_pos[j], kinematics_.axis(j)));
         }
         offset += frame.translation() / 2.;
       }
@@ -207,8 +265,7 @@ private:
 
   double radius_;
   VelocityBiasLaw law_;
-  std::array<Eigen::Isometry3d, 8> origin_;
-  std::array<Eigen::Vector3d, 8> axes_;
+  WheelKinematics kinematics_;
   Eigen::Vector3d previous_offset_{Eigen::Vector3d::Zero()};
   std::array<double, 2> signs_{0., 0.};
   bool holding_{false}, eligible_{false}, have_offset_{false}, acquired_{false}, inhibited_{false};

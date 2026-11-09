@@ -316,7 +316,7 @@ def describe_checkpoint(path):
         path = path / 'actor.pt'
     if not path.is_file() or path.suffix != '.pt':
         raise ValueError('--ckpt must be a trained PPO .pt or FlashSAC actor.pt/model directory')
-    flash = path.name == 'actor.pt' and (path.parent / 'ddt.json').is_file()
+    flash = path.name in ('actor.pt', 'policy.pt') and (path.parent / 'ddt.json').is_file()
     env_path = _sidecar(path, 'env.yaml')
     agent_path = _sidecar(path, 'agent.json', required=False) or _sidecar(path, 'agent.yaml')
     agent = json.loads(agent_path.read_text()) if agent_path.suffix == '.json' else read_yaml(agent_path)

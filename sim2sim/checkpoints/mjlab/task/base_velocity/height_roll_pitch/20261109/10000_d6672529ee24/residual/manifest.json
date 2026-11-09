@@ -1,0 +1,79 @@
+{
+  "schema_version": 3,
+  "execution_domain": "DESKTOP_DRY_RUN",
+  "evidence_status": "PASS",
+  "residual_mode": "torque",
+  "output_units": "Nm",
+  "checkpoint_sha256": "d6672529ee247a92b7043f50bb6deb501a65becbf760761a412b33d5701b6002",
+  "onnx_sha256": "063c76967eb16b5156597ac909b3e830620196c20d66d16a51db46f37c1a60de",
+  "teacher_checkpoint_sha256": "5487e3584fddbdfc87b7485bb2ad4c7da8069a7679b1975789d64419e7482334",
+  "teacher_onnx_sha256": "0e8cd0723d2a7de2d83a6866818309c173c513c020a62f2c8832f9761344543b",
+  "teacher_config_sha256": "e725e7460598b9f50fae4a129e89d4ce84fb0eb456af0014ef764d353bb318e2",
+  "actor_obs_dim": 440,
+  "actor_stack": 10,
+  "actor_frame": 44,
+  "actor_hz": 250,
+  "teacher_hz": 50,
+  "physics_hz": 500,
+  "torque_residual_limit_nm": 10.0,
+  "residual_wheel_latch": false,
+  "residual_wheel_input_clipped": false,
+  "wheel_radius": 0.0925,
+  "wheel_scale": 5.0,
+  "heading_observation_index": 34,
+  "nominal_height": 0.335,
+  "history_order": "oldest_first",
+  "stop_entry_history": "repeat_current_frame_10",
+  "training_pose_command_mode": "height_roll_pitch",
+  "training_pose_command_ranges": [
+    [
+      -0.5235987755982988,
+      0.5235987755982988
+    ],
+    [
+      -0.2617993877991494,
+      0.2617993877991494
+    ],
+    [
+      0.27,
+      0.42
+    ]
+  ],
+  "training_torque_delay_bins_ms": [
+    0,
+    2,
+    4,
+    6,
+    8
+  ],
+  "training_torque_delay_sampling": "Uniform per environment on reset; constant during episode; common to all eight joints",
+  "actor_sensor_source": "Measured Teacher sensor snapshot; native wheel encoder plus shared leg angles/gravity; no synthetic hardware noise",
+  "hardware_gate": "RL, exact-zero velocity target/applied, axes7=0; roll/pitch/height within saved trained ranges, active pose changes allowed",
+  "export_max_abs_error_nm": 1.8835067749023438e-05,
+  "hardware_allow_pose_commands": true,
+  "hardware_pose_command_ranges": [
+    [
+      -0.5235987755982988,
+      0.5235987755982988
+    ],
+    [
+      -0.2617993877991494,
+      0.2617993877991494
+    ],
+    [
+      0.27,
+      0.42
+    ]
+  ],
+  "actor_sensor_mode": "teacher_shared",
+  "residual_torque_filter": {
+    "kind": "one_pole_matched",
+    "placement": "residual_only",
+    "cutoff_hz": 60.0,
+    "update_hz": 500,
+    "alpha": 0.5295107822801821,
+    "reset": "zero_on_episode_reset_or_gate_loss",
+    "actor_previous_residual": "requested_pre_filter",
+    "order": "residual LPF -> fresh PD sum -> final effort clamp -> torque delay"
+  }
+}

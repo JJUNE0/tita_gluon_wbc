@@ -13,12 +13,13 @@ os.environ.setdefault("MUJOCO_GL", "egl")
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from mj_lab.flash_sac import TitaFlashSACEnv, runtime
-from mj_lab.robots.tita.robot_cfg import REPO_ROOT
+from mj_lab.robots.tita.common.robot_cfg import REPO_ROOT
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--checkpoint", type=Path, required=True)
+    parser.add_argument("--checkpoint", type=Path)
+    parser.add_argument("--config", type=Path, default=REPO_ROOT/'sim2sim/config/policies.json')
     parser.add_argument("--num_envs", type=int, default=1)
     parser.add_argument("--steps", type=int, default=1000)
     parser.add_argument("--device", default="cuda:0")
@@ -35,9 +36,13 @@ def main():
         parser.error("Positive sizes are required; --video requires --num_envs 1")
     if args.video_result and not args.video:
         parser.error("--video_result requires --video")
-    path, metadata = runtime.read_checkpoint(args.checkpoint)
+    from sim2sim.checkpoint_store import register_checkpoint, resolve_checkpoint, selection
+    selected = args.checkpoint or selection(args.config, 'teacher')
+    path, metadata = runtime.read_checkpoint(resolve_checkpoint(selected).parent)
     if metadata.get("backend") != "mjlab":
         parser.error("This player requires a native mjlab checkpoint")
+    registered = register_checkpoint(path, metadata)
+    print(f"[DESKTOP_DRY_RUN] Checkpoint registered: {registered['sim2sim']}")
     runtime.setup_imports(False)
     import torch
     from mjlab.envs import ManagerBasedRlEnv

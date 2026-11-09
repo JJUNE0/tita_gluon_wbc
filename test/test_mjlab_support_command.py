@@ -18,9 +18,9 @@ from mj_lab.checkpoint import plain, playback_contract
 from mj_lab.flash_sac import TitaFlashSACEnv
 from mj_lab.robots.tita import mdp
 from mj_lab.robots.tita.flat_env_cfg import TitaFlatEnvCfg
-from mj_lab.robots.tita.robot_cfg import JOINTS, INITIAL_Q
-from mj_lab.robots.tita.stand_one_leg_reference_env_cfg import TitaStandOneLegReferenceEnvCfg
-from mj_lab.robots.tita.support_command_env_cfg import (
+from mj_lab.robots.tita.common.robot_cfg import JOINTS, INITIAL_Q
+from mj_lab.robots.tita.stand_one_leg.stand_one_leg_reference_env_cfg import TitaStandOneLegReferenceEnvCfg
+from mj_lab.robots.tita.stand_one_leg.support_command_env_cfg import (
     SupportModeCommandCfg, TitaSupportCommandEnvCfg, achieved_support, pose_hint, support_leg_tilt, support_reward,
 )
 from sim2sim_ros2_jazzy.adapter import ObservationBuilder, ObsState

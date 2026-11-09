@@ -10,5 +10,11 @@ requires-python = ">=3.12"
 dependencies = ["mjlab==1.6.0", "gymnasium", "cloudpickle", "pyyaml", "wandb", "tensorboard", "imageio", "imageio-ffmpeg", "pillow"]
 
 [tool.setuptools]
-packages = ["mj_lab", "mj_lab.robots", "mj_lab.robots.tita", "mj_lab.scripts"]
+packages = [
+  "mj_lab", "mj_lab.robots", "mj_lab.robots.tita",
+  "mj_lab.robots.tita.common", "mj_lab.robots.tita.residual",
+  "mj_lab.robots.tita.roll_pitch_height", "mj_lab.robots.tita.walk",
+  "mj_lab.robots.tita.sit_stand", "mj_lab.robots.tita.stand_one_leg",
+  "mj_lab.scripts",
+]
 package-dir = {mj_lab = "."}

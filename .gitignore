@@ -84,3 +84,46 @@ docs/exp/**
 *.ply
 # Embedded third-party tool repository (separate git repo)
 test/Minta-Actuator-Studio-linux/
+
+# Published LPF60 reference pair (all other registry entries stay local).
+sim2sim/checkpoints/**
+!sim2sim/checkpoints/README.md
+!sim2sim/checkpoints/mjlab/
+sim2sim/checkpoints/mjlab/*
+!sim2sim/checkpoints/mjlab/task/
+!sim2sim/checkpoints/mjlab/task/base_velocity/
+!sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/
+!sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/
+sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/*
+!sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/80000/
+!sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/80000/**
+!sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261109/
+sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261109/*
+!sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261109/10000_d6672529ee24/
+!sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261109/10000_d6672529ee24/**
+sim2real/checkpoints/**
+!sim2real/checkpoints/README.md
+!sim2real/checkpoints/mjlab/
+sim2real/checkpoints/mjlab/*
+!sim2real/checkpoints/mjlab/task/
+!sim2real/checkpoints/mjlab/task/base_velocity/
+!sim2real/checkpoints/mjlab/task/base_velocity/height_roll_pitch/
+!sim2real/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/
+sim2real/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/*
+!sim2real/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/80000/
+!sim2real/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/80000/**
+!sim2real/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261109/
+sim2real/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261109/*
+!sim2real/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261109/10000_d6672529ee24/
+!sim2real/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261109/10000_d6672529ee24/**
+
+# Regenerated sim2sim export caches are not part of the published pair.
+sim2sim/checkpoints/**/sim2sim/
+sim2real/checkpoints/**/sim2sim/
+
+# Local publication test executable.
+test/lpf60_publication_build/
+
+# Required Apache-2.0 TITA SDK runtime dependencies.
+!sim2real/tita_ws/src/tita_robot/lib/amd64/libtita_robot.so
+!sim2real/tita_ws/src/tita_robot/lib/arm64/libtita_robot.so

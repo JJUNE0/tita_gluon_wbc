@@ -63,6 +63,11 @@ def run_runtime(args):
                         '-p', f'leg_notch_hz:={args.leg_notch_hz}', '-p', f'leg_notch_q:={args.leg_notch_q}']
         if args.support_mode is not None:
             ros_args += ['-p', f'support_mode:={args.support_mode}']
+        if args.learned_residual is not None:
+            ros_args += ['-p', f'learned_residual:={args.learned_residual.resolve()}',
+                         '-p', f'payload_mass:={args.payload_mass}', '-p', f'push_force:={args.push_force}']
+            if args.lpf is not None:
+                ros_args += ['-p', f'residual_lpf_hz:={args.lpf}']
         rclpy.init(args=ros_args)
         node = Sim2SimNode()
         if 'support_command' in cfg:
@@ -109,6 +114,29 @@ def run_runtime(args):
     finally:
         rclpy.try_shutdown()
         if node:
+            if node.learned is not None:
+                result['residual_checkpoint_sha256'] = node.learned.metadata['policy_checkpoint_sha256']
+                result['residual_checkpoint'] = node.learned.metadata['checkpoint']
+                result['residual_inferences'] = node.learned.inferences
+                result['residual_disabled_ticks'] = node.learned.disabled_ticks
+                mode = node.learned.metadata['residual_mode']
+                result['residual_mode'] = mode
+                result['residual_actor_hz'] = node.learned.metadata['actor_hz']
+                result['residual_max_abs_nm'] = node.learned.maximum_residual.tolist()
+                result['residual_gate_enabled'] = node.learned.enabled
+                result['residual_nm'] = node.learned.residual.tolist()
+                from .residual_policy import residual_lpf_hz
+                trained_lpf = residual_lpf_hz(node.learned.metadata)
+                result['residual_lpf_hz'] = node.learned.filter_hz
+                result['residual_lpf_alpha'] = node.learned.filter_alpha
+                result['residual_trained_lpf_hz'] = trained_lpf
+                result['residual_lpf_matches_training'] = node.learned.filter_hz == trained_lpf
+                result['residual_filtered_nm'] = node.learned.filtered_residual.tolist()
+                result['payload_kg'] = node.disturbance.mass
+                result['simulation_perturbations'] = node.env.perturbation_settings()
+                result['residual_requested_enabled'] = node.disturbance.residual_enabled
+                result['ui_setting_changes'] = node.disturbance.setting_changes
+                node.disturbance.close()
             result['policy_steps'] = node.steps
             result['tilt_faults'] = node.tilt_faults
             result['final_state'] = node.sm.state
@@ -128,8 +156,11 @@ def run_runtime(args):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--ckpt', type=Path, required=True,
+    parser.add_argument('--config', type=Path, default=REPO/'sim2sim/config/policies.json',
+                        help='Policy selections; relative paths resolve beside this JSON')
+    parser.add_argument('--ckpt', type=Path,
                         help='PPO .pt, FlashSAC actor.pt, or FlashSAC model directory')
+    parser.add_argument('--with-torque-residual', action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('--headless', action='store_true')
     parser.add_argument('--leg_action_filter', choices=['auto', 'none', 'ma2_legs', 'ma2_notch_legs'], default='auto',
                         help='auto restores the saved action filter; explicit modes override it for experiments')
@@ -150,12 +181,57 @@ def main(argv=None):
     parser.add_argument('--pose', type=float, nargs=3, metavar=('ROLL_DEG', 'PITCH_DEG', 'HEIGHT_M'),
                         help='Pose target in degrees/degrees/metres, ramped using the saved training rates')
     parser.add_argument('--prepare-only', action='store_true', help='Prepare and verify the policy without starting MuJoCo')
+    parser.add_argument('--learned-residual', type=Path, help='Saved stop-only residual actor; requires its matching Teacher')
+    parser.add_argument('--lpf', type=float, metavar='HZ',
+                        help='Residual torque LPF at 500Hz: 0 disables, 0 < Hz < 250; default restores the saved cutoff')
+    parser.add_argument('--payload-mass', type=float, default=2., help='Mouse attachment mass in kg,0..5')
+    parser.add_argument('--push-force', type=float, default=20., help='Torso hold-button force in N,0..50')
     parser.add_argument('--isaac-python', type=Path, default=Path.home() / 'isaac/env_isaaclab/bin/python')
     parser.add_argument('--mujoco-python', type=Path, default=Path.home() / 'venvs/cosim_ros2_jazzy/bin/python')
     parser.add_argument('--_prepare', action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('--_runtime', action='store_true', help=argparse.SUPPRESS)
     parser.add_argument('--_config', type=Path, help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
+    sys.path.insert(0, str(REPO))
+    from sim2sim.checkpoint_store import selection, resolve_checkpoint, register_checkpoint
+    if args.ckpt is None:
+        args.ckpt = selection(args.config, 'teacher')
+    if args.with_torque_residual and args.learned_residual is None:
+        args.learned_residual = selection(args.config, 'residual_torque')
+    candidate = resolve_checkpoint(args.ckpt)
+    selected = candidate if candidate.is_file() else candidate/'actor.pt'
+    if candidate.is_dir() and (candidate/'latest.json').is_file():
+        latest = json.loads((candidate/'latest.json').read_text())
+        if 'checkpoint' in latest:
+            from .residual_policy import residual_checkpoint
+            selected = residual_checkpoint(candidate)
+    direct_residual = (selected.parent/'residual.json').is_file()
+    if direct_residual:
+        if args.learned_residual is not None:
+            parser.error('Choose one residual checkpoint selector')
+        from .residual_policy import residual_checkpoint
+        selected = residual_checkpoint(candidate)
+        saved = json.loads(selected.with_name('residual.json').read_text())
+        args.learned_residual = selected
+        paired_teacher = selected.with_name('policy.pt')
+        args.ckpt = paired_teacher if paired_teacher.is_file() else Path(saved['teacher_checkpoint'])
+    if args.lpf is not None:
+        if not math.isfinite(args.lpf) or not 0 <= args.lpf < 250:
+            parser.error('--lpf must be finite, 0 <= Hz < 250; 0 disables filtering')
+        if args.learned_residual is None:
+            parser.error('--lpf requires a learned torque residual')
+    if args.learned_residual is not None:
+        if (not math.isfinite(args.payload_mass) or not 0 <= args.payload_mass <= 5
+                or not math.isfinite(args.push_force) or not 0 <= args.push_force <= 50):
+            parser.error('Payload must be0..5kg and push force0..50N')
+        if any((args.residual_wheel_pd, args.fixed_residual_lqr, args.velocity_bias)):
+            parser.error('Choose learned residual or a wheel residual controller')
+        if args.leg_action_filter != 'auto':
+            parser.error('Learned residual uses the saved Teacher action filter')
+        if args.mujoco_python == parser.get_default('mujoco_python'):
+            args.mujoco_python = Path.home()/'venvs/tita_mjlab/bin/python'
+    # Torque actors use their saved history/Teacher contract rather than the
+    # ordinary position/velocity action exporter.
     if args.steps is not None and (args.steps < 1 or not args.headless):
         parser.error('--steps must be positive and used with --headless')
     if args.command is not None and (not args.headless or not all(math.isfinite(v) for v in args.command)):
@@ -170,6 +246,11 @@ def main(argv=None):
         path, _, _, _ = describe_checkpoint(args.ckpt)
     except ValueError as error:
         parser.error(str(error))
+    stores = (REPO/'sim2sim/checkpoints', REPO/'sim2real/checkpoints')
+    requested = resolve_checkpoint(args.learned_residual) if args.learned_residual is not None else path
+    if not any(requested.is_relative_to(store) for store in stores):
+        registered = register_checkpoint(requested)
+        print('[DESKTOP_DRY_RUN] Checkpoint registered: '+str(registered['sim2sim']), flush=True)
     if args._prepare:
         cfg_path = prepare_checkpoint(path, args.mujoco_python)
         record(json.loads((cfg_path.parent / 'manifest.json').read_text()), 'policy_export')
@@ -178,6 +259,8 @@ def main(argv=None):
         parser.error('Viewer keyboard mode requires a terminal; use --headless for a finite run')
     config = prepared_config(path)
     launch_file = PACKAGE / 'launch/sim2sim.launch.py'
+    if args.learned_residual is not None:
+        launch_file = PACKAGE / 'launch/sim2sim.residual.torque.launch.py'
     if config is None:
         subprocess.run([str(args.isaac_python), str(launch_file), '--ckpt', str(path), '--_prepare',
                         '--mujoco-python', str(args.mujoco_python)], check=True)
@@ -185,6 +268,11 @@ def main(argv=None):
     if config is None:
         raise RuntimeError('Export verification did not produce a valid config')
     print(f'[VALIDATION_SIM] Checkpoint: {path}\nVerified interface: {config}', flush=True)
+    if args.learned_residual is not None:
+        from .residual_policy import residual_metadata, residual_lpf_hz
+        metadata = residual_metadata(args.learned_residual, json.loads(config.read_text())['policy_interface']['checkpoint_sha256'])
+        print('[VALIDATION_SIM] Residual verified: '+json.dumps(metadata['policy_checkpoint_sha256']), flush=True)
+        print(f'[VALIDATION_SIM] Residual-only LPF: {residual_lpf_hz(metadata, args.lpf):g} Hz (0 = bypass), update 500 Hz', flush=True)
     if args.prepare_only:
         return
     command = ['/bin/bash', '--noprofile', '--norc', '-c', 'source "$1" || exit; shift; exec "$@"', 'sim2sim',
@@ -204,6 +292,11 @@ def main(argv=None):
         command += ['--support-mode', str(args.support_mode)]
     if args.pose is not None:
         command += ['--pose', *map(str, args.pose)]
+    if args.learned_residual is not None:
+        command += ['--learned-residual', str(args.learned_residual),
+                    '--payload-mass', str(args.payload_mass), '--push-force', str(args.push_force)]
+        if args.lpf is not None:
+            command += ['--lpf', str(args.lpf)]
     command += ['--leg_action_filter', args.leg_action_filter]
     command += ['--leg_notch_hz', str(args.leg_notch_hz), '--leg_notch_q', str(args.leg_notch_q)]
     environment = os.environ.copy()

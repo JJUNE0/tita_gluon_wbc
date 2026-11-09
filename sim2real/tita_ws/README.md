@@ -1,442 +1,140 @@
-# tita_ws (sim2real)
+# TITA single Sim2Real workspace
 
-TITA real-robot runtime with the same structure as `sim2sim/sim2sim_ros2_jazzy`:
-one node, one loop, one state machine, and the same exported policy folder.
+Execution Domains: `DESKTOP_DRY_RUN` for local builds/tests;
+`ROBOT_STATE_CHANGING` for operator-invoked launch. Canonical workspace:
+`sim2real/tita_ws` locally, `~/tita_ws` after a separately approved robot deployment.
+No per-checkpoint workspaces are needed.
 
-The generic `tita.launch.py policy_dir:=<export-folder>` reads the 33/34-input
-layout and the saved action filter from `config.json`. Its default
-`leg_action_filter:=auto` restores leg MA2 for PosKneeMA2 and no filter for older
-policies. Explicit filter overrides remain available. First prepare a checkpoint
-on the desktop with the sim2sim launcher's `--ckpt <model-directory> --prepare-only`;
-the resulting `<model-directory>/sim2sim/actor/` contains `policy.onnx`,
-`config.json`, and its verification manifest. The robot consumes that exported
-folder and does not need PyTorch or the raw training checkpoint.
+## Current policy pair
 
-The position-error term uses only encoder angles and IMU pitch, with nominal
-radius, command zero thresholds, clip and scale exported from training. Its
-reference and wheel unwrap state reset on RL exit/reentry and policy faults;
-wheel travel between observations must be below pi radians. Training noise and
-radius randomization are omitted during inference. This generic loader support
-does not install a new robot bundle; the frozen `flashsac.launch.py` runner still
-requires a separately prepared SHA256-pinned bundle and operator deployment.
+| Policy | Bundle | Source checkpoint SHA256 |
+|---|---|---|
+| Frozen Teacher80k | `flashsac_mjlab_pose_80000` | `5487e3584fddbdfc87b7485bb2ad4c7da8069a7679b1975789d64419e7482334` |
+| Experiment2 torque residual10k + LPF60 | `20261109/10000_d6672529ee24/residual` | `d6672529ee247a92b7043f50bb6deb501a65becbf760761a412b33d5701b6002` |
 
-| sim2sim (`sim2sim_ros2_jazzy/`) | sim2real (`src/tita_controller/`) |
-|---|---|
-| `state_machine.py` | `include/tita_controller/state_machine.hpp` |
-| `adapter.py` | `include/tita_controller/adapter.hpp` |
-| `sim2sim_node.py` + `mujoco_env.py` | `src/tita_node.cpp` + `tita_robot` CAN API |
-| keyboard `1` / `0` / `6` | joystick switches (below) |
+Policy selection is [`../config/policies.json`](../config/policies.json),
+relative to that JSON. Actual files are in `../checkpoints/`, organized as
+`<framework>/task/<family>/<task>/<YYYYMMDD>/<step>/`. The residual entry contains
+both `policy.pt` (matching Teacher) and `residual.policy.pt`, plus saved contracts.
+The native source package no longer has duplicate `policies/` bundles.
 
-Vendor packages copied unchanged from `tita_gluon_ws/src/ddt_ros2_control`:
-`tita_robot` (CAN API, prebuilt), `teleop_command` (ELRS joystick -> `sensor_msgs/Joy`), `ros_utils`.
+The controller source is the latest hardware-tested full-pose/direct-joystick
+version. Public launch validates the pinned Teacher config/ONNX and residual
+manifest/ONNX before creating the logged hardware runner. A new policy requires
+an explicit export and contract validation; changing a filename alone is insufficient.
 
-## Four sphere-wheel candidates (2026-10-19)
+## Public entrypoints
 
-Select one with `policy:=<bundle>` in `flashsac.launch.py`. The four actor/ONNX pairs are pinned
-individually; `leg_action_filter:=auto` restores each saved filter.
-
-| Candidate | Bundle | Training run / checkpoint | Filter |
-|---|---|---|---|
-| ② 60k | `flashsac_sphere2_60000` | `tita_flash_sac_220437_199621/model_60000` | `none` |
-| ① 70k | `flashsac_sphere1_70000` | `tita_flash_sac_220437_190135/model_70000` | `ma2_legs` |
-| ① 90k | `flashsac_sphere1_90000` | `tita_flash_sac_220437_190135/model_90000` | `ma2_legs` |
-| ③ 70k | `flashsac_sphere3_70000` | `tita_flash_sac_034313_051978/model_70000` | `ma2_legs` |
-
-All use the existing 34-observation interface, eight actions, 50 Hz inference, knee gains 92/2.3,
-other leg gains 60/1.5, wheel Kd 0.5, and effort caps 60/12 Nm. Existing joystick limits remain
-1 m/s and 1 rad/s, with the existing 0.5/s command ramp; velocity bias defaults OFF. Candidate ③
-was trained with ±1.5 m/s / ±3 rad/s and no command ramp; deployment does not raise joystick limits
-or remove the real command ramp. Its full training command range is therefore not exercised here.
-Default policy remains A80k and older bundles stay selectable. Hardware motion is NOT_TESTED.
-
-```bash
-ros2 launch tita_controller flashsac.launch.py output_enabled:=true policy:=flashsac_sphere2_60000
-```
-
-## Selectable bundle: PosKneeMA2 model_75000 (2026-10-18)
-
-`policy:=flashsac_posma2_75000` selects `tita_flash_sac_180212_290240/model_75000`.
-It retains the PosKneeMA2 50k interface: 34 observations, 50 Hz inference, automatic six-leg
-MA2, knee 92/2.3, other legs 60/1.5, wheel Kd 0.5 and caps 60/12 Nm. Joystick caps remain
-1 m/s / 1 rad/s. Velocity bias defaults OFF. The default bundle remains A80k; 50k stays selectable.
-Hardware behaviour is NOT_TESTED; replacing the checkpoint does not establish a fix for yaw drift.
-
-```bash
-ros2 launch tita_controller flashsac.launch.py output_enabled:=true policy:=flashsac_posma2_75000
-```
-
-## Selectable bundle: PosKneeMA2 model_50000 (2026-10-18)
-
-`policy:=flashsac_posma2_50000` selects `tita_flash_sac_180212_290240/model_50000`.
-It uses 34 observations (encoder/IMU wheel position error included), eight actions at 50 Hz,
-knee Kp/Kd 92/2.3 and other leg gains 60/1.5. `leg_action_filter:=auto` (the public launch
-and runner default) restores the saved `ma2_legs`; older bundles still resolve to `none`.
-Wheel Kd 0.5, torque caps 60/12 Nm and joystick caps 1 m/s / 1 rad/s are retained.
-The default policy remains `flashsac_80000`. Hardware behaviour is NOT_TESTED.
-
-```bash
-ros2 launch tita_controller flashsac.launch.py output_enabled:=true policy:=flashsac_posma2_50000
-```
-
-## Selectable bundle: C2 leg-scale model_60000 (2026-10-18)
-
-`policy:=flashsac_c2_60000` selects the C2 arm (`DDT-Velocity-Flat-Tita-My-LegScale-Reward-v0`, run
-`tita_flash_sac_114500_483968/model_60000`, checkpoint `b4c8ae07…`, ONNX `b12e4026…`). It is installed from
-`src/tita_controller/policies/flashsac_c2_60000/`. The default `policy:=flashsac_80000` is unchanged.
-
-C2 learned a leg output scale of about 0.55–0.78 in training. Its config therefore keeps the training
-defaults: RL legs Kp 60 / Kd 1.5, wheel Kd 0.5, caps 60/12, command range 1.0/1.0. Do not combine it with the
-knee 92/2.3 deployment override, which compensates the same deficit twice. Both bundles are SHA256-pinned in
-`flashsac.launch.py`, and the runner names logs `<bundle>_<time>_output_<flag>`.
-
-```bash
-ros2 launch tita_controller flashsac.launch.py output_enabled:=true policy:=flashsac_c2_60000
-```
-
-Selection evidence and sim-only risks are in `docs/exp/2026-10-18/flashsac_legscale_sim2sim.md` §3a. The risks are
-possible 25 Hz chatter, possible forward drift if only the knees are weak, and weaker backward/yaw tracking.
-Hardware behaviour is NOT_TESTED.
-
-## Frozen FlashSAC model_80000
-
-Execution domains: `DESKTOP_DRY_RUN` for local build/tests;
-`ROBOT_STATE_CHANGING` for the public launch, which stops the existing service
-even with controller torque output disabled (the default).
-
-The selected checkpoint is
-`lab/ddt_lab/logs/flash_sac/tita_flash_sac_201940_278440/model_80000`.
-Its exported actor is included in `src/tita_controller/policies/flashsac_80000/`
-and installed with the package. The original checkpoint/export is left unchanged.
-The earlier 50000/60000/75000 bundles are retained. Updating the
-launch and runner together is required to select another bundle and keep pinned hashes and
-run identifiers consistent; a deployment backup contains the previous install.
-`flashsac.launch.py` verifies pinned ONNX/config/checkpoint hashes before creating nodes;
-it needs no PC training-log path on the SBC. The policy consumes 33 observations,
-produces eight native-order actions, and runs at 50 Hz inside the 500 Hz motor loop.
-The current deployment config uses RL Kp 60 / Kd 1.5 for native leg indices
-0,1,4,5 and Kp 92 / Kd 2.3 for knee indices 2,6. Previously all six leg joints
-used 92 / 2.3. Wheel Kp 0 / Kd 0.5 and final torque limits are unchanged. Transform-up/sit/supporting-sit use their own
-state-machine gains; this config change does not replace those gains. The
-checkpoint/ONNX are unchanged; the config override is pinned and logged.
-The frozen ONNX actor includes its trained action gains. No residual, RLS, probing,
-or runtime gain/bias/reference adaptation is present.
-
-Read-only SSH inspection confirmed Ubuntu 22.04, `/opt/ros/humble`, and existing
-workspace `/home/robot/tita_ws`. The user approved replacing `/home/robot/tita_ws` with this workspace.
-The previous workspace is archived outside the active path before replacement. Both the existing motor controller and joystick are owned by
-`tita-bringup.service`. The replacement/build operation does not stop or launch controllers.
-Build in the replacement workspace:
+After deployment, from the robot workspace, the start script sources ROS and
+this workspace automatically. It checks workspace `config/policies.json`, then
+adjacent source config, then the installed config. `TITA_POLICY_CONFIG=/path/to/policies.json`
+selects a different config:
 
 ```bash
 cd ~/tita_ws
-source /opt/ros/humble/setup.bash
-exp_dir="$PWD/docs/exp/$(TZ=Asia/Seoul date +%F)"
-mkdir -p "$exp_dir"
-set -o pipefail
-colcon --log-base "$exp_dir/colcon" build --packages-up-to tita_controller --cmake-args -DBUILD_TESTING=OFF -DPython3_EXECUTABLE=/usr/bin/python3 2>&1 | tee "$exp_dir/flashsac_build_$(date +%H%M%S).log"
-source install/setup.bash
+./start_sim2real.sh false teacher   # output disabled; still accesses hardware
+./start_sim2real.sh true teacher
+./start_sim2real.sh true residual
 ```
 
-Source the rebuilt workspace, support the robot, then use one launch command.
-It validates the frozen policy, stops `tita-bringup.service`, waits for its
-controller/joystick to disappear, starts logging and rosbag, then launches the
-new controller. With `output_enabled:=true`, it first sends the upstream
-`start.bash` MCU Ready -> Direct request sequence after recording is ready;
-failure prevents controller startup. `output_enabled:=false` sends no MCU mode
-requests. Successful request transmission is logged separately from a mode ACK,
-which the current SDK does not expose. Service stop uses exactly `sudo -n /usr/bin/systemctl stop
-tita-bringup.service`; failure prevents the new controller from starting.
-Existing SBC permission for this command was inspected; permissions were not changed.
+Equivalent commands after sourcing ROS and `install/setup.bash`:
 
 ```bash
-# ROBOT_STATE_CHANGING: automatic service stop, new controller torque output off.
-source install/setup.bash
-ros2 launch tita_controller flashsac.launch.py
+ros2 launch tita_controller sim2real.launch.py output_enabled:=true
+ros2 launch tita_controller sim2real.residual.torque.launch.py output_enabled:=true
 ```
 
-After ending that session with Ctrl+C, the operator can select physical actuation:
+`policy_config:=/path/to/policies.json` overrides selection in ROS launch.
+Checkpoint paths resolve relative to that JSON. The installed package preserves
+this same config/checkpoints layout. Rebuild/redeploy to refresh its installed
+copy; editing an adjacent source config is picked up on the next start-script run.
 
-```bash
-# ROBOT_STATE_CHANGING
-ros2 launch tita_controller flashsac.launch.py output_enabled:=true
-```
+Only these two public launch files remain. `_policy_launch.py`,
+`_controller_nodes.py` and `_residual_bundle.py` implement shared validation and
+node construction; operators should use the public launchers. `run_sim2real.sh`
+retains the existing logged runner, Ready→Direct MCU precondition, owned process
+groups, recorder and shutdown sequence. Do not invoke the private node helper
+as a replacement for that sequence.
 
-The runner always saves console output, ROS logs, checkpoint/ONNX/config hashes,
-exit status and a rosbag under this workspace's `docs/exp/YYYY-MM-DD/` (Korea date).
-It starts the recorder first, rejects launch if recording cannot start, stops
-the launch if recording exits, and finalizes the bag on Ctrl+C. The recording
-contains joint states, IMU, joystick, observation, action, computed torque, state
-and rosout. Use `namespace:=<name>` to override the namespace. The environment
-hook loaded by `install/setup.bash` also places the outer ROS launch logs under
-`docs/exp/YYYY-MM-DD/ros/`. The existing `./run_flashsac.sh false|true` commands
-delegate to this public launch. The installed logged runner calls generic
-`tita.launch.py` internally, avoiding launch recursion. The old service is never
-restarted automatically, including on launch failure or Ctrl+C.
-The inner launch and recorder each run in an owned process session with SIGINT
-restored to its default disposition. Ctrl+C signals each owned process group,
-then escalates to SIGTERM/SIGKILL with bounded waits if descendants remain.
-Wait for the runner's `Exit ...; saved: ...` message before starting another run.
-Duplicate-process refusal prints the conflicting PID and command. Existing
-processes from older runs are never killed automatically during a new launch.
+## Control behavior
 
-The default namespace is `tita4252763`.
-The main controller and policy inference run on the SBC. Build ARM binaries there;
-do not copy the desktop's `build/` or `install/` directories. Do not run another
-motor controller alongside this node. SBC build, CAN ownership, physical torque
-signs/units and joint mapping must be checked on the SBC; desktop parity is not
-hardware validation.
+- With motor output enabled, only the500Hz motor/control thread requests
+  `SCHED_FIFO` priority20 and timer slack1ns. Startup prints the verified active
+  settings; a setup failure prevents normal control and uses the existing
+  bounded shutdown-zero path. Output-disabled runs keep their original scheduling.
+  SDK frame waits remain100us and TX remains synchronous. Policy, CAN receive
+  and capture-publisher threads keep their existing scheduling. For an explicit
+  comparison, prefix the same start command with `TITA_MOTOR_RT_PRIORITY=0`;
+  default/unset or `20` selects RT. Other values are rejected. The corresponding
+  `motor_realtime_priority` ROS parameter is read-only after startup. Full
+  policy/ROS-load timing with this setting still needs hardware validation.
+- `vx=-axes[2]*1.5m/s`, `yaw_rate=axes[3]*3rad/s`, subject to deadzone and saved
+  limits. Stick changes apply immediately; there is no velocity slew ramp.
+- Right stick `-axes[0]` roll and `-axes[1]` pitch; `axes[5]` height speed/hold.
+  Pose ranges: roll ±30°, pitch ±15°, height 0.27–0.42m, nominal 0.335m.
+  Saved pose ramp rates are retained.
+- The existing prepare/sit/RL/software-stop button state machine is unchanged.
+  Follow the startup button instructions printed by the controller.
+- In residual mode, `axes[7]=0` permits residual; ±1 disables it. Teacher remains
+  active in RL either way. Residual additionally requires exact-zero requested
+  and applied velocity, valid sensors, and pose within the trained ranges.
+  Roll/pitch commands and nonnominal heights are permitted within those bounds.
+- Teacher50Hz / residual250Hz run in the policy worker; the nonwaiting motor
+  exchange targets500Hz. Residual is held between worker results. PD + residual
+  is effort-clipped once; the residual expires after12ms and Teacher after40ms
+  from its source snapshot. Existing generation/fault checks remain unchanged.
+- Experiment2 uses its saved60Hz residual-only one-pole LPF on every500Hz motor
+  tick, including held250Hz actor requests. Fresh PD is added after filtering,
+  then the final effort limit is applied. Filter state clears immediately when
+  residual is disabled, stale, from a different gate epoch, or outside valid RL.
+  No synthetic training torque delay is added on hardware.
+- Residual uses the same measured gyro/gravity/leg-joint sample as the Teacher
+  builder, mapped to its saved native440-input frame. Wheel displacement uses
+  shared measured leg angles/gravity and the actual wheel encoder. No synthetic
+  training noise/bias is injected on hardware. Actor previous-output history
+  remains the selected requested torque before the LPF.
+- Actuator samples separately record `selected_residual` (requested),
+  `filtered_residual` (candidate feedforward after LPF) and `computed_torque`
+  (after PD sum/clamp), with `residual_lpf_hz`. `torque_sent` records transport
+  acceptance separately. These are not motor actuation acknowledgements.
 
-For observation/action/torque inspection, the controller publishes
-`/sim2real/debug/{obs,action,torque,state}`. Torque is the computed command in
-native order (left leg_1..4, right leg_1..4), before `output_enabled` gating;
-it is not measured/applied torque. The expected joint-space unit is N*m.
+Residual actor250Hz, Teacher50Hz and motor/filter500Hz remain the trained timing
+contract.500Hz actor inference is not a launch-time override: changing it also
+changes the observation history's time span and the policy's closed-loop behavior.
 
-Desktop checks (no robot node or CAN API is instantiated):
+## Build and evidence
 
-```bash
-source /opt/ros/jazzy/setup.bash
-python3 test/sim2real/test_sim2real_parity.py sim2real/tita_ws/src/tita_controller/policies/flashsac_80000
-python3 test/sim2real/test_flashsac_setup.py --torch-python /home/cocel/anaconda3/envs/online_rl/bin/python
-```
-
-## Build
+Local ROS Jazzy build (no physical controller launch):
 
 ```bash
 cd sim2real/tita_ws
-source /opt/ros/<distro>/setup.bash
-colcon build      # downloads ONNX Runtime 1.19.2 for x86_64 or aarch64
-```
-
-If another Python (e.g. Isaac) is first in `PATH`, build with the system Python
-(`catkin_pkg` must be importable).
-
-## Run
-
-Copy the sim2sim export folder of a checkpoint (`<model>/sim2sim/actor/`: `config.json` + `policy.onnx`)
-to the robot. Run `sim2sim.launch.py --prepare-only` first if it does not exist yet.
-
-```bash
+source /opt/ros/jazzy/setup.bash
 source install/setup.bash
-# read-only: reads CAN/IMU/joystick, publishes state, sends no torque
-ros2 launch tita_controller tita.launch.py policy_dir:=<actor folder>
-# motors on
-ros2 launch tita_controller tita.launch.py policy_dir:=<actor folder> output_enabled:=true
+colcon build --packages-select tita_controller --allow-overriding tita_controller \
+  --cmake-args -DBUILD_TESTING=OFF -DPython3_EXECUTABLE=/usr/bin/python3
 ```
 
-## States and joystick
+For a standalone robot `~/tita_ws`, the separately approved deployment should
+copy this workspace plus `sim2real/config/` and `sim2real/checkpoints/` into
+`~/tita_ws/config/` and `~/tita_ws/checkpoints/`. CMake supports both this standalone
+layout and the repository's adjacent layout; the config's relative paths stay valid.
 
-### Optional zero-command velocity bias
+For a fresh workspace with no install tree, build dependencies using
+`--packages-up-to tita_controller` instead. On the robot use its installed
+ROS distribution (currently Humble). Local compilation does not deploy anything. CMake installs the shared
+`sim2real/checkpoints/` tree and its config with the controller. Automatic play
+registration creates local copies in both domains without selecting/deploying them.
+Only a validated hardware export can be selected for a physical launch; see the
+[registry instructions](../checkpoints/README.md).
 
-```bash
-# Computes policy + bounded correction and records it; motor output remains off.
-ros2 launch tita_controller flashsac.launch.py velocity_bias:=true
-```
+The runner records under workspace `docs/exp/YYYY-MM-DD/`: summary, console,
+ROS logs and rosbag. Actuator capture defaults ON at the500Hz motor-loop sampling
+clock (`/sim2real/actuator_sample`). Worker samples and Teacher/residual/command
+streams remain recorded. These are timestamped controller samples and cached SDK
+feedback, not proof of fresh500Hz sensor packets or a motor torque ACK.
+Shutdown attempts ten zero-torque commands with the original fault guards.
 
-`velocity_bias` defaults to false. When enabled, an encoder/IMU/relative-FK
-observer and a torque-bounded integral law run at policy cadence inside the
-existing controller. Each neutral hold ignores 0–1 s, estimates drift and mean
-pitch over 1–3 s with correction OFF, and applies correction after 3 s. It changes only the
-two native wheel velocity targets before their existing PD and torque clipping.
-The same eight-element torque vector is sent once per 500 Hz loop; this mode
-does not create another CAN sender. Actor observations and raw last actions
-are unchanged.
-
-The additional computed torque is fixed at **+/-0.8 Nm per wheel**, converted
-using the actual wheel Kd and radius (the larger Kd sets the shared bias bound).
-Integral gain 4 and LPF tau 0.1 s are retained; the `3*v` torque seed is removed.
-A 1 s ramp and slew of at most **0.8 Nm/s per wheel** bound application.
-The integral tracks the limited output to prevent hidden windup. With the
-selected checkpoint the common velocity-offset bound is +/-0.148 m/s; final
-policy-plus-bias wheel torque is still clipped at +/-12 Nm.
-`velocity_bias_max_torque` and its old environment variable remain unsupported;
-the 0.8 Nm limit is fixed. Movement commands, RL exit and invalid timing cut
-the correction immediately and reset acquisition. During acquisition/application,
-tilt above 0.3 rad or estimated speed above 1 m/s inhibits correction. After
-acquisition, pitch deviation above **5 degrees** from the 1–3 s mean also cuts
-correction and latches it OFF until movement-command exit/reentry or RL reset.
-The node logs the acquired drift/pitch reference and inhibition transitions.
-Hold hysteresis is the same as sim2sim:
-enter below [0.02, 0.02, 0.03], leave at [0.04, 0.04, 0.06].
-
-`velocity_bias_response_sign:=1.0` uses the MuJoCo closed-loop response sign;
-hardware feedback sign, sensor alignment, slip and actual torque calibration
-remain NOT_TESTED. `-1.0` is the alternate response sign. The sign is
-validated before the public launch creates the runner. This is an adaptive
-velocity offset with an integral state; it does not use RLS, LQR gains or
-probing and does not hold absolute position or heading.
-
-The runner always records the selection, bias limit/slew, sign and geometry hash.
-`/sim2real/debug/velocity_bias` contains 11 values:
-`holding, eligible, hold_age_s, v_hat_m_s, filtered_v_m_s, integral_m_s,
-bias_m_s, wheel_offset_L_rad_s, wheel_offset_R_rad_s,
-actual_added_computed_torque_L_Nm, actual_added_computed_torque_R_Nm`.
-The existing torque topic records the final computed eight-joint torque.
-Output-disabled mode computes the same signals without transmitting torque.
-
-`/sim2real/training_sample` (`tita_controller/msg/TrainingSample`) records a single
-frame at the same nominal 50 Hz policy cadence, plus state transitions. It also
-records invalid-sensor frames, with an empty observation and validity flags.
-Each frame has a ROS stamp captured just after the controller sensor read,
-`sequence_id` (starts at zero on node restart), `control_tick` (2 ms loop index),
-and `monotonic_ns` for measuring intervals even if wall/ROS time changes. Existing
-JointState/IMU stamps use that same frame stamp. These are controller snapshot
-times, not hardware CAN acquisition times. Sequence gaps indicate missing
-training frames; account for node restarts and bag subscription startup.
-
-The frame includes observation, command, joint/IMU state, raw ONNX action,
-wheel velocity offsets, equivalent `teacher_action`, computed torque, bias
-diagnostics, state, and validity/output/transport flags. `teacher_action` is in
-**ONNX output units including export gains**, not normalized actor units:
-`physical_target = clip(action_raw * scale + offset) + wheel_velocity_bias`,
-then `teacher_action = (physical_target - offset) / scale`. Only wheels receive
-the velocity offset. Divide by checkpoint export gains when fitting the
-normalized actor. `teacher_action_valid` checks current inference and adapter
-invertibility/target clipping; actor output bounds must additionally be checked
-offline. It does not certify good behavior or hardware actuation.
-
-`/sim2real/motor_feedback` (`tita_controller/msg/MotorFeedback`) is recorded in
-the same bag at that cadence. Join it to TrainingSample using `sequence_id`,
-`control_tick`, and `monotonic_ns` within one node run. The original
-TrainingSample schema is unchanged, so previously recorded bags remain readable.
-`reported_torque` contains eight native-order SDK `get_joint_t()` values in
-firmware-reported Nm, not independently calibrated physical torque. The same
-valid values also populate JointState `effort`; invalid reads leave effort empty.
-
-Feedback is read before the current policy inference and torque transmission.
-`feedback_read_monotonic_ns` marks the controller read completion. The message
-also records the preceding 500 Hz `previous_computed_torque`, its
-`previous_torque_sent` transport flag and transport-return
-`previous_command_monotonic_ns`. These are not CAN acquisition times or a motor
-acknowledgement: the SDK cache and motor latency still need to be considered.
-`valid` requires eight finite values and no SDK motor timeout; invalid feedback
-contains NaN. This diagnostic validity never gates policy or motor output.
-The feedback topic is independent of TrainingSample transport, so check for
-missing IDs before comparing them. A same-row torque ratio alone is unreliable
-during fast command changes.
-
-For physical teacher-data training, select RL frames with `sensors_valid`,
-`policy_valid`, `teacher_action_valid`, `output_enabled` and `torque_sent` true,
-then apply command/bias/quality filters for the task. `torque_sent` means the
-transport call accepted the command, not a motor acknowledgement or measured
-torque. The observation's last-action fields retain the existing raw-action
-convention. Collection and subsequent student execution must account for this
-history convention. The logged runner records the new topic automatically.
-Build this package on the SBC and source its overlay before collection; desktop
-builds are not deployed to the robot automatically.
-
-`idle` (start, original velocity damping) -> `transform_up` (current -> splay -> sit)
--> `sit` -> `rl`. Left release from RL starts `return_to_sit`, which interpolates
-over 4 s with full leg support PD active from entry. The initial effective
-reference reproduces the previous final torque, then moves with smoothstep to
-the original sit PD/feedforward target. A 0.3 rad thigh arc and encoder/IMU
-nominal CoM wheel balance (30/5/1 gains) preserve support while lowering. Wheel
-balance fades as the knees fold; final wheel control is damping. No policy or
-velocity bias runs during this transition. Command limits remain +/-1 m/s and
-+/-1 rad/s; the bundled export's smaller command caps are explicitly overridden.
-Idle retains the original damp behavior: `torque[i] = clip(-Kd[i] * joint_velocity[i])`,
-with `Kd = [8, 8, 8, 0.5, 8, 8, 8, 0.5]` and checkpoint torque limits.
-Stationary joints receive zero torque; moving joints receive opposing damping torque.
-An internal `sit` state holds the ready pose after transform-up until the operator
-selects RL. Same transform poses, gains and timings as sim2sim. `rl` is rejected
-until `sit`; policy inference starts only in `rl`.
-
-The left lower button is a latching RL selector. The right lower button is held
-for startup and pressed again for an immediate software stop; its release alone
-does not stop. There is no long-press action on the left button.
-
-| State | Button action | Result |
-|---|---|---|
-| Startup | Both buttons released | Arm recognition of a fresh startup hold |
-| Idle (or initial fault damping after sensors recover) | Left up, hold right for at least 1 s | `transform_up` then `sit` |
-| Transform/sit/RL/return | Release the startup right-button hold | Continue current state |
-| Sit | Push left down | `rl` |
-| RL | Push left again so it comes up | `return_to_sit` then `sit` |
-| After startup was enabled | A new right-button press | Latched `estop`: 4 s supporting sit when upright with valid sensors; otherwise damping |
-
-Starting with either button held cannot start movement; release both first.
-A short right press in idle cancels without starting. Keeping the startup press
-held cannot also trigger stop; release it and press again to stop. A new right
-press has priority over a simultaneous left action. Joystick loss/invalid data
-after enabling also latches stop. `estop` cannot be cleared by joystick or fault
-requests; restart the process with both buttons released to begin again.
-The supporting stop stays latched after sitting and cannot resume RL. A stop
-while already returning preserves that trajectory without restarting its clock.
-Sensor/fall/inference faults cancel supporting control and retain damping,
-including inside a latched `estop`. Idle and incomplete startup stops use damping.
-This software stop still commands motor torque and does not isolate power.
-Simulation evidence: `docs/exp/2026-10-18/flashsac_sit_validation.md`; hardware
-motion and moving-stop performance require operator validation.
-
-Default node parameters `left_button_axis=4`, `right_button_axis=6` follow the
-DDT two-position channel convention (down=-1, up=+1). This physical mapping is
-NOT_TESTED and must be confirmed with output disabled before hardware deployment.
-Middle/unknown button values are invalid. The old axes[4]/axes[5] three-position
-switch scheme is no longer used by this controller.
-
-RL still requires `sit`; an early left press does not queue automatic RL entry.
-Release/repress left after `state: sit`, including when a sit-return was still
-running. Sit completion is time based and does not prove the robot attained its
-target or that it can balance without the policy. Sticks remain `axes[2]` for
-forward/back and `axes[3]` for yaw, with checkpoint caps and 0.5/s ramp in RL.
-Command and previous action are cleared outside RL.
-
-Safety: stale or non-finite IMU/motor data, or tilt > 0.65 rad, switches to `damp`
-(legs and wheels: velocity damping only). Torques are clipped to the checkpoint torque limits.
-Fault handling takes precedence over joystick requests in the same tick.
-Invalid policy tensor shapes/timing reject startup; non-finite observations/actions
-or inference errors enter `damp`. A fault during an enabled session requires
-process restart/re-preparation before further RL; no automatic RL resume occurs.
-
-Button/state regression (no ROS/CAN API): `python3 test/sim2real/test_joystick_buttons.py`.
-
-Published for `real2sim`: `/<namespace>/joint_states`, `/<namespace>/imu_sensor_broadcaster/imu`,
-and `/sim2real/debug/{obs,action}` at the policy rate.
-
-## Optional leg action MA2
-
-The default is `leg_action_filter:=auto`, which reads the selected policy config. Select `leg_action_filter:=ma2_legs`
-to average the current and previous raw policy output on the six leg actions,
-once per 50 Hz inference. Wheels pass through and 500 Hz PD still uses live
-encoder feedback. The first RL action initializes the filter; leaving RL or a
-fault resets it. Observation `last_action` and `/sim2real/debug/action` remain raw.
-Transform/sit/return/estop controllers and shutdown zero commands bypass this filter.
-
-After sourcing the workspace, the operator can select it with:
-
-```bash
-ros2 launch tita_controller flashsac.launch.py output_enabled:=true leg_action_filter:=ma2_legs
-```
-
-Velocity bias remains independently OFF by default. The runner always records
-the filter mode and `/sim2real/action_filter_sample`: header, sequence ID,
-control tick, monotonic time, mode and applied action. Join this to the existing
-`/sim2real/training_sample` by sequence ID AND monotonic time. Its wire schema
-is preserved for old recordings; `teacher_action` now describes applied targets
-(leg filter plus wheel bias), not unfiltered leg targets. Use `policy_valid`
-and output flags when selecting learning samples. Transport success is not a
-motor acknowledgement. Desktop and ARM checks do not prove physical vibration
-suppression; see `docs/exp/2026-10-18/leg_action_filter_deployment.md`.
-
-`leg_action_filter:=ma2_notch_legs` adds a second-order notch after MA2 on the
-same six leg actions. Startup parameters are `leg_notch_hz:=8.3` and
-`leg_notch_q:=3.0`; the runner summary records both with the mode. The first
-action initializes the notch at its DC steady state and RL reset clears its
-history. Raw observations and applied/teacher logging keep the same meaning.
-The sim comparison passed the stated operating-point regression gates, but
-the real residual 8–9 Hz mode is not reproduced by the nominal plant.
-Physical attenuation is NOT_TESTED. See `docs/exp/2026-10-18/leg_notch_validation.md`
-for exact coverage, limits and deployment status before selecting this option.
-
-## Orderly Ctrl+C shutdown
-
-The control loop now attempts ten all-joint zero-torque commands over about 18 ms on its
-sole writer thread before SDK teardown, including when a loop exception exits
-control. Output-disabled runs send nothing; a previously latched CAN failure
-is not retried. The success log confirms transport acceptance only. There is
-no motor ACK, hardware torque-disable command or firmware watchdog guarantee.
-SIGKILL, a blocked writer, broken CAN or SBC power loss can bypass/prevent this
-cleanup. Do not treat process exit as electrical motor power isolation.
-
-Incident evidence: `docs/exp/2026-10-18/flashsac_shutdown_torque_review.md`.
-This shutdown fix requires a rebuilt controller; the existing SBC executable
-is unchanged until a separately approved deployment.
+Older staged workspaces, launchers and policy bundles were moved into
+`docs/exp/2026-11-08/backup/` at the repository root (see the backup manifest).
+Historical paths/scripts require restoration before reuse. Existing robot
+workspaces have not been removed or overwritten by this local cleanup.

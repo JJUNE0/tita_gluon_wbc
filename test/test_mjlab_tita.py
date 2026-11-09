@@ -17,8 +17,8 @@ from mj_lab.flash_sac import TitaFlashSACEnv, runtime
 from mj_lab.checkpoint import playback_contract
 from mj_lab.robots.tita import mdp
 from mj_lab.robots.tita.flat_env_cfg import TitaFlatEnvCfg
-from mj_lab.robots.tita.walk_env_cfg import TitaWalkEnvCfg
-from mj_lab.robots.tita.robot_cfg import JOINTS, OBS_JOINTS
+from mj_lab.robots.tita.walk.walk_env_cfg import TitaWalkEnvCfg
+from mj_lab.robots.tita.common.robot_cfg import JOINTS, OBS_JOINTS
 from mjlab.envs import ManagerBasedRlEnv
 
 

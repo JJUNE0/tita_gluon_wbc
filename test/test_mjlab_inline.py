@@ -15,8 +15,8 @@ from mj_lab.checkpoint import plain, playback_contract
 from mj_lab.flash_sac import TitaFlashSACEnv
 from mj_lab.robots.tita import mdp
 from mj_lab.robots.tita.flat_env_cfg import TitaFlatEnvCfg
-from mj_lab.robots.tita.inline_env_cfg import TitaInlineEnvCfg
-from mj_lab.robots.tita.robot_cfg import JOINTS
+from mj_lab.robots.tita.walk.inline_env_cfg import TitaInlineEnvCfg
+from mj_lab.robots.tita.common.robot_cfg import JOINTS
 from mjlab.envs import ManagerBasedRlEnv
 from sim2sim_ros2_jazzy.adapter import ActionAdapter, ObservationBuilder
 from sim2sim_ros2_jazzy.checkpoint import action_layout, observation_layout, simulation_config

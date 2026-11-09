@@ -2,10 +2,30 @@
 
 Execution domains: `TRAINING_SIM` for training; `VALIDATION_SIM` for playback/export.
 
-`robots/tita/flat_env_cfg.py` and `walk_env_cfg.py` run native mjlab managers and
+`robots/tita/flat_env_cfg.py` and `robots/tita/walk/walk_env_cfg.py` run native mjlab managers and
 MuJoCo Warp GPU physics. The learner is the existing, unmodified
 `isaac_lab/ddt_lab/scripts/flash_sac/vendor/flash_rl` FlashSAC implementation.
 This entry point does not use mjlab's default PPO runner.
+
+The TITA environments are grouped by task:
+
+```text
+robots/tita/
+├── flat_env_cfg.py       # Base driving environment / Teacher defaults
+├── common/               # Robot model, motors, shared MDP functions
+├── residual/             # Frozen Teacher + torque residual; optional training-only LPF
+├── roll_pitch_height/    # Roll, pitch and height goals
+├── sit_stand/            # Sit/stand and height-only cycles
+├── stand_one_leg/        # Left/right reference, anchor and support commands
+└── walk/                 # Walking and inline wheel-assisted stepping
+```
+
+`inline` remains the training CLI default and the base of the alternating
+one-leg task. `support_command` selects left, right or both supports;
+`support_velocity` adds velocity goals. Both remain supported in their task
+folders. Task names and training commands are unchanged. The package initializer
+preserves the old module paths for existing checkpoint `env.pkl` files and
+trial scripts; new code should import from the task folders.
 
 From the repository root, install in a separate Python 3.12 environment:
 
@@ -33,33 +53,7 @@ python -m mj_lab.scripts.train --task flat --num_envs 1024 --steps 100000
 python -m mj_lab.scripts.train --task walk --num_envs 1024 --steps 100000
 ```
 
-### Roll, pitch, height and sit/stand
-
-```bash
-python -m mj_lab.scripts.train --task flat_roll_pitch_height --headless --num_envs 1024 --steps 100000
-python -m mj_lab.scripts.train --task sit_stand --headless --num_envs 1024 --steps 100000
-python -m mj_lab.scripts.train --task height_only --headless --num_envs 1024 --steps 100000
-```
-
-`flat_roll_pitch_height` adds roll/pitch/base-link-height commands to the flat
-task (38 actor and 42 critic inputs, eight actions). Current targets span
-roll ±30 degrees, pitch ±15 degrees and height 0.27–0.42 m. The native player
-accepts `--pose-command ROLL_RAD PITCH_RAD HEIGHT_M`; the external sim2sim
-launcher accepts `--pose ROLL_DEG PITCH_DEG HEIGHT_M`. Saved checkpoint ranges
-and ramp rates determine playback behavior.
-
-`sit_stand` extends the pose task with height-dependent motion gating and a
-saved curriculum. `--standing-height-only` selects its fresh standing-only
-variant. `height_only` is a separate stationary height experiment. These tasks
-have distinct saved configurations; choose the matching task when resuming.
-
-Fixed left/right support tasks are `stand_one_leg_reference` and
-`stand_one_leg_reference_right`. Their anchor variants are
-`stand_one_leg_anchor_left` and `stand_one_leg_anchor_right`. Support goals can
-also be selected through `support_command` or combined with velocity commands
-through `support_velocity`, described below.
-
-`robots/tita/inline_env_cfg.py` inherits flat's wheel actions, PD, full domain
+`robots/tita/walk/inline_env_cfg.py` inherits flat's wheel actions, PD, full domain
 randomization, reset distributions and command ranges (vx +/-1.5 m/s,
 vy 0, yaw +/-3 rad/s). A fixed half of environment IDs samples only vx, with
 vy/yaw zero; the other half retains flat's mixed driving/turning/standing
@@ -171,7 +165,7 @@ separately. Timeout alone can mean successful two-foot standing and is not
 evidence of successful one-leg balance. Older alternating checkpoints retain
 their original configuration and remain playable.
 
-`robots/tita/stand_one_leg_env_cfg.py` reuses inline's observations, actions,
+`robots/tita/stand_one_leg/stand_one_leg_env_cfg.py` reuses inline's observations, actions,
 wheel balance, physics and randomization, with vx/vy/yaw commands fixed to zero.
 The first 2 s train double-support balance: both wheel contacts earn positive
 reward while gait stays off. Gait then runs even at zero command. Its
@@ -312,3 +306,114 @@ python -m pytest -q test/test_mjlab_tita.py
 
 Short learner, resume, video and sim2sim checks establish pipeline operation.
 They do not establish a trained walking policy; run a full experiment for that.
+
+## Frozen Teacher with torque residual
+
+Execution Domain: `TRAINING_SIM`. The canonical runner is
+`mj_lab.scripts.train_residual_torque`, organized around Experiment1:
+Teacher-shared sensor noise/bias, random height/roll/pitch commands and
+post-PD torque delay. Teacher remains frozen; residual Actor/critics, replay,
+optimizers and entropy temperature initialize fresh.
+
+```bash
+~/venvs/tita_mjlab/bin/python -m mj_lab.scripts.train_residual_torque \
+  --teacher sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/80000 \
+  --reference-config mj_lab/config/residual_lpf60_10k.json \
+  --output docs/exp/2026-11-08/my_new_torque_run \
+  --num-envs 4096 --batch-size 8096 --steps 50000
+```
+
+Use a new output directory. The reference supplies learner settings, not weights
+or replay. Defaults: gamma0.99,1M replay transitions,100k warmup transitions,
+two updates per vector step,10s episodes, seed42, checkpoints every2k vector
+steps, evolving-training video every10k, online W&B logging and final matched
+Teacher/candidate evaluation. Local artifacts, source copies, hashes, initial
+state checks, metrics and upload receipts remain in the dated output folder.
+
+Teacher runs50Hz, residual250Hz and PD/physics500Hz. The normalized eight-axis
+Actor output is scaled once to ±10Nm; PD + residual is effort-clipped then
+passed through the post-PD actuator command history. Each environment samples
+a common motor lag from0/2/4/6/8ms on reset and holds it for that episode.
+Native reference-command delay is disabled to avoid adding a second lag model.
+Residual output holds between its4ms updates; the PD state feedback updates2ms.
+
+The Actor has44 features ×10 frames (440 inputs); asymmetric critic754 inputs.
+Joint/gyro/gravity sensor corruption is shared with Teacher, including the saved
+bias/delay/noise pipeline, rather than drawing a second independent sample.
+Residual has its own fixed stop wheel-displacement reference, no velocity latch
+and no wheel-error input clip. Teacher's saved wheel/heading observation behavior
+is unchanged. Existing rewards and their coefficients remain the Experiment1
+values. Initial pose/velocity perturbations and initial push are disabled;
+payload, physical DR and subsequent push scheduling remain enabled.
+
+Pose command targets are randomly resampled: height0.27–0.42m, roll±30°,
+pitch±15° by default, with30% nominal targets and5–8s resampling intervals.
+These are command targets using the saved pose ramp, not random teleports.
+`--pose-command-mode height` limits the sampler to height only.
+
+### Experiment2: residual-only LPF60
+
+Add `--residual-lpf-hz 60` to the same runner, using a different output directory.
+The native one-pole filter updates at500Hz on residual torque before it joins
+PD. The rest of the pipeline and episode-fixed torque delay remain the same.
+Its saved manifest explicitly records the filter. Current sim2sim and Sim2Real
+restore this residual-only filter at500Hz before fresh PD, clipping and delay.
+The published Teacher80k/residual10k pair and fresh10k training command are in
+[the LPF60 guide](../docs/lpf60_residual.md). Historical experiment output paths
+below are local examples; the published recipe does not require them.
+
+### Internal structure and playback
+
+- `robots/tita/residual/__init__.py`: `TorqueResidualEnv` / `TorqueResidualEnvCfg`
+  expose the Experiment1 environment.
+- `flat_env_residual_torque.py`: native Teacher/reward/DR/torque environment.
+- `flat_env_residual_torque_delay.py`: post-PD motor-command delay.
+- `flat_env_residual_torque_pose_delay.py`: random pose command sampling.
+- `flat_env_residual_torque_sensor_delay.py`: shared Teacher sensor interface.
+- `flat_env_residual_torque_lpf_delay.py`: optional Experiment2 filter.
+- `scripts/residual_training.py`: shared learner, rendering and evidence helpers.
+- `scripts/train_residual.py`: render-only compatibility path for the live
+  Experiment1's video subprocess; it is no longer a training entrypoint.
+
+These internal layers retain their native dynamics. Historical action residual
+and duplicate trainer sources are archived in
+`docs/exp/2026-11-08/backup/retired_training/`.
+For torque-only playback use
+[`sim2sim.residual.torque.launch.py`](../sim2sim/sim2sim_ros2_jazzy/launch/sim2sim.residual.torque.launch.py);
+see the [sim2sim instructions](../sim2sim/README.md).
+
+## Play and automatic checkpoint registration
+
+Execution Domain: `VALIDATION_SIM`. The default Teacher is read from
+`sim2sim/config/policies.json`, so the current policy needs no long path:
+
+```bash
+~/venvs/tita_mjlab/bin/python -m mj_lab.scripts.play --steps 1000
+
+# Select a new training checkpoint once; both registries are populated.
+~/venvs/tita_mjlab/bin/python -m mj_lab.scripts.play \
+  --checkpoint mj_lab/logs/flash_sac/<run>/model_<step> --steps 1000
+
+# Native video; save evidence inside docs/exp/YYYY-MM-DD/.
+~/venvs/tita_mjlab/bin/python -m mj_lab.scripts.play --steps 1000 \
+  --video docs/exp/2026-11-08/teacher_play.mp4
+
+# MuJoCo sim2sim defaults come from the same selection config.
+~/venvs/tita_mjlab/bin/python sim2sim/sim2sim_ros2_jazzy/launch/sim2sim.launch.py
+~/venvs/tita_mjlab/bin/python sim2sim/sim2sim_ros2_jazzy/launch/sim2sim.residual.torque.launch.py
+```
+
+Native play accepts the registered checkpoint folder or `policy.pt` as well.
+For example, `--checkpoint sim2sim/checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/80000`.
+Registration preserves native playback states and saved sensor/action contracts;
+it does not change learning or replace the config-selected hardware policy.
+See [registry layout](../sim2sim/checkpoints/README.md).
+
+### Pre-shared-sensor LPF comparison (2026-11-09)
+
+`--actor-sensor-mode clean --residual-lpf-hz 60` keeps the old full-pose torque
+Actor's simulated proprioception and existing error-input path while adding only
+the500Hz residual filter. Teacher noise/bias/delay remains enabled as saved.
+The default `teacher_shared` profile is unchanged. A fresh4096/b8096/50k comparison
+is queued after candidate validation; do not launch a duplicate. Exact settings
+and queue evidence: `docs/exp/2026-11-09/clean_lpf60_queued_training.md`.

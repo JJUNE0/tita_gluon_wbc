@@ -35,12 +35,31 @@ class Sim2SimNode(Node):
         self.declare_parameter('leg_notch_hz', 8.3)
         self.declare_parameter('leg_notch_q', 3.)
         self.declare_parameter('support_mode', -1)
+        self.declare_parameter('learned_residual', '')
+        self.declare_parameter('residual_lpf_hz', -1.)
+        self.declare_parameter('payload_mass', 2.)
+        self.declare_parameter('push_force', 20.)
         fixed_lqr = self.get_parameter('fixed_residual_lqr').value
         residual_pd = self.get_parameter('residual_wheel_pd').value
         velocity_bias = self.get_parameter('velocity_bias').value
         if sum([fixed_lqr, residual_pd, velocity_bias]) > 1:
             raise ValueError('Choose one residual controller')
         self.cfg = json.loads(Path(self.get_parameter('config').value).read_text())
+        learned_checkpoint = self.get_parameter('learned_residual').value
+        requested_lpf = self.get_parameter('residual_lpf_hz').value
+        if not learned_checkpoint and requested_lpf != -1.:
+            raise ValueError('Residual LPF requires a learned torque residual')
+        if learned_checkpoint:
+            if any((fixed_lqr, residual_pd, velocity_bias)):
+                raise ValueError('Learned residual cannot be combined with wheel residual controllers')
+            from .residual_policy import residual_metadata
+            saved = residual_metadata(learned_checkpoint, self.cfg['policy_interface']['checkpoint_sha256'])
+            self.cfg['learned_residual'] = saved['checkpoint']
+            if requested_lpf != -1.:
+                from .residual_policy import residual_lpf_hz
+                self.cfg['residual_lpf_hz'] = residual_lpf_hz(saved, requested_lpf)
+            self.cfg['control'].update(sim_timestep=1./saved['physics_hz'],
+                                       decimation=saved['physics_hz']//saved['teacher_hz'])
         self.pose_cfg = self.cfg.get('pose_command')
         self.pose_target = self.pose_command = None
         if self.pose_cfg is not None:
@@ -89,6 +108,14 @@ class Sim2SimNode(Node):
             self.residual = ResidualWheelPD(self.env)
         self.obs_builder = ObservationBuilder(self.cfg)
         self.action_adapter = ActionAdapter(self.cfg)
+        self.learned = self.disturbance = None
+        if learned_checkpoint:
+            from .residual_policy import StopResidual
+            from .residual_disturbance import ResidualDisturbance
+            self.learned = StopResidual(self.cfg, self.env, self.action_adapter)
+            self.obs_builder = self.learned.builder
+            self.disturbance = ResidualDisturbance(self.env,
+                self.get_parameter('payload_mass').value, self.get_parameter('push_force').value)
         filter_mode = self.get_parameter('leg_action_filter').value
         if filter_mode == 'auto':
             filter_mode = self.cfg['policy_interface'].get('leg_action_filter', 'none')
@@ -105,6 +132,7 @@ class Sim2SimNode(Node):
             raise ValueError('ONNX interface does not match the checkpoint metadata')
         self.command = np.zeros(3, dtype=np.float32)
         self.command_target = np.zeros(3, dtype=np.float32)
+        self.requested_command = np.zeros(3, dtype=np.float32)
         self.last_action = np.zeros(8, dtype=np.float32)
         self.steps = 0
         self.was_rl = False
@@ -122,6 +150,9 @@ class Sim2SimNode(Node):
         self.obs_pub = self.create_publisher(Float32MultiArray, '/sim2sim/debug/obs', 10)
         self.action_pub = self.create_publisher(Float32MultiArray, '/sim2sim/debug/action', 10)
         self.applied_pub = self.create_publisher(Float32MultiArray, '/sim2sim/debug/action_applied', 10)
+        if self.learned is not None:
+            topic = '/sim2sim/debug/residual_torque'
+            self.residual_pub = self.create_publisher(Float32MultiArray, topic, 10)
         self.timer = self.create_timer(self.env.control_dt, self._step)
         self.get_logger().info(self.cfg['policy_interface']['checkpoint'])
 
@@ -135,10 +166,13 @@ class Sim2SimNode(Node):
         elif message.data in ('pose_stand', 'reset'):
             self.env.reset(SPLAY_POSE)
             self.command[:] = self.command_target[:] = 0.
+            self.requested_command[:] = 0.
             self.last_action[:] = 0.
             if self.pose_cfg is not None:
                 self.pose_command[:] = self.pose_target[:] = self.nominal_pose
             self.obs_builder.reset()
+            if self.learned is not None:
+                self.learned.reset()
             self.leg_filter.reset()
             self.was_rl = False
             self.sm.request('idle', self.env.joint_pos())
@@ -150,6 +184,7 @@ class Sim2SimNode(Node):
         self.get_logger().info(f'state: {self.sm.state}')
 
     def _cmd_twist_cb(self, message):
+        self.requested_command[:] = message.linear.x, message.linear.y, message.angular.z
         for index, (value, name) in enumerate(zip(
             (message.linear.x, message.linear.y, message.angular.z), ('lin_vel_x', 'lin_vel_y', 'ang_vel_z')
         )):
@@ -184,11 +219,16 @@ class Sim2SimNode(Node):
                 self.get_logger().warn(f'Total tilt {np.degrees(tilt):.1f} deg exceeded support cutoff; entering damp')
         if not is_rl or not self.was_rl:
             self.obs_builder.reset()
+            if self.learned is not None:
+                self.learned.reset()
             if self.pose_cfg is not None:
                 self.pose_command[:] = self.nominal_pose
             if self.walking:
                 self.command[:] = 0.
         self.was_rl = is_rl
+        if self.disturbance is not None:
+            # Apply UI changes before this observation and its residual gate.
+            self.disturbance.update(self.learned.enabled, self.sm.state)
         motion_range = self.pose_cfg.get('height_motion_range') if self.pose_cfg is not None else None
         if motion_range is not None:
             lo, hi = motion_range
@@ -201,24 +241,40 @@ class Sim2SimNode(Node):
             self.residual.update(self.command if self.sm.state == 'rl' else None, self.last_action)
         elif self.residual:
             self.residual.update(self.command if self.sm.state == 'rl' else None)
-        sensors = self.residual.data if self.residual and self.sm.state == 'rl' else self.env.data
-        quaternion = sensors.sensor('trunk_quat').data.astype(np.float32).copy()
+        if self.residual and self.sm.state == 'rl':
+            quaternion = self.residual.data.sensor('trunk_quat').data.astype(np.float32).copy()
+            angular_velocity = self.residual.data.sensor('trunk_gyro').data.astype(np.float32).copy()
+        else:
+            quaternion = self.env.base_quat_sensor()
+            angular_velocity = self.env.base_ang_vel()
         state = ObsState(
             self.env.joint_pos(), self.env.joint_vel(), quaternion,
-            sensors.sensor('trunk_gyro').data.astype(np.float32).copy(),
+            angular_velocity,
             self.command, self.last_action,
             quat_wxyz_to_rotmat(quaternion).T @ self.env.base_lin_vel(), support_mode=self.support_mode,
             pose_command=self.pose_command)
-        obs = self.obs_builder.build(state)
+        if self.learned is not None:
+            allowed = (is_rl and self.disturbance.residual_enabled and np.isfinite(self.requested_command).all()
+                       and not np.any(self.requested_command) and not np.any(self.command_target)
+                       and not np.any(self.command) and self.support_mode == 2
+                       and self.learned.pose_allowed(self.pose_command,self.pose_target))
+            obs = self.learned.observe(state, allowed)
+            self.disturbance.show_status(allowed, self.sm.state)
+        else:
+            obs = self.obs_builder.build(state)
         action = np.zeros(8, dtype=np.float32)
         applied = action.copy()
         if self.sm.state == 'rl':
             action = self.policy.run(['nn_output'], {'nn_input0': obs.reshape(1, -1)})[0].reshape(8)
             applied = self.leg_filter.update(action)
+            if self.learned is not None:
+                self.learned.begin(applied)
             # Freeze the same mode that was present in this policy observation
             # for every physics substep. The next gait state is computed later.
             gait_enabled = self.obs_builder.gait_enabled
             def torque(positions, velocities):
+                if self.learned is not None:
+                    return self.learned.torque(positions, velocities)
                 if isinstance(self.residual, WheelVelocityBias):
                     return self.residual.compute(self.action_adapter, applied, positions, velocities)
                 result = self.action_adapter.compute(applied, positions, velocities, gait_enabled=gait_enabled)
@@ -268,10 +324,14 @@ class Sim2SimNode(Node):
         self.obs_pub.publish(Float32MultiArray(data=obs.astype(float).tolist()))
         self.action_pub.publish(Float32MultiArray(data=action.astype(float).tolist()))
         self.applied_pub.publish(Float32MultiArray(data=applied.astype(float).tolist()))
+        if self.learned is not None:
+            self.residual_pub.publish(Float32MultiArray(data=self.learned.residual.astype(float).tolist()))
 
     def run_interactive(self):
         """Read keys and spin the same ROS executor; physics stays on its timer."""
         saved = termios.tcgetattr(sys.stdin)
+        if self.disturbance is not None:
+            self.disturbance.open_ui()
         target = np.zeros(3)
         current = np.zeros(3)
         last_key = previous = time.monotonic()

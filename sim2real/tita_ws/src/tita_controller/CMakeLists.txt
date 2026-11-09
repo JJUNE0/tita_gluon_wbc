@@ -7,6 +7,7 @@ add_compile_options(-Wall -Wextra -O2)
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rcl_interfaces REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(tita_robot REQUIRED)
@@ -16,7 +17,9 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/TrainingSample.msg"
   "msg/MotorFeedback.msg"
+  "msg/ActuatorSample.msg"
   "msg/ActionFilterSample.msg"
+  "msg/PolicyWorkerSample.msg"
   DEPENDENCIES std_msgs)
 ament_export_dependencies(rosidl_default_runtime)
 
@@ -39,13 +42,19 @@ target_link_directories(tita_node PRIVATE ${ORT_DIR}/lib)
 target_link_libraries(tita_node onnxruntime ${tita_robot_LIBRARIES} Eigen3::Eigen)
 rosidl_get_typesupport_target(training_typesupport ${PROJECT_NAME} rosidl_typesupport_cpp)
 target_link_libraries(tita_node "${training_typesupport}")
-ament_target_dependencies(tita_node rclcpp sensor_msgs std_msgs tita_robot)
+ament_target_dependencies(tita_node rclcpp rcl_interfaces sensor_msgs std_msgs tita_robot)
 set_target_properties(tita_node PROPERTIES INSTALL_RPATH "$ORIGIN/../../lib")
 
 install(TARGETS tita_node DESTINATION lib/${PROJECT_NAME})
-install(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/../../run_flashsac.sh DESTINATION lib/${PROJECT_NAME})
+install(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/../../run_sim2real.sh DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
-install(DIRECTORY policies DESTINATION share/${PROJECT_NAME})
+get_filename_component(SIM2REAL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../.." ABSOLUTE)
+if(NOT EXISTS "${SIM2REAL_ROOT}/config/policies.json")
+  # A standalone robot workspace carries the same config/store inside itself.
+  get_filename_component(SIM2REAL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
+endif()
+install(DIRECTORY ${SIM2REAL_ROOT}/checkpoints DESTINATION share/${PROJECT_NAME})
+install(FILES ${SIM2REAL_ROOT}/config/policies.json DESTINATION share/${PROJECT_NAME}/config)
 install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
 install(DIRECTORY ${ORT_DIR}/lib/ DESTINATION lib FILES_MATCHING PATTERN "libonnxruntime.so*")
 

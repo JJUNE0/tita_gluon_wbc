@@ -18,7 +18,7 @@ from mj_lab.checkpoint import plain, playback_contract
 from mj_lab.flash_sac import TitaFlashSACEnv
 from mj_lab.robots.tita import mdp
 from mj_lab.robots.tita.flat_env_cfg import TitaFlatEnvCfg
-from mj_lab.robots.tita.flat_env_roll_pitch_height_cfg import (
+from mj_lab.robots.tita.roll_pitch_height.flat_env_roll_pitch_height_cfg import (
     RollPitchHeightCommandCfg, TitaFlatRollPitchHeightEnvCfg,
     desired_gravity, pose_error, pose_observation, pose_tracking_l2,
 )

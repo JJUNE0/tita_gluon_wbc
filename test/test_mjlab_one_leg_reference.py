@@ -17,8 +17,8 @@ sys.path.insert(0, str(REPO/'sim2sim/sim2sim_ros2_jazzy'))
 from mj_lab.checkpoint import plain, playback_contract
 from mj_lab.flash_sac import TitaFlashSACEnv
 from mj_lab.robots.tita.flat_env_cfg import TitaFlatEnvCfg
-from mj_lab.robots.tita.robot_cfg import JOINTS
-from mj_lab.robots.tita.stand_one_leg_reference_env_cfg import (
+from mj_lab.robots.tita.common.robot_cfg import JOINTS
+from mj_lab.robots.tita.stand_one_leg.stand_one_leg_reference_env_cfg import (
     TitaStandOneLegReferenceEnvCfg, balance_metric, fixed_support, pose_hint,
 )
 from sim2sim_ros2_jazzy.checkpoint import observation_layout, simulation_config

@@ -1,0 +1,542 @@
+{
+  "execution_domain": "TRAINING_SIM",
+  "teacher_checkpoint": "/home/cocel/Desktop/Research/tita_gluon_wbc/mj_lab/logs/flash_sac/tita_mjlab_112630_629104/model_80000",
+  "teacher_sha256": "5487e3584fddbdfc87b7485bb2ad4c7da8069a7679b1975789d64419e7482334",
+  "teacher_frozen": true,
+  "teacher_reward_terms": {
+    "track_lin_vel_xy_exp": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "track_lin_vel_xy_exp",
+        "std": 0.5
+      },
+      "weight": 2.0
+    },
+    "track_lin_vel_xy_exp_2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "track_lin_vel_xy_exp",
+        "std": 0.25
+      },
+      "weight": 0.5
+    },
+    "track_lin_vel_xy_exp_3": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "track_lin_vel_xy_exp",
+        "std": 0.1767766952966369
+      },
+      "weight": 0.5
+    },
+    "track_ang_vel_z_exp": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "track_ang_vel_z_exp"
+      },
+      "weight": 1.0
+    },
+    "lin_vel_z_l2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "lin_vel_z_l2"
+      },
+      "weight": -2.0
+    },
+    "ang_vel_xy_l2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "ang_vel_xy_l2"
+      },
+      "weight": -0.05
+    },
+    "dof_torques_l2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "joint_torques_l2"
+      },
+      "weight": -1e-05
+    },
+    "dof_acc_l2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "joint_acc_l2"
+      },
+      "weight": -2.5e-07
+    },
+    "action_rate_l2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "action_rate_l2"
+      },
+      "weight": -0.01
+    },
+    "joint_mirror": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "joint_mirror"
+      },
+      "weight": 0.0
+    },
+    "undesired_contacts": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "undesired_contacts"
+      },
+      "weight": -1.0
+    },
+    "flat_orientation_l2": {
+      "func": "mj_lab.robots.tita.roll_pitch_height.flat_env_roll_pitch_height_cfg:pose_tracking_l2",
+      "params": {
+        "kind": "flat_orientation_l2"
+      },
+      "weight": -5.0
+    },
+    "base_height_l2": {
+      "func": "mj_lab.robots.tita.roll_pitch_height.flat_env_roll_pitch_height_cfg:pose_tracking_l2",
+      "params": {
+        "kind": "base_height_l2"
+      },
+      "weight": -10.0
+    },
+    "joint_deviation_hip": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "joint_deviation_hip"
+      },
+      "weight": -1.0
+    },
+    "joint_deviation_shoulder": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "joint_deviation_shoulder"
+      },
+      "weight": -0.5
+    },
+    "zero_command_position_drift": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "zero_command_position_drift"
+      },
+      "weight": 1.0
+    },
+    "zero_command_wheel_action": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "zero_command_wheel_action"
+      },
+      "weight": -0.05
+    },
+    "zero_command_heading_drift": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "zero_command_heading_drift"
+      },
+      "weight": 1.0
+    }
+  },
+  "actual_reward_terms": {
+    "track_lin_vel_xy_exp": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "track_lin_vel_xy_exp",
+        "std": 0.5
+      },
+      "weight": 2.0
+    },
+    "track_lin_vel_xy_exp_2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "track_lin_vel_xy_exp",
+        "std": 0.25
+      },
+      "weight": 0.5
+    },
+    "track_lin_vel_xy_exp_3": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "track_lin_vel_xy_exp",
+        "std": 0.1767766952966369
+      },
+      "weight": 0.5
+    },
+    "track_ang_vel_z_exp": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "track_ang_vel_z_exp"
+      },
+      "weight": 1.0
+    },
+    "lin_vel_z_l2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "lin_vel_z_l2"
+      },
+      "weight": -2.0
+    },
+    "ang_vel_xy_l2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "ang_vel_xy_l2"
+      },
+      "weight": -0.05
+    },
+    "dof_torques_l2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "joint_torques_l2"
+      },
+      "weight": -1e-05
+    },
+    "dof_acc_l2": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "joint_acc_l2"
+      },
+      "weight": -2.5e-07
+    },
+    "action_rate_l2": {
+      "func": "mj_lab.robots.tita.residual.flat_env_residual_torque:residual_torque_action_rate",
+      "params": {
+        "torque_scale_nm": 10.0
+      },
+      "weight": -0.01
+    },
+    "joint_mirror": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "joint_mirror"
+      },
+      "weight": 0.0
+    },
+    "undesired_contacts": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "undesired_contacts"
+      },
+      "weight": -1.0
+    },
+    "flat_orientation_l2": {
+      "func": "mj_lab.robots.tita.roll_pitch_height.flat_env_roll_pitch_height_cfg:pose_tracking_l2",
+      "params": {
+        "kind": "flat_orientation_l2"
+      },
+      "weight": -5.0
+    },
+    "base_height_l2": {
+      "func": "mj_lab.robots.tita.roll_pitch_height.flat_env_roll_pitch_height_cfg:pose_tracking_l2",
+      "params": {
+        "kind": "base_height_l2"
+      },
+      "weight": -10.0
+    },
+    "joint_deviation_hip": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "joint_deviation_hip"
+      },
+      "weight": -1.0
+    },
+    "joint_deviation_shoulder": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "joint_deviation_shoulder"
+      },
+      "weight": -0.5
+    },
+    "zero_command_position_drift": {
+      "func": "mj_lab.robots.tita.residual.flat_env_residual_torque:fixed_position_hold",
+      "params": {},
+      "weight": 1.0
+    },
+    "zero_command_wheel_action": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "zero_command_wheel_action"
+      },
+      "weight": 0.0
+    },
+    "zero_command_heading_drift": {
+      "func": "mj_lab.robots.tita.common.mdp:reward",
+      "params": {
+        "kind": "zero_command_heading_drift"
+      },
+      "weight": 1.0
+    }
+  },
+  "actual_reward_definition_sha256": "40a25c01cb9f48f2022873c54845abf3f0d86ee704cb2cb16a11c0ecc15df486",
+  "reward_variant": "residual_torque_rate_fixed_position_no_teacher_wheel_penalty",
+  "actor_obs_dim": 440,
+  "critic_obs_dim": 754,
+  "action_dim": 8,
+  "actor_hz": 250,
+  "teacher_hz": 50,
+  "physics_hz": 500,
+  "episode_seconds": 10.0,
+  "torque_residual_limit_nm": 10.0,
+  "history_length": 10,
+  "critic_time_scale_s": 20.0,
+  "baseline_fraction": 0.5,
+  "extra_disturbance_fraction": 0.5,
+  "payload_range_kg": [
+    0.0,
+    5.0
+  ],
+  "force_range_n": [
+    0.0,
+    30.0
+  ],
+  "force_onset_s": [
+    2.0,
+    5.0
+  ],
+  "force_duration_s": [
+    5.0,
+    10.0
+  ],
+  "force_links": [
+    "base_link",
+    "left_leg_1",
+    "left_leg_2",
+    "left_leg_3",
+    "left_leg_4",
+    "right_leg_1",
+    "right_leg_2",
+    "right_leg_3",
+    "right_leg_4"
+  ],
+  "initial_pose_randomization": false,
+  "initial_velocity_randomization": false,
+  "physical_dr": "Restored from Teacher checkpoint; original interval kicks retained",
+  "residual_wheel_latch": false,
+  "residual_wheel_input_clipped": false,
+  "residual_mode": "torque",
+  "torque_delay_location": "after PD+residual sum and final effort clamp",
+  "torque_delay_bins_ms": [
+    0,
+    2,
+    4,
+    6,
+    8
+  ],
+  "torque_delay_sampling": "Uniform per environment on reset; constant during episode; common to all eight joints",
+  "native_reference_delay_ms": 0.0,
+  "torque_history_warmup": "First valid command / available history, no synthetic zero gap",
+  "reset_control_writes": "Refresh reset rows only; do not advance torque history without a physics substep",
+  "actor_sensor_source": "Shared saved Teacher observation noise/bias at250Hz; Teacher consumes same sample at50Hz",
+  "output_units": "Nm",
+  "action_rate_definition": "Existing normalized residual torque command difference",
+  "pose_command_mode": "height_roll_pitch",
+  "pose_command_ranges": [
+    [
+      -0.5235987755982988,
+      0.5235987755982988
+    ],
+    [
+      -0.2617993877991494,
+      0.2617993877991494
+    ],
+    [
+      0.27,
+      0.42
+    ]
+  ],
+  "pose_command_nominal_fraction": 0.3,
+  "pose_command_resampling_s": [
+    5.0,
+    8.0
+  ],
+  "pose_command_ramp_rates": [
+    0.15,
+    0.15,
+    0.05
+  ],
+  "pose_command_sampling": "Random target commands; fixed initial pose and zero initial velocities",
+  "pose_observation": "Existing torque frame channels39:42 encode emitted pose minus nominal, divided by [.5,.3,.1]",
+  "history_sample_period_s": 0.004,
+  "history_first_to_last_s": 0.036,
+  "actor_sensor_mode": "teacher_shared",
+  "actor_sensor_noise_multiplier": 1.0,
+  "actor_sensor_noise": {
+    "base_ang_vel": {
+      "min": -0.2,
+      "max": 0.2
+    },
+    "projected_gravity": {
+      "min": -0.05,
+      "max": 0.05
+    },
+    "joint_pos": {
+      "min": -0.01,
+      "max": 0.01
+    },
+    "joint_vel": {
+      "min": -1.5,
+      "max": 1.5
+    },
+    "wheel_position_error": {
+      "min": -0.005,
+      "max": 0.005
+    },
+    "heading_error": {
+      "min": -0.003,
+      "max": 0.003
+    }
+  },
+  "actor_sensor_corruption_enabled": true,
+  "actor_sensor_bias_enabled": true,
+  "actor_wheel_error_source": "Measured joints/gravity; fixed reference, no velocity latch or input clamp",
+  "critic_motion_source": "Clean simulator state",
+  "residual_torque_filter": {
+    "kind": "one_pole_matched",
+    "placement": "residual_only",
+    "cutoff_hz": 60.0,
+    "update_hz": 500,
+    "alpha": 0.5295107822801821,
+    "reset": "zero_on_episode_reset_or_gate_loss",
+    "actor_previous_residual": "requested_pre_filter",
+    "order": "residual LPF -> fresh PD sum -> final effort clamp -> torque delay"
+  },
+  "output_semantics": "Requested residual torque in Nm; requires saved500Hz external LPF",
+  "evidence_status": "NOT_TESTED",
+  "args": {
+    "teacher": "/home/cocel/Desktop/Research/tita_gluon_wbc/mj_lab/logs/flash_sac/tita_mjlab_112630_629104/model_80000",
+    "reference_config": "/home/cocel/Desktop/Research/tita_gluon_wbc/docs/exp/2026-11-08/residual_torque_height_rpfull_postpd8ms4096_b8096_s42_50k_v1/config.json",
+    "output": "/home/cocel/Desktop/Research/tita_gluon_wbc/docs/exp/2026-11-08/residual_torque_sharednoisebias_lpf60_rpfull_postpd8ms4096_b8096_s42_50k_v1",
+    "num_envs": 4096,
+    "batch_size": 8096,
+    "buffer_size": 1000000,
+    "min_buffer": 100000,
+    "steps": 50000,
+    "seed": 42,
+    "checkpoint_interval": 2000,
+    "video_interval": 10000,
+    "torque_max_lag": 4,
+    "gamma": 0.99,
+    "updates_per_step": 2.0,
+    "episode_seconds": 10.0,
+    "torque_limit": 10.0,
+    "eval_seconds": 120.0,
+    "wandb_mode": "online",
+    "pose_command_mode": "height_roll_pitch",
+    "actor_sensor_mode": "teacher_shared",
+    "residual_lpf_hz": 60.0,
+    "pose_height_range": [
+      0.27,
+      0.42
+    ],
+    "pose_roll_pitch_deg": 5.0,
+    "pose_roll_deg": 30.0,
+    "pose_pitch_deg": 15.0,
+    "pose_nominal_fraction": 0.3,
+    "pose_resampling_s": [
+      5.0,
+      8.0
+    ]
+  },
+  "algorithm": "FLASH SAC",
+  "initialization": "Fresh Actor/Critics/temperature/optimizers/replay/reward normalizer; frozen Teacher only",
+  "total_target_vector_steps": 50000,
+  "total_transitions": 204800000,
+  "step_definition": "One vector step advances all worlds 4ms; residual250Hz / Teacher50Hz / PD500Hz",
+  "initial_push": false,
+  "reference_config": "/home/cocel/Desktop/Research/tita_gluon_wbc/docs/exp/2026-11-08/residual_torque_height_rpfull_postpd8ms4096_b8096_s42_50k_v1/config.json",
+  "reference_wandb_url": "https://forge.coreweave.com/wandb/bjy6614-postech/tita_sac_residual_amp/runs/w00b9dlg",
+  "learner_actions": "Normalized [-1,1] in replay; multiply by torque_limit exactly once at env.step",
+  "checkpoint_interval_vector_steps": 2000,
+  "video_interval_vector_steps": 10000,
+  "source_sha256": {
+    "/home/cocel/Desktop/Research/tita_gluon_wbc/mj_lab/scripts/train_residual_torque.py": "5b657932d4fa9e1618c07d3785dcd11c8606e5b92fe15a74eb8469ba895d1251",
+    "mj_lab/robots/tita/residual/flat_env_residual_torque_delay.py": "f8a0061305c1cb5265784cae3525f7512a56e1ac8e8e24c8baa93cc7e67d6e19",
+    "mj_lab/robots/tita/residual/flat_env_residual_torque.py": "cde4243465492dbb255d7fa7cbebd46ea3494be5b37b245677e17abe4d91862b",
+    "mj_lab/robots/tita/common/mdp.py": "d28aad0f02129053da8701dceb7b889299307aa3c670a6d6f28bd774cc899648",
+    "mj_lab/robots/tita/common/robot_cfg.py": "617ad29b0d299e83df5515d37c256dfea60bb66f70bd5a5d2c734782b9df6e6b",
+    "mj_lab/scripts/residual_training.py": "b818e3bf084f61adce27a82017436ac5e157329255de38dbd49ff63c11d02627",
+    "mj_lab/robots/tita/residual/flat_env_residual_torque_pose_delay.py": "e9f218131e596677fc5507bfbd29bdc00cbfc7c7f4609084780bff12bd8184ec",
+    "mj_lab/robots/tita/roll_pitch_height/flat_env_roll_pitch_height_cfg.py": "bb080295fe765f223a4ef366e5ff77958b9d5120a6c26a82f571eef517933e5c",
+    "mj_lab/robots/tita/residual/flat_env_residual_torque_sensor_delay.py": "c715cdccdc36e2649d9d9fa15afc90a03ca5adf2ab7467cf7ca267a654056b94",
+    "mj_lab/robots/tita/residual/flat_env_residual_torque_lpf_delay.py": "5b479eee9ace75ad60ba5ff2a3b978f12fdf6642dd6efd66597ca8643d65ebac"
+  },
+  "wandb_url": "https://forge.coreweave.com/wandb/bjy6614-postech/tita_sac_residual_amp/runs/jv68rep7",
+  "flash_sac_agent": {
+    "seed": 42,
+    "normalize_reward": true,
+    "normalized_G_max": 5.0,
+    "asymmetric_observation": true,
+    "device_type": "cuda:0",
+    "buffer_max_length": 1000000,
+    "buffer_min_length": 100000,
+    "buffer_device_type": "cuda:0",
+    "sample_batch_size": 8096,
+    "learning_rate_init": 0.0003,
+    "learning_rate_peak": 0.0003,
+    "learning_rate_end": 0.00015,
+    "learning_rate_warmup_rate": 1e-06,
+    "learning_rate_warmup_step": 0,
+    "learning_rate_decay_rate": 1.0,
+    "learning_rate_decay_step": 20000,
+    "actor_num_blocks": 2,
+    "actor_hidden_dim": 128,
+    "actor_bc_alpha": 0.0,
+    "actor_noise_zeta_mu": 2.0,
+    "actor_noise_zeta_max": 16,
+    "actor_update_period": 2,
+    "critic_num_blocks": 2,
+    "critic_hidden_dim": 256,
+    "critic_num_bins": 101,
+    "critic_min_v": -5.0,
+    "critic_max_v": 5.0,
+    "critic_target_update_tau": 0.01,
+    "temp_initial_value": 0.01,
+    "temp_target_sigma": 0.15,
+    "temp_target_entropy": -3.825451613449669,
+    "gamma": 0.99,
+    "n_step": 3,
+    "use_compile": false,
+    "compile_mode": "max-autotune",
+    "use_amp": false,
+    "load_optimizer": false,
+    "load_reward_normalizer": false
+  },
+  "initial_actor_updates": 0,
+  "initial_state_receipt": {
+    "execution_domain": "TRAINING_SIM",
+    "evidence_status": "PASS",
+    "max_initial_linear_speed": 0.0,
+    "max_initial_angular_speed": 0.0,
+    "max_initial_joint_speed": 0.0,
+    "initial_force_active_worlds": 0,
+    "torque_delay_bin_counts": [
+      836,
+      866,
+      752,
+      802,
+      840
+    ],
+    "torque_delay_bins_ms": [
+      0,
+      2,
+      4,
+      6,
+      8
+    ],
+    "common_lag_across_all_motors": true,
+    "native_reference_delay_disabled": true,
+    "pose_command_mode": "height_roll_pitch",
+    "initial_sampled_pose_target_min": [
+      -0.5233343243598938,
+      -0.26148369908332825,
+      0.27001574635505676
+    ],
+    "initial_sampled_pose_target_max": [
+      0.5227839350700378,
+      0.2617298662662506,
+      0.4199932813644409
+    ]
+  },
+  "hyperparameter_differences": {},
+  "vector_step": 10000,
+  "updates": 19948,
+  "physical_transitions": 40960000,
+  "policy_checkpoint_sha256": "d6672529ee247a92b7043f50bb6deb501a65becbf760761a412b33d5701b6002",
+  "replay_saved": false
+}

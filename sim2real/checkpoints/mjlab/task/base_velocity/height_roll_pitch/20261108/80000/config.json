@@ -1,0 +1,373 @@
+{
+  "model": {
+    "scene_xml": "sim2sim/robot/tita/mujoco_corrected/scene.xml",
+    "ground_friction": 0.8,
+    "wheel_collision": "sphere",
+    "flat_ground": true
+  },
+  "control": {
+    "sim_timestep": 0.005,
+    "decimation": 4,
+    "support_fall_tilt_deg": 55.0
+  },
+  "command": {
+    "max_lin_x": 1.5,
+    "max_lin_y": 0.0,
+    "max_ang_z": 3.0
+  },
+  "robot": {
+    "default_joint_angles": [
+      0.0,
+      0.8,
+      -1.5,
+      0.0,
+      0.0,
+      0.8,
+      -1.5,
+      0.0
+    ],
+    "reset_base_pos": [
+      0.0,
+      0.0,
+      0.4
+    ],
+    "reset_base_quat": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "default_joint_velocities": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "joint_kp": [
+      60.0,
+      60.0,
+      92.0,
+      0.0,
+      60.0,
+      60.0,
+      92.0,
+      0.0
+    ],
+    "joint_kd": [
+      1.5,
+      1.5,
+      2.3,
+      0.5,
+      1.5,
+      1.5,
+      2.3,
+      0.5
+    ],
+    "torque_limit": [
+      60.0,
+      60.0,
+      60.0,
+      12.0,
+      60.0,
+      60.0,
+      60.0,
+      12.0
+    ]
+  },
+  "sim_command_ranges": {
+    "lin_vel_x": [
+      -1.5,
+      1.5
+    ],
+    "lin_vel_y": [
+      0.0,
+      0.0
+    ],
+    "ang_vel_z": [
+      -3.0,
+      3.0
+    ]
+  },
+  "sim_command_ramp": null,
+  "pose_command": {
+    "roll_range": [
+      -0.5235987755982988,
+      0.5235987755982988
+    ],
+    "pitch_range": [
+      -0.2617993877991494,
+      0.2617993877991494
+    ],
+    "height_range": [
+      0.27,
+      0.42
+    ],
+    "nominal_height": 0.335,
+    "ramp_rates": [
+      0.15,
+      0.15,
+      0.02
+    ]
+  },
+  "policy": {
+    "obs_dim": 38,
+    "path": "/home/cocel/Desktop/Research/tita_gluon_wbc/mj_lab/logs/flash_sac/tita_mjlab_112630_629104/model_80000/sim2sim/actor/policy.onnx"
+  },
+  "policy_interface": {
+    "schema_version": 1,
+    "observations": [
+      {
+        "name": "base_ang_vel",
+        "kind": "ang_vel",
+        "scale": 0.25,
+        "clip": [
+          -100,
+          100
+        ],
+        "size": 3
+      },
+      {
+        "name": "projected_gravity",
+        "kind": "gravity",
+        "scale": 1.0,
+        "clip": [
+          -100,
+          100
+        ],
+        "size": 3
+      },
+      {
+        "name": "velocity_commands",
+        "kind": "commands",
+        "scale": [
+          2.0,
+          2.0,
+          0.25
+        ],
+        "clip": [
+          -100,
+          100
+        ],
+        "size": 3
+      },
+      {
+        "name": "joint_pos",
+        "kind": "joint_pos",
+        "scale": 1.0,
+        "clip": [
+          -100,
+          100
+        ],
+        "joints": [
+          "joint_left_leg_1",
+          "joint_right_leg_1",
+          "joint_left_leg_2",
+          "joint_right_leg_2",
+          "joint_left_leg_3",
+          "joint_right_leg_3",
+          "joint_left_leg_4",
+          "joint_right_leg_4"
+        ],
+        "zero_wheel_pos": true,
+        "size": 8
+      },
+      {
+        "name": "joint_vel",
+        "kind": "joint_vel",
+        "scale": 0.05,
+        "clip": [
+          -100,
+          100
+        ],
+        "joints": [
+          "joint_left_leg_1",
+          "joint_right_leg_1",
+          "joint_left_leg_2",
+          "joint_right_leg_2",
+          "joint_left_leg_3",
+          "joint_right_leg_3",
+          "joint_left_leg_4",
+          "joint_right_leg_4"
+        ],
+        "zero_wheel_pos": false,
+        "size": 8
+      },
+      {
+        "name": "actions",
+        "kind": "last_action",
+        "scale": 1.0,
+        "clip": [
+          -100,
+          100
+        ],
+        "size": 8
+      },
+      {
+        "name": "wheel_position_error",
+        "kind": "wheel_position_error",
+        "scale": 5.0,
+        "clip": [
+          -100,
+          100
+        ],
+        "params": {
+          "radius": 0.0925,
+          "clip_m": 0.3,
+          "zero_thresholds": [
+            0.02,
+            0.02,
+            0.03
+          ],
+          "velocity_thresholds": [
+            0.1,
+            0.15
+          ],
+          "moving_anchor": true
+        },
+        "size": 1
+      },
+      {
+        "name": "heading_error",
+        "kind": "heading_error",
+        "scale": 2.0,
+        "clip": [
+          -100,
+          100
+        ],
+        "params": {
+          "clip_rad": 0.5,
+          "zero_thresholds": [
+            0.02,
+            0.02,
+            0.03
+          ],
+          "warmup_s": 0.0
+        },
+        "size": 1
+      },
+      {
+        "name": "pose_commands",
+        "kind": "pose_commands",
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "clip": null,
+        "size": 3
+      }
+    ],
+    "actions": [
+      {
+        "joint": "joint_left_leg_1",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_left_leg_2",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.8,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_left_leg_3",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": -1.5,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_left_leg_4",
+        "kind": "velocity",
+        "scale": 20.0,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_1",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_2",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": 0.8,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_3",
+        "kind": "position",
+        "scale": 0.25,
+        "offset": -1.5,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      },
+      {
+        "joint": "joint_right_leg_4",
+        "kind": "velocity",
+        "scale": 20.0,
+        "offset": 0.0,
+        "clip": [
+          -100.0,
+          100.0
+        ]
+      }
+    ],
+    "leg_action_filter": "none",
+    "articulation_joint_names": [
+      "joint_left_leg_1",
+      "joint_right_leg_1",
+      "joint_left_leg_2",
+      "joint_right_leg_2",
+      "joint_left_leg_3",
+      "joint_right_leg_3",
+      "joint_left_leg_4",
+      "joint_right_leg_4"
+    ],
+    "joint_order_source": "validated legacy TITA order",
+    "checkpoint": "/home/cocel/Desktop/Research/tita_gluon_wbc/mj_lab/logs/flash_sac/tita_mjlab_112630_629104/model_80000/actor.pt",
+    "algorithm": "FlashSAC",
+    "checkpoint_sha256": "5487e3584fddbdfc87b7485bb2ad4c7da8069a7679b1975789d64419e7482334",
+    "sources": {
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/mj_lab/logs/flash_sac/tita_mjlab_112630_629104/model_80000/env.yaml": "1b244161f6496fe4590ecdf2117a45f3d2010cd76e5820f2f95de3ac68f9ef5b",
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/mj_lab/logs/flash_sac/tita_mjlab_112630_629104/model_80000/agent.json": "115c7ff5be33508db9c762f85e758137e4f512858d94ed5bc0d716ceefe8386a",
+      "/home/cocel/Desktop/Research/tita_gluon_wbc/mj_lab/logs/flash_sac/tita_mjlab_112630_629104/model_80000/ddt.json": "c3304ce31e11860eaea0dfd2400489b1ed9fd1932dd164c3e164410f61259b1b"
+    },
+    "adapter_sources": {
+      "checkpoint.py": "3e61314f37b274b4bea490ab9d45d860c7ac1d739fed6cd19bf769fdf1101b39",
+      "adapter.py": "35041ab48d0e48d7162e9599273ddfe90f2f47ccf9137b33141f4a5132ba5691",
+      "export.py": "5af6da2ec876eee890360386a061d16baf17e44e83e3378c9662185f6fd2e38c"
+    },
+    "onnx_sha256": "0e8cd0723d2a7de2d83a6866818309c173c513c020a62f2c8832f9761344543b"
+  }
+}

@@ -1,0 +1,1265 @@
+decimation: 4
+scene:
+  num_envs: 4096
+  env_spacing: 2.5
+  terrain:
+    init_state:
+      pos:
+      - 0.0
+      - 0.0
+      - 0.0
+      rot:
+      - 1.0
+      - 0.0
+      - 0.0
+      - 0.0
+      lin_vel:
+      - 0.0
+      - 0.0
+      - 0.0
+      ang_vel:
+      - 0.0
+      - 0.0
+      - 0.0
+      joint_pos:
+        .*: 0.0
+      joint_vel:
+        .*: 0.0
+    spec_fn: mjlab.entity.entity:EntityCfg.<lambda>.<locals>.<lambda>
+    articulation: null
+    sort_actuators: false
+    lights:
+    - name: sun
+      body: world
+      mode: fixed
+      target: null
+      type: directional
+      castshadow: true
+      pos:
+      - 0.0
+      - 0.0
+      - 1.5
+      dir:
+      - 0.0
+      - 0.0
+      - -1.0
+      cutoff: 45.0
+      exponent: 10.0
+      diffuse: null
+      specular: null
+      ambient: null
+      active: true
+      attenuation:
+      - 1.0
+      - 0.0
+      - 0.0
+    cameras: []
+    textures:
+    - name: groundplane
+      type: 2d
+      builtin: checker
+      rgb1:
+      - 0.2
+      - 0.3
+      - 0.4
+      rgb2:
+      - 0.1
+      - 0.2
+      - 0.3
+      width: 300
+      height: 300
+      mark: edge
+      markrgb:
+      - 0.8
+      - 0.8
+      - 0.8
+      random: 0.01
+      file: null
+      cubefiles: null
+      gridsize: null
+      gridlayout: null
+      nchannel: 3
+      hflip: false
+      vflip: false
+    materials:
+    - name: groundplane
+      rgba:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      texuniform: true
+      texrepeat:
+      - 4.0
+      - 4.0
+      reflectance: 0.2
+      texture: groundplane
+      geom_names_expr:
+      - terrain$
+    meshes: []
+    geoms: []
+    collisions: []
+    terrain_type: plane
+    terrain_generator: null
+    env_spacing: 2.5
+    max_init_terrain_level: null
+    num_envs: 4096
+    debug_vis: false
+  entities:
+    robot:
+      init_state:
+        pos:
+        - 0.0
+        - 0.0
+        - 0.4
+        rot:
+        - 1.0
+        - 0.0
+        - 0.0
+        - 0.0
+        lin_vel:
+        - 0.0
+        - 0.0
+        - 0.0
+        ang_vel:
+        - 0.0
+        - 0.0
+        - 0.0
+        joint_pos:
+          joint_left_leg_1: 0.0
+          joint_left_leg_2: 0.8
+          joint_left_leg_3: -1.5
+          joint_left_leg_4: 0.0
+          joint_right_leg_1: 0.0
+          joint_right_leg_2: 0.8
+          joint_right_leg_3: -1.5
+          joint_right_leg_4: 0.0
+        joint_vel:
+          .*: 0.0
+      spec_fn: mj_lab.robots.tita.robot_cfg:get_spec
+      articulation:
+        actuators:
+        - target_names_expr:
+          - .*_leg_[12]
+          transmission_type: TransmissionType.JOINT
+          armature: 0.0
+          frictionloss: 0.0
+          viscous_damping: 0.0
+          delay_min_lag: 0
+          delay_max_lag: 4
+          delay_hold_prob: 1.0
+          delay_update_period: 0
+          delay_per_env_phase: true
+          stiffness: 60.0
+          damping: 1.5
+          effort_limit: 60.0
+        - target_names_expr:
+          - .*_leg_3
+          transmission_type: TransmissionType.JOINT
+          armature: 0.0
+          frictionloss: 0.0
+          viscous_damping: 0.0
+          delay_min_lag: 0
+          delay_max_lag: 4
+          delay_hold_prob: 1.0
+          delay_update_period: 0
+          delay_per_env_phase: true
+          stiffness: 92.0
+          damping: 2.3
+          effort_limit: 60.0
+        - target_names_expr:
+          - .*_leg_4
+          transmission_type: TransmissionType.JOINT
+          armature: 0.0
+          frictionloss: 0.0
+          viscous_damping: 0.0
+          delay_min_lag: 0
+          delay_max_lag: 4
+          delay_hold_prob: 1.0
+          delay_update_period: 0
+          delay_per_env_phase: true
+          stiffness: 0.0
+          damping: 0.5
+          effort_limit: 12.0
+        soft_joint_pos_limit_factor: 0.9
+      sort_actuators: false
+      lights: []
+      cameras: []
+      textures: []
+      materials: []
+      meshes: []
+      geoms: []
+      collisions: []
+  sensors:
+  - name: feet
+    primary:
+      mode: body
+      pattern:
+      - left_leg_4
+      - right_leg_4
+      entity: robot
+      exclude: []
+    secondary:
+      mode: body
+      pattern: terrain
+      entity: null
+      exclude: []
+    fields:
+    - found
+    - force
+    reduce: netforce
+    num_slots: 1
+    secondary_policy: first
+    track_air_time: true
+    global_frame: false
+    history_length: 3
+    debug: false
+  - name: knees
+    primary:
+      mode: body
+      pattern:
+      - left_leg_3
+      - right_leg_3
+      entity: robot
+      exclude: []
+    secondary:
+      mode: body
+      pattern: terrain
+      entity: null
+      exclude: []
+    fields:
+    - found
+    - force
+    reduce: netforce
+    num_slots: 1
+    secondary_policy: first
+    track_air_time: true
+    global_frame: false
+    history_length: 3
+    debug: false
+  - name: base
+    primary:
+      mode: body
+      pattern: base_link
+      entity: robot
+      exclude: []
+    secondary:
+      mode: body
+      pattern: terrain
+      entity: null
+      exclude: []
+    fields:
+    - found
+    - force
+    reduce: netforce
+    num_slots: 1
+    secondary_policy: first
+    track_air_time: true
+    global_frame: false
+    history_length: 3
+    debug: false
+  extent: null
+  spec_fn: null
+observations:
+  policy:
+    terms:
+      base_ang_vel:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: base_ang_vel
+          critic: false
+        noise:
+          operation: add
+          _tensor_cache: {}
+          n_min: -0.2
+          n_max: 0.2
+        clip:
+        - -100
+        - 100
+        scale: 0.25
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      projected_gravity:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: projected_gravity
+          critic: false
+        noise:
+          operation: add
+          _tensor_cache: {}
+          n_min: -0.05
+          n_max: 0.05
+        clip:
+        - -100
+        - 100
+        scale: 1.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      velocity_commands:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: velocity_commands
+          critic: false
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale:
+        - 2.0
+        - 2.0
+        - 0.25
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      joint_pos:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: joint_pos
+          critic: false
+        noise:
+          operation: add
+          _tensor_cache: {}
+          n_min: -0.01
+          n_max: 0.01
+        clip:
+        - -100
+        - 100
+        scale: 1.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      joint_vel:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: joint_vel
+          critic: false
+        noise:
+          operation: add
+          _tensor_cache: {}
+          n_min: -1.5
+          n_max: 1.5
+        clip:
+        - -100
+        - 100
+        scale: 0.05
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      actions:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: actions
+          critic: false
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale: 1.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      wheel_position_error:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: wheel_position_error
+          critic: false
+        noise:
+          operation: add
+          _tensor_cache: {}
+          n_min: -0.005
+          n_max: 0.005
+        clip:
+        - -100
+        - 100
+        scale: 5.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      heading_error:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: heading_error
+          critic: false
+        noise:
+          operation: add
+          _tensor_cache: {}
+          n_min: -0.003
+          n_max: 0.003
+        clip:
+        - -100
+        - 100
+        scale: 2.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      pose_commands:
+        func: mj_lab.robots.tita.flat_env_roll_pitch_height_cfg:pose_observation
+        params:
+          kind: pose_commands
+        noise: null
+        clip: null
+        scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+    concatenate_terms: true
+    concatenate_dim: -1
+    enable_corruption: true
+    history_length: null
+    flatten_history_dim: true
+    nan_policy: disabled
+    nan_check_per_term: true
+  critic:
+    terms:
+      base_lin_vel:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: base_lin_vel
+          critic: true
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale: 2.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      base_ang_vel:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: base_ang_vel
+          critic: true
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale: 0.25
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      projected_gravity:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: projected_gravity
+          critic: true
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale: 1.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      velocity_commands:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: velocity_commands
+          critic: true
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale:
+        - 2.0
+        - 2.0
+        - 0.25
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      joint_pos:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: joint_pos
+          critic: true
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale: 1.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      joint_vel:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: joint_vel
+          critic: true
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale: 0.05
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      actions:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: actions
+          critic: true
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale: 1.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      wheel_position_error:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: wheel_position_error
+          critic: true
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale: 5.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      heading_drift_error:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: heading_drift_error
+          critic: true
+        noise: null
+        clip:
+        - -3.2
+        - 3.2
+        scale: 2.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      heading_error:
+        func: mj_lab.robots.tita.mdp:observation
+        params:
+          kind: heading_error
+          critic: true
+        noise: null
+        clip:
+        - -100
+        - 100
+        scale: 2.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+      pose_commands:
+        func: mj_lab.robots.tita.flat_env_roll_pitch_height_cfg:pose_observation
+        params:
+          kind: pose_commands
+        noise: null
+        clip: null
+        scale:
+        - 1.0
+        - 1.0
+        - 1.0
+        delay_min_lag: 0
+        delay_max_lag: 0
+        delay_per_env: true
+        delay_hold_prob: 0.0
+        delay_update_period: 0
+        delay_per_env_phase: true
+        history_length: 0
+        flatten_history_dim: true
+    concatenate_terms: true
+    concatenate_dim: -1
+    enable_corruption: false
+    history_length: null
+    flatten_history_dim: true
+    nan_policy: disabled
+    nan_check_per_term: true
+actions:
+  joint_pos_0:
+    entity_name: robot
+    clip:
+      .*:
+      - -100.0
+      - 100.0
+    transmission_type: TransmissionType.JOINT
+    actuator_names:
+    - joint_left_leg_1
+    scale: 0.25
+    offset: 0.0
+    preserve_order: false
+    use_default_offset: true
+  joint_pos_1:
+    entity_name: robot
+    clip:
+      .*:
+      - -100.0
+      - 100.0
+    transmission_type: TransmissionType.JOINT
+    actuator_names:
+    - joint_left_leg_2
+    scale: 0.25
+    offset: 0.0
+    preserve_order: false
+    use_default_offset: true
+  joint_pos_2:
+    entity_name: robot
+    clip:
+      .*:
+      - -100.0
+      - 100.0
+    transmission_type: TransmissionType.JOINT
+    actuator_names:
+    - joint_left_leg_3
+    scale: 0.25
+    offset: 0.0
+    preserve_order: false
+    use_default_offset: true
+  joint_vel_3:
+    entity_name: robot
+    clip:
+      .*:
+      - -100.0
+      - 100.0
+    transmission_type: TransmissionType.JOINT
+    actuator_names:
+    - joint_left_leg_4
+    scale: 20.0
+    offset: 0.0
+    preserve_order: false
+    use_default_offset: true
+  joint_pos_4:
+    entity_name: robot
+    clip:
+      .*:
+      - -100.0
+      - 100.0
+    transmission_type: TransmissionType.JOINT
+    actuator_names:
+    - joint_right_leg_1
+    scale: 0.25
+    offset: 0.0
+    preserve_order: false
+    use_default_offset: true
+  joint_pos_5:
+    entity_name: robot
+    clip:
+      .*:
+      - -100.0
+      - 100.0
+    transmission_type: TransmissionType.JOINT
+    actuator_names:
+    - joint_right_leg_2
+    scale: 0.25
+    offset: 0.0
+    preserve_order: false
+    use_default_offset: true
+  joint_pos_6:
+    entity_name: robot
+    clip:
+      .*:
+      - -100.0
+      - 100.0
+    transmission_type: TransmissionType.JOINT
+    actuator_names:
+    - joint_right_leg_3
+    scale: 0.25
+    offset: 0.0
+    preserve_order: false
+    use_default_offset: true
+  joint_vel_7:
+    entity_name: robot
+    clip:
+      .*:
+      - -100.0
+      - 100.0
+    transmission_type: TransmissionType.JOINT
+    actuator_names:
+    - joint_right_leg_4
+    scale: 20.0
+    offset: 0.0
+    preserve_order: false
+    use_default_offset: true
+events:
+  physics_material:
+    func: mjlab.envs.mdp.dr.geom:geom_friction
+    params:
+      ranges:
+      - 0.2
+      - 1.6
+    mode: startup
+    interval_range_s: null
+    is_global_time: false
+    min_step_count_between_reset: 0
+  add_base_mass:
+    func: mjlab.envs.mdp.dr.body:body_mass
+    params:
+      ranges:
+      - -0.5
+      - 2.0
+      operation: add
+      asset_cfg:
+        name: robot
+        joint_names: null
+        joint_ids:
+          slice:
+          - null
+          - null
+          - null
+        body_names: base_link
+        body_ids:
+          slice:
+          - null
+          - null
+          - null
+        geom_names: null
+        geom_ids:
+          slice:
+          - null
+          - null
+          - null
+        site_names: null
+        site_ids:
+          slice:
+          - null
+          - null
+          - null
+        actuator_names: null
+        actuator_ids:
+          slice:
+          - null
+          - null
+          - null
+        tendon_names: null
+        tendon_ids:
+          slice:
+          - null
+          - null
+          - null
+        camera_names: null
+        camera_ids:
+          slice:
+          - null
+          - null
+          - null
+        light_names: null
+        light_ids:
+          slice:
+          - null
+          - null
+          - null
+        material_names: null
+        material_ids:
+          slice:
+          - null
+          - null
+          - null
+        texture_names: null
+        texture_ids:
+          slice:
+          - null
+          - null
+          - null
+        pair_names: null
+        pair_ids:
+          slice:
+          - null
+          - null
+          - null
+        preserve_order: false
+    mode: startup
+    interval_range_s: null
+    is_global_time: false
+    min_step_count_between_reset: 0
+  add_base_inertia:
+    func: mj_lab.robots.tita.mdp:randomize_inertia
+    params: {}
+    mode: startup
+    interval_range_s: null
+    is_global_time: false
+    min_step_count_between_reset: 0
+  add_base_com:
+    func: mjlab.envs.mdp.dr.body:body_com_offset
+    params:
+      ranges:
+      - -0.015
+      - 0.015
+      operation: add
+      asset_cfg:
+        name: robot
+        joint_names: null
+        joint_ids:
+          slice:
+          - null
+          - null
+          - null
+        body_names: base_link
+        body_ids:
+          slice:
+          - null
+          - null
+          - null
+        geom_names: null
+        geom_ids:
+          slice:
+          - null
+          - null
+          - null
+        site_names: null
+        site_ids:
+          slice:
+          - null
+          - null
+          - null
+        actuator_names: null
+        actuator_ids:
+          slice:
+          - null
+          - null
+          - null
+        tendon_names: null
+        tendon_ids:
+          slice:
+          - null
+          - null
+          - null
+        camera_names: null
+        camera_ids:
+          slice:
+          - null
+          - null
+          - null
+        light_names: null
+        light_ids:
+          slice:
+          - null
+          - null
+          - null
+        material_names: null
+        material_ids:
+          slice:
+          - null
+          - null
+          - null
+        texture_names: null
+        texture_ids:
+          slice:
+          - null
+          - null
+          - null
+        pair_names: null
+        pair_ids:
+          slice:
+          - null
+          - null
+          - null
+        preserve_order: false
+    mode: startup
+    interval_range_s: null
+    is_global_time: false
+    min_step_count_between_reset: 0
+  reset_base:
+    func: mjlab.envs.mdp.events:reset_root_state_uniform
+    params:
+      pose_range:
+        x:
+        - -0.5
+        - 0.5
+        y:
+        - -0.5
+        - 0.5
+        yaw:
+        - -3.14
+        - 3.14
+      velocity_range:
+        x:
+        - -0.5
+        - 0.5
+        y:
+        - -0.5
+        - 0.5
+        z:
+        - -0.5
+        - 0.5
+        roll:
+        - -0.5
+        - 0.5
+        pitch:
+        - -0.5
+        - 0.5
+        yaw:
+        - -0.5
+        - 0.5
+    mode: reset
+    interval_range_s: null
+    is_global_time: false
+    min_step_count_between_reset: 0
+  reset_joints:
+    func: mj_lab.robots.tita.mdp:reset_joints
+    params:
+      position_range:
+      - -0.5
+      - 1.0
+    mode: reset
+    interval_range_s: null
+    is_global_time: false
+    min_step_count_between_reset: 0
+  randomize_motors:
+    func: mj_lab.robots.tita.mdp:randomize_motors
+    params: {}
+    mode: reset
+    interval_range_s: null
+    is_global_time: false
+    min_step_count_between_reset: 0
+  push_robot:
+    func: mjlab.envs.mdp.events:push_by_setting_velocity
+    params:
+      velocity_range:
+        x:
+        - -0.5
+        - 0.5
+        y:
+        - -0.5
+        - 0.5
+    mode: interval
+    interval_range_s:
+    - 10.0
+    - 15.0
+    is_global_time: false
+    min_step_count_between_reset: 0
+seed: 42
+sim:
+  nconmax: 64
+  njmax: 128
+  contact_sensor_maxmatch: 64
+  broadphase: null
+  broadphase_filter: null
+  ls_parallel: null
+  mujoco:
+    timestep: 0.005
+    integrator: implicitfast
+    impratio: 1.0
+    cone: elliptic
+    jacobian: auto
+    solver: newton
+    iterations: 20
+    tolerance: 1.0e-08
+    ls_iterations: 10
+    ls_tolerance: 0.01
+    ccd_iterations: 50
+    gravity:
+    - 0.0
+    - 0.0
+    - -9.81
+    disableflags: []
+    enableflags: []
+  nan_guard:
+    enabled: false
+    buffer_size: 100
+    output_dir: /tmp/mjlab/nan_dumps
+    max_envs_to_dump: 5
+viewer:
+  origin_type: OriginType.ASSET_ROOT
+  height: 480
+  width: 640
+  enable_reflections: true
+  enable_shadows: true
+  geom_group:
+  - 1
+  - 1
+  - 1
+  - 0
+  - 0
+  - 0
+  site_group:
+  - 1
+  - 1
+  - 1
+  - 0
+  - 0
+  - 0
+  env_idx: 0
+  max_extra_envs: 2
+  reward_bar_max_terms: 20
+  distance: 2.0
+  elevation: -15
+  azimuth: 120
+  fovy: null
+  lookat:
+  - 0.0
+  - 0.0
+  - 0.0
+  entity_name: robot
+  body_name: null
+episode_length_s: 20.0
+rewards:
+  track_lin_vel_xy_exp:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: track_lin_vel_xy_exp
+      std: 0.5
+    weight: 2.0
+  track_lin_vel_xy_exp_2:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: track_lin_vel_xy_exp
+      std: 0.25
+    weight: 0.5
+  track_lin_vel_xy_exp_3:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: track_lin_vel_xy_exp
+      std: 0.1767766952966369
+    weight: 0.5
+  track_ang_vel_z_exp:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: track_ang_vel_z_exp
+    weight: 1.0
+  lin_vel_z_l2:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: lin_vel_z_l2
+    weight: -2.0
+  ang_vel_xy_l2:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: ang_vel_xy_l2
+    weight: -0.05
+  dof_torques_l2:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: joint_torques_l2
+    weight: -1.0e-05
+  dof_acc_l2:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: joint_acc_l2
+    weight: -2.5e-07
+  action_rate_l2:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: action_rate_l2
+    weight: -0.01
+  joint_mirror:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: joint_mirror
+    weight: 0.0
+  undesired_contacts:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: undesired_contacts
+    weight: -1.0
+  flat_orientation_l2:
+    func: mj_lab.robots.tita.flat_env_roll_pitch_height_cfg:pose_tracking_l2
+    params:
+      kind: flat_orientation_l2
+    weight: -5.0
+  base_height_l2:
+    func: mj_lab.robots.tita.flat_env_roll_pitch_height_cfg:pose_tracking_l2
+    params:
+      kind: base_height_l2
+    weight: -10.0
+  joint_deviation_hip:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: joint_deviation_hip
+    weight: -1.0
+  joint_deviation_shoulder:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: joint_deviation_shoulder
+    weight: -0.5
+  zero_command_position_drift:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: zero_command_position_drift
+    weight: 1.0
+  zero_command_wheel_action:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: zero_command_wheel_action
+    weight: -0.05
+  zero_command_heading_drift:
+    func: mj_lab.robots.tita.mdp:reward
+    params:
+      kind: zero_command_heading_drift
+    weight: 1.0
+terminations:
+  time_out:
+    func: mj_lab.robots.tita.mdp:timeout
+    params: {}
+    time_out: true
+  base_contact:
+    func: mj_lab.robots.tita.mdp:illegal_contact
+    params:
+      sensor: base
+    time_out: false
+commands:
+  base_velocity:
+    resampling_time_range:
+    - 6.0
+    - 8.0
+    debug_vis: false
+    lin_vel_x:
+    - -1.5
+    - 1.5
+    lin_vel_y:
+    - 0.0
+    - 0.0
+    ang_vel_z:
+    - -3.0
+    - 3.0
+    rel_standing_envs: 0.1
+    rel_straight_envs: 0.0
+    ramp_rate: 0.0
+    initial_phase_time: 0.0
+    sensor_bias: true
+    wheel_error_gait_name: null
+    wheel_error_velocity_thresholds:
+    - 0.1
+    - 0.15
+    wheel_error_moving_anchor: true
+    wheel_error_clip_m: 0.3
+    stop_state_after_pose: true
+  base_pose:
+    resampling_time_range:
+    - 10.0
+    - 12.0
+    debug_vis: false
+    roll_range:
+    - -0.5235987755982988
+    - 0.5235987755982988
+    pitch_range:
+    - -0.2617993877991494
+    - 0.2617993877991494
+    height_range:
+    - 0.27
+    - 0.42
+    nominal_height: 0.335
+    rel_nominal_envs: 0.2
+    ramp_rates:
+    - 0.15
+    - 0.15
+    - 0.02
+    height_target_bands: null
+    height_motion_range: null
+curriculum: {}
+metrics:
+  roll_error_rad:
+    func: mj_lab.robots.tita.flat_env_roll_pitch_height_cfg:pose_error
+    params:
+      axis: 0
+    per_substep: false
+    reduce: mean
+  pitch_error_rad:
+    func: mj_lab.robots.tita.flat_env_roll_pitch_height_cfg:pose_error
+    params:
+      axis: 1
+    per_substep: false
+    reduce: mean
+  height_error_m:
+    func: mj_lab.robots.tita.flat_env_roll_pitch_height_cfg:pose_error
+    params:
+      axis: 2
+    per_substep: false
+    reduce: mean
+recorders: {}
+is_finite_horizon: false
+auto_reset: false
+scale_rewards_by_dt: true

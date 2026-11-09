@@ -10,6 +10,7 @@
   <exec_depend>rosidl_default_runtime</exec_depend>
   <member_of_group>rosidl_interface_packages</member_of_group>
   <depend>rclcpp</depend>
+  <depend>rcl_interfaces</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
   <depend>tita_robot</depend>

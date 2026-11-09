@@ -13,21 +13,21 @@ import time
 
 from mj_lab.flash_sac import TitaFlashSACEnv, runtime
 from mj_lab.checkpoint import save_checkpoint
-from mj_lab.robots.tita.robot_cfg import REPO_ROOT
+from mj_lab.robots.tita.common.robot_cfg import REPO_ROOT
 from mj_lab.robots.tita.flat_env_cfg import TitaFlatEnvCfg
-from mj_lab.robots.tita.flat_env_roll_pitch_height_cfg import TitaFlatRollPitchHeightEnvCfg
-from mj_lab.robots.tita.sit_stand_env_cfg import TitaSitStandEnvCfg
-from mj_lab.robots.tita.height_only_env_cfg import TitaHeightOnlyEnvCfg
-from mj_lab.robots.tita.walk_env_cfg import TitaWalkEnvCfg
-from mj_lab.robots.tita.inline_env_cfg import TitaInlineEnvCfg
-from mj_lab.robots.tita.stand_one_leg_env_cfg import TitaStandOneLegEnvCfg
-from mj_lab.robots.tita.stand_one_leg_reference_env_cfg import (
+from mj_lab.robots.tita.roll_pitch_height.flat_env_roll_pitch_height_cfg import TitaFlatRollPitchHeightEnvCfg
+from mj_lab.robots.tita.sit_stand.sit_stand_env_cfg import TitaSitStandEnvCfg
+from mj_lab.robots.tita.sit_stand.height_only_env_cfg import TitaHeightOnlyEnvCfg
+from mj_lab.robots.tita.walk.walk_env_cfg import TitaWalkEnvCfg
+from mj_lab.robots.tita.walk.inline_env_cfg import TitaInlineEnvCfg
+from mj_lab.robots.tita.stand_one_leg.stand_one_leg_env_cfg import TitaStandOneLegEnvCfg
+from mj_lab.robots.tita.stand_one_leg.stand_one_leg_reference_env_cfg import (
     TitaStandOneLegReferenceEnvCfg, TitaStandOneLegRightReferenceEnvCfg,
 )
-from mj_lab.robots.tita.stand_one_leg_anchor_env_cfg import (
+from mj_lab.robots.tita.stand_one_leg.stand_one_leg_anchor_env_cfg import (
     TitaStandOneLegAnchorEnvCfg, TitaStandOneLegRightAnchorEnvCfg,
 )
-from mj_lab.robots.tita.support_command_env_cfg import TitaSupportCommandEnvCfg, TitaSupportVelocityEnvCfg
+from mj_lab.robots.tita.stand_one_leg.support_command_env_cfg import TitaSupportCommandEnvCfg, TitaSupportVelocityEnvCfg
 from train import build_parser  # Shared CLI/defaults; importing does not start Isaac.
 
 

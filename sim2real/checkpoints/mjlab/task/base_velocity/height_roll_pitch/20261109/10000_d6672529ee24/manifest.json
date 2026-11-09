@@ -1,0 +1,12 @@
+{
+  "execution_domain": "VALIDATION_SIM",
+  "evidence_status": "PASS",
+  "checkpoint_sha256": "5487e3584fddbdfc87b7485bb2ad4c7da8069a7679b1975789d64419e7482334",
+  "onnx_sha256": "0e8cd0723d2a7de2d83a6866818309c173c513c020a62f2c8832f9761344543b",
+  "config_sha256": "e725e7460598b9f50fae4a129e89d4ce84fb0eb456af0014ef764d353bb318e2",
+  "fingerprint": "0689f746bc72a68e982c99f5b2109800d81320d640c000f99e6d4330f0d45762",
+  "parity": {
+    "samples": 256,
+    "max_abs_error": 3.933906555175781e-06
+  }
+}

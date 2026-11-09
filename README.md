@@ -132,3 +132,11 @@ ros2 launch tita_controller flashsac.launch.py \
 
 배포·조작 방법: [실기 README](sim2real/tita_ws/README.md).
 학습·검증·실기 로그: 각 workspace의 `docs/exp/YYYY-MM-DD/`.
+
+## Published LPF60 torque residual
+
+The repository includes frozen Teacher80k and shared-sensor residual10k weights,
+their native contracts and hash-validated ONNX exports in `sim2sim/checkpoints/`.
+Training, MuJoCo playback and Sim2Real source/build instructions:
+[LPF60 residual guide](docs/lpf60_residual.md). Walk, sit/stand and single-leg
+training tasks remain available under `mj_lab/robots/tita/`.

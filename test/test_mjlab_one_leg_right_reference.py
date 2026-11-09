@@ -11,8 +11,8 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / 'sim2sim/sim2sim_ros2_jazzy')]
 from mj_lab.checkpoint import plain, playback_contract
-from mj_lab.robots.tita.robot_cfg import JOINTS
-from mj_lab.robots.tita.stand_one_leg_reference_env_cfg import (
+from mj_lab.robots.tita.common.robot_cfg import JOINTS
+from mj_lab.robots.tita.stand_one_leg.stand_one_leg_reference_env_cfg import (
     TitaStandOneLegReferenceEnvCfg, TitaStandOneLegRightReferenceEnvCfg,
     balance_metric, fixed_support, pose_hint, support_leg_tilt,
 )

@@ -14,8 +14,8 @@ sys.path[:0] = [str(ROOT), str(ROOT/'sim2sim/sim2sim_ros2_jazzy')]
 from mj_lab.checkpoint import playback_contract
 from mj_lab.flash_sac import TitaFlashSACEnv
 from mj_lab.robots.tita import mdp
-from mj_lab.robots.tita.flat_env_roll_pitch_height_cfg import TitaFlatRollPitchHeightEnvCfg
-from mj_lab.robots.tita.sit_stand_env_cfg import TitaSitStandEnvCfg
+from mj_lab.robots.tita.roll_pitch_height.flat_env_roll_pitch_height_cfg import TitaFlatRollPitchHeightEnvCfg
+from mj_lab.robots.tita.sit_stand.sit_stand_env_cfg import TitaSitStandEnvCfg
 from sim2sim_ros2_jazzy.adapter import ObservationBuilder, ObsState
 from sim2sim_ros2_jazzy.checkpoint import observation_layout, simulation_config
 

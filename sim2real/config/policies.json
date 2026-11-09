@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "teacher": "../checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261108/80000",
+  "residual_torque": "../checkpoints/mjlab/task/base_velocity/height_roll_pitch/20261109/10000_d6672529ee24/residual"
+}
